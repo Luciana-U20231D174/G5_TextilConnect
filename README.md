@@ -1,2 +1,0 @@
-
-Contribución: Joan-Marquez
