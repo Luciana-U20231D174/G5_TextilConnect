@@ -5,51 +5,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.upc.textilconnect.dtos.TipoDocumentoDTO;
-import pe.edu.upc.textilconnect.entities.TipoDocumento;
-import pe.edu.upc.textilconnect.servicesinterfaces.ITipoDocumentoService;
+import pe.edu.upc.textilconnect.dtos.TipoProductoDTO;
+import pe.edu.upc.textilconnect.entities.TipoProducto;
+import pe.edu.upc.textilconnect.servicesinterfaces.ITipoProductoService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/tiposdocumentos")
-public class TipoDocumentoController {
+@RequestMapping("/tiposproductos")
+public class TipoProductoController {
     @Autowired
-    private ITipoDocumentoService dS;
+    private ITipoProductoService dS;
 
     @GetMapping
-    public List<TipoDocumentoDTO> listar(){
-        return this.dS.list().stream().map((y)->{
-            ModelMapper m = new ModelMapper();
-            return (TipoDocumentoDTO)m.map(y,TipoDocumentoDTO.class);
+    public List<TipoProductoDTO> listar() {
+        return this.dS.list().stream().map((y) -> {
+            ModelMapper m =new ModelMapper();
+            return (TipoProductoDTO)m.map(y, TipoProductoDTO.class);
         }).collect(Collectors.toList());
     }
 
     @PostMapping
-    public void insertar(@RequestBody TipoDocumentoDTO dto){
+    public void insertar(@RequestBody TipoProductoDTO dto) {
         ModelMapper m =new ModelMapper();
-        TipoDocumento td=(TipoDocumento)m.map(dto,TipoDocumento.class);
-        this.dS.insert(td);
+        TipoProducto prod = (TipoProducto)m.map(dto,TipoProducto.class);
+        this.dS.insert(prod);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
-        TipoDocumento tip = dS.listId(id);
-        if (tip == null) {
+        TipoProducto prod = dS.listId(id);
+        if (prod == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: " + id);
         }
         ModelMapper m = new ModelMapper();
-        TipoDocumentoDTO dto = m.map(tip, TipoDocumentoDTO.class);
+        TipoProductoDTO dto = m.map(prod, TipoProductoDTO.class);
         return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
-        TipoDocumento td = dS.listId(id);
-        if (td == null) {
+        TipoProducto prod = dS.listId(id);
+        if (prod == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: " + id);
         }
@@ -58,16 +58,16 @@ public class TipoDocumentoController {
     }
 
     @PutMapping
-    public ResponseEntity<String> modificar(@RequestBody TipoDocumentoDTO dto) {
+    public ResponseEntity<String> modificar(@RequestBody TipoProductoDTO dto) {
         ModelMapper m = new ModelMapper();
-        TipoDocumento tp = m.map(dto, TipoDocumento.class);
+        TipoProducto prod = m.map(dto, TipoProducto.class);
 
-        TipoDocumento existente = dS.listId(tp.getIdTipoDocumento());
+        TipoProducto existente = dS.listId(prod.getIdTipoProducto());
         if (existente == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se puede modificar. No existe un registro con el ID: " + tp.getIdTipoDocumento());
+                    .body("No se puede modificar. No existe un registro con el ID: " + prod.getIdTipoProducto());
         }
-        dS.update(tp);
-        return ResponseEntity.ok("Registro con ID " + tp.getIdTipoDocumento() + " modificado correctamente.");
+        dS.update(prod);
+        return ResponseEntity.ok("Registro con ID " + prod.getIdTipoProducto() + " modificado correctamente.");
     }
 }

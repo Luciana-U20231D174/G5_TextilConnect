@@ -8,13 +8,9 @@ import jakarta.persistence.*;
 )
 public class TipoDocumento {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idTipoDocumento;
 
-    @Column(name = "codigoTipoDocumento", length = 5, nullable = false)
-    private String codigoTipoDocumento;
 
     @Column(name ="nombre", length = 100, nullable = false)
     private String nombre;
@@ -22,18 +18,17 @@ public class TipoDocumento {
     @Column(name = "descripcionTipoDocumento", length = 255,  nullable = true)
     private String descripcionTipoDocumento;
 
-    @Column(name = "rucTipoDocumento", length = 11,  nullable = true)
+    @Column(name = "rucTipoDocumento",  nullable = true)
     private int rucTipoDocumento;
 
     public TipoDocumento() {
     }
 
-    public TipoDocumento(int idTipoDocumento, int rucTipoDocumento, String descripcionTipoDocumento, String nombre, String codigoTipoDocumento) {
+    public TipoDocumento(int idTipoDocumento, String nombre, String descripcionTipoDocumento, int rucTipoDocumento) {
         this.idTipoDocumento = idTipoDocumento;
-        this.rucTipoDocumento = rucTipoDocumento;
-        this.descripcionTipoDocumento = descripcionTipoDocumento;
         this.nombre = nombre;
-        this.codigoTipoDocumento = codigoTipoDocumento;
+        this.descripcionTipoDocumento = descripcionTipoDocumento;
+        this.rucTipoDocumento = rucTipoDocumento;
     }
 
     public int getIdTipoDocumento() {
@@ -44,12 +39,12 @@ public class TipoDocumento {
         this.idTipoDocumento = idTipoDocumento;
     }
 
-    public int getRucTipoDocumento() {
-        return rucTipoDocumento;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setRucTipoDocumento(int rucTipoDocumento) {
-        this.rucTipoDocumento = rucTipoDocumento;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getDescripcionTipoDocumento() {
@@ -60,19 +55,11 @@ public class TipoDocumento {
         this.descripcionTipoDocumento = descripcionTipoDocumento;
     }
 
-    public String getNombre() {
-        return nombre;
+    public int getRucTipoDocumento() {
+        return rucTipoDocumento;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCodigoTipoDocumento() {
-        return codigoTipoDocumento;
-    }
-
-    public void setCodigoTipoDocumento(String codigoTipoDocumento) {
-        this.codigoTipoDocumento = codigoTipoDocumento;
+    public void setRucTipoDocumento(int rucTipoDocumento) {
+        this.rucTipoDocumento = rucTipoDocumento;
     }
 }

@@ -2,7 +2,6 @@ package pe.edu.upc.textilconnect.dtos;
 
 public class TipoDocumentoDTO {
     private int idTipoDocumento;
-    private String codigoTipoDocumento;
     private String nombre;
     private String descripcionTipoDocumento;
     private int rucTipoDocumento;
@@ -13,14 +12,6 @@ public class TipoDocumentoDTO {
 
     public void setIdTipoDocumento(int idTipoDocumento) {
         this.idTipoDocumento = idTipoDocumento;
-    }
-
-    public String getCodigoTipoDocumento() {
-        return codigoTipoDocumento;
-    }
-
-    public void setCodigoTipoDocumento(String codigoTipoDocumento) {
-        this.codigoTipoDocumento = codigoTipoDocumento;
     }
 
     public String getNombre() {
