@@ -1,6 +1,7 @@
 package pe.edu.upc.textilconnect.entities;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -11,7 +12,7 @@ public class Notificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idNotificacion;
 
-    @Column(name = "tipoNotificacion", length = 50, nullable = false)
+    @Column(name = "tipoNotificacion", length = 20, nullable = false)
     private String tipoNotificacion;
 
     @Column(name = "mensajeNotificacion", length = 255, nullable = false)
@@ -21,7 +22,7 @@ public class Notificacion {
     private LocalDate fechaNotificacion;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario") // clave foránea
+    @JoinColumn(name = "idUsuario")
     private Usuario usuario;
 
     public Notificacion() {

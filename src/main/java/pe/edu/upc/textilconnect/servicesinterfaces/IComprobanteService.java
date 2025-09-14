@@ -5,6 +5,6 @@ import pe.edu.upc.textilconnect.entities.Comprobante;
 import java.util.List;
 
 public interface IComprobanteService {
-    List<Comprobante> list();
+    public List<Comprobante> list();
     public void insert(Comprobante comprobante);
 }
