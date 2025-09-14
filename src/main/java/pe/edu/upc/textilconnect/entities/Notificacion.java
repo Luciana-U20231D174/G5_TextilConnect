@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "Notificacion")
 public class Notificacion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idNotificacion;
@@ -14,20 +15,21 @@ public class Notificacion {
     @Column(name = "tipoNotificacion", length = 20, nullable = false)
     private String tipoNotificacion;
 
-    @Column(name = "mensajeNotificacion", length = 200, nullable = false)
+    @Column(name = "mensajeNotificacion", length = 255, nullable = false)
     private String mensajeNotificacion;
 
     @Column(name = "fechaNotificacion", nullable = false)
     private LocalDate fechaNotificacion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idUsuario")
     private Usuario usuario;
 
     public Notificacion() {
     }
 
-    public Notificacion(int idNotificacion, String tipoNotificacion, String mensajeNotificacion, LocalDate fechaNotificacion, Usuario usuario) {
+    public Notificacion(int idNotificacion, String tipoNotificacion, String mensajeNotificacion,
+                        LocalDate fechaNotificacion, Usuario usuario) {
         this.idNotificacion = idNotificacion;
         this.tipoNotificacion = tipoNotificacion;
         this.mensajeNotificacion = mensajeNotificacion;
