@@ -4,10 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.ProductoFotoDTO;
-import pe.edu.upc.textilconnect.dtos.UsuarioDTOInsert;
-import pe.edu.upc.textilconnect.dtos.UsuarioDTOList;
 import pe.edu.upc.textilconnect.entities.ProductoFoto;
-import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProductoFotoService;
 
 import java.util.List;

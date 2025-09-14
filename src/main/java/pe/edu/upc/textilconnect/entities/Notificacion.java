@@ -1,12 +1,27 @@
 package pe.edu.upc.textilconnect.entities;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "Notificacion")
 public class Notificacion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idNotificacion;
+
+    @Column(name = "tipoNotificacion", length = 20, nullable = false)
     private String tipoNotificacion;
+
+    @Column(name = "mensajeNotificacion", length = 200, nullable = false)
     private String mensajeNotificacion;
+
+    @Column(name = "fechaNotificacion", nullable = false)
     private LocalDate fechaNotificacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idUsuario")
     private Usuario usuario;
 
     public Notificacion() {
