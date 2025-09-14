@@ -1,0 +1,26 @@
+package pe.edu.upc.textilconnect.servicesimplements;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pe.edu.upc.textilconnect.entities.MetodoPagoGuardado;
+import pe.edu.upc.textilconnect.repositories.IMetodoPagoGuardadoRepository;
+import pe.edu.upc.textilconnect.servicesinterfaces.IMetodoPagoGuardadoService;
+
+import java.util.List;
+
+@Service
+public class MetodoPagoGuardadoServiceImplement implements IMetodoPagoGuardadoService {
+
+    @Autowired
+    private IMetodoPagoGuardadoRepository metodoPagoGuardadoRepository;
+
+    @Override
+    public List<MetodoPagoGuardado> list() {
+        return metodoPagoGuardadoRepository.findAll();
+    }
+
+    @Override
+    public void insert(MetodoPagoGuardado metodoPagoGuardado) {
+        metodoPagoGuardadoRepository.save(metodoPagoGuardado);
+    }
+}
