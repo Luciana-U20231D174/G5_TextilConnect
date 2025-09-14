@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/metodospagos")
 public class MetodoPagoController {
     @Autowired
-    private IMetodoPagoService dS;
+    private IMetodoPagoService metodoPagoService;
 
     @GetMapping
     public List<MetodoPagoDTO> listar() {
-        return this.dS.list().stream().map((y) -> {
+        return this.metodoPagoService.list().stream().map((y) -> {
             ModelMapper m =new ModelMapper();
             return (MetodoPagoDTO)m.map(y, MetodoPagoDTO.class);
         }).collect(Collectors.toList());
@@ -30,12 +30,12 @@ public class MetodoPagoController {
     public void insertar(@RequestBody MetodoPagoDTO dto) {
         ModelMapper m =new ModelMapper();
         MetodoPago meto = (MetodoPago)m.map(dto,MetodoPago.class);
-        this.dS.insert(meto);
+        this.metodoPagoService.insert(meto);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
-        MetodoPago meto = dS.listId(id);
+        MetodoPago meto = metodoPagoService.listId(id);
         if (meto == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -48,12 +48,12 @@ public class MetodoPagoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
-        MetodoPago meto = dS.listId(id);
+        MetodoPago meto = metodoPagoService.listId(id);
         if (meto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: " + id);
         }
-        dS.delete(id);
+        metodoPagoService.delete(id);
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
@@ -62,12 +62,12 @@ public class MetodoPagoController {
         ModelMapper m = new ModelMapper();
         MetodoPago meto = m.map(dto, MetodoPago.class);
 
-        MetodoPago existente = dS.listId(meto.getIdMetodoPago());
+        MetodoPago existente = metodoPagoService.listId(meto.getIdMetodoPago());
         if (existente == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No se puede modificar. No existe un registro con el ID: " + meto.getIdMetodoPago());
         }
-        dS.update(meto);
+        metodoPagoService.update(meto);
         return ResponseEntity.ok("Registro con ID " + meto.getIdMetodoPago() + " modificado correctamente.");
     }
 }
