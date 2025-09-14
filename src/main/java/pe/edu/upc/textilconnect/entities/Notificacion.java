@@ -1,18 +1,34 @@
 package pe.edu.upc.textilconnect.entities;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "Notificacion")
 public class Notificacion {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idNotificacion;
+
+    @Column(name = "tipoNotificacion", length = 50, nullable = false)
     private String tipoNotificacion;
+
+    @Column(name = "mensajeNotificacion", length = 255, nullable = false)
     private String mensajeNotificacion;
+
+    @Column(name = "fechaNotificacion", nullable = false)
     private LocalDate fechaNotificacion;
+
+    @ManyToOne
+    @JoinColumn(name = "idUsuario") // clave foránea
     private Usuario usuario;
 
     public Notificacion() {
     }
 
-    public Notificacion(int idNotificacion, String tipoNotificacion, String mensajeNotificacion, LocalDate fechaNotificacion, Usuario usuario) {
+    public Notificacion(int idNotificacion, String tipoNotificacion, String mensajeNotificacion,
+                        LocalDate fechaNotificacion, Usuario usuario) {
         this.idNotificacion = idNotificacion;
         this.tipoNotificacion = tipoNotificacion;
         this.mensajeNotificacion = mensajeNotificacion;
