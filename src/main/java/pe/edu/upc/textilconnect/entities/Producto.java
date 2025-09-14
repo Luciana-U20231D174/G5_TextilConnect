@@ -2,7 +2,6 @@ package pe.edu.upc.textilconnect.entities;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "Producto")
