@@ -5,12 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.MetodoPagoGuardadoDTOInsert;
 import pe.edu.upc.textilconnect.dtos.MetodoPagoGuardadoDTOList;
-import pe.edu.upc.textilconnect.dtos.UsuarioDTOInsert;
-import pe.edu.upc.textilconnect.dtos.UsuarioDTOList;
 import pe.edu.upc.textilconnect.entities.MetodoPagoGuardado;
-import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.servicesinterfaces.IMetodoPagoGuardadoService;
-import pe.edu.upc.textilconnect.servicesinterfaces.IUsuarioService;
 
 import java.util.List;
 import java.util.stream.Collectors;
