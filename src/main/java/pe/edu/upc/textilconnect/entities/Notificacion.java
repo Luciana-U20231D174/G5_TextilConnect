@@ -21,7 +21,7 @@ public class Notificacion {
     private LocalDate fechaNotificacion;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario") // clave foránea
+    @JoinColumn(name = "idUsuario")
     private Usuario usuario;
 
     public Notificacion() {

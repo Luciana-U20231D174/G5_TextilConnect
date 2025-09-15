@@ -1,11 +1,13 @@
 package pe.edu.upc.textilconnect.dtos;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class UsuarioDTOList {
     private String nombreUsuario;
     private String emailUsuario;
     private LocalDate fechaRegistroUsuario;
+    private BigDecimal promedioCalifacion;
 
     public String getNombreUsuario() {
         return nombreUsuario;
@@ -29,5 +31,13 @@ public class UsuarioDTOList {
 
     public void setFechaRegistroUsuario(LocalDate fechaRegistroUsuario) {
         this.fechaRegistroUsuario = fechaRegistroUsuario;
+    }
+
+    public BigDecimal getPromedioCalifacion() {
+        return promedioCalifacion;
+    }
+
+    public void setPromedioCalifacion(BigDecimal promedioCalifacion) {
+        this.promedioCalifacion = promedioCalifacion;
     }
 }

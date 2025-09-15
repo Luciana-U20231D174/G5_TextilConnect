@@ -2,6 +2,7 @@ package pe.edu.upc.textilconnect.dtos;
 
 import pe.edu.upc.textilconnect.entities.Rol;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class UsuarioDTOInsert {
@@ -12,6 +13,8 @@ public class UsuarioDTOInsert {
     private String telefonoUsuario;
     private String direccionUsuario;
     private LocalDate fechaRegistroUsuario;
+    private BigDecimal promedioCalificacion;
+    private int totalCalificacion;
     private Rol rol;
 
     public int getIdUsuario() {
@@ -68,6 +71,22 @@ public class UsuarioDTOInsert {
 
     public void setFechaRegistroUsuario(LocalDate fechaRegistroUsuario) {
         this.fechaRegistroUsuario = fechaRegistroUsuario;
+    }
+
+    public BigDecimal getPromedioCalificacion() {
+        return promedioCalificacion;
+    }
+
+    public void setPromedioCalificacion(BigDecimal promedioCalificacion) {
+        this.promedioCalificacion = promedioCalificacion;
+    }
+
+    public int getTotalCalificacion() {
+        return totalCalificacion;
+    }
+
+    public void setTotalCalificacion(int totalCalificacion) {
+        this.totalCalificacion = totalCalificacion;
     }
 
     public Rol getRol() {
