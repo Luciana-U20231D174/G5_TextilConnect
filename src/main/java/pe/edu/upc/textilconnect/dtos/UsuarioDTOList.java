@@ -8,6 +8,7 @@ public class UsuarioDTOList {
     private String emailUsuario;
     private LocalDate fechaRegistroUsuario;
     private BigDecimal promedioCalifacion;
+    private int totalCalificacion;
 
     public String getNombreUsuario() {
         return nombreUsuario;
@@ -39,5 +40,13 @@ public class UsuarioDTOList {
 
     public void setPromedioCalifacion(BigDecimal promedioCalifacion) {
         this.promedioCalifacion = promedioCalifacion;
+    }
+
+    public int getTotalCalificacion() {
+        return totalCalificacion;
+    }
+
+    public void setTotalCalificacion(int totalCalificacion) {
+        this.totalCalificacion = totalCalificacion;
     }
 }
