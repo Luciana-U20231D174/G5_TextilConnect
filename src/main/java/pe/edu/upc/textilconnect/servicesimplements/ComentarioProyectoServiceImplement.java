@@ -25,15 +25,4 @@ public class ComentarioProyectoServiceImplement implements IComentarioProyectoSe
     public void insert(ComentarioProyecto comentarioProyecto) {
         comentarioProyectoRepository.save(comentarioProyecto);
     }
-
-    @Override
-    public  ComentarioProyecto listId(int id) {return comentarioProyectoRepository.findById(id).orElse(null);}
-
-    @Override
-    public void delete(int id) {comentarioProyectoRepository.deleteById(id);}
-
-    @Override
-    public void update(ComentarioProyecto comentarioProyecto) {comentarioProyectoRepository.save(comentarioProyecto);}
-
-
 }

@@ -36,29 +36,4 @@ public class ComentarioProyectoController {
             return (ComentarioProyectoDTO)m.map(y, ComentarioProyectoDTO.class);
         }).collect(Collectors.toList());
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
-        ComentarioProyecto com = comentarioProyectoService.listId(id);
-        if (com == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No existe un registro con el ID: " + id);
-        }
-        comentarioProyectoService.delete(id);
-        return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
-    }
-
-    @PutMapping
-    public ResponseEntity<String> modificar(@RequestBody ComentarioProyectoDTO cpdto) {
-        ModelMapper m = new ModelMapper();
-        ComentarioProyecto com = m.map(cpdto, ComentarioProyecto.class);
-
-        ComentarioProyecto existente = comentarioProyectoService.listId(com.getIdComentarioProyecto());
-        if (existente == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se puede modificar. No existe un registro con el ID: " + com.getIdComentarioProyecto());
-        }
-        comentarioProyectoService.update(com);
-        return ResponseEntity.ok("Registro con ID " + com.getIdComentarioProyecto() + " modificado correctamente.");
-    }
 }
