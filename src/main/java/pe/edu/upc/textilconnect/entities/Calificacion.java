@@ -46,59 +46,59 @@ public class Calificacion {
         this.calificado = calificado;
     }
 
-    public int getIdCalificacion() {
+    public int getIdCalificacion()  {
         return idCalificacion;
     }
 
-    public void setIdCalificacion(int idCalificacion) {
+    public void setIdCalificacion(int idCalificacion)  {
         this.idCalificacion = idCalificacion;
     }
 
-    public int getEstrellas() {
+    public int getEstrellas()  {
         return estrellas;
     }
 
-    public void setEstrellas(int estrellas) {
+    public void setEstrellas(int estrellas)  {
         this.estrellas = estrellas;
     }
 
-    public String getComentario() {
+    public String getComentario()  {
         return comentario;
     }
 
-    public void setComentario(String comentario) {
+    public void setComentario(String comentario)  {
         this.comentario = comentario;
     }
 
-    public LocalDate getFechaCalificacion() {
+    public LocalDate getFechaCalificacion()  {
         return fechaCalificacion;
     }
 
-    public void setFechaCalificacion(LocalDate fechaCalificacion) {
+    public void setFechaCalificacion(LocalDate fechaCalificacion)  {
         this.fechaCalificacion = fechaCalificacion;
     }
 
-    public Operacion getOperacion() {
+    public Operacion getOperacion()  {
         return operacion;
     }
 
-    public void setOperacion(Operacion operacion) {
+    public void setOperacion(Operacion operacion)  {
         this.operacion = operacion;
     }
 
-    public Usuario getCalificador() {
+    public Usuario getCalificador()  {
         return calificador;
     }
 
-    public void setCalificador(Usuario calificador) {
+    public void setCalificador(Usuario calificador)  {
         this.calificador = calificador;
     }
 
-    public Usuario getCalificado() {
+    public Usuario getCalificado(){
         return calificado;
     }
 
-    public void setCalificado(Usuario calificado) {
+    public void setCalificado(Usuario calificado)  {
         this.calificado = calificado;
     }
 }
