@@ -12,7 +12,8 @@ public class OperacionDTO {
     private LocalDate fechaCreacionOperacion;
     private LocalDate fechaPagoOperacion;
     private BigDecimal totalOperacion;
-    private Usuario usuario;
+    private Usuario comprador;
+    private Usuario vendedor;
     private MetodoPago metodoPago;
 
     public int getIdOperacion() {
@@ -55,12 +56,20 @@ public class OperacionDTO {
         this.totalOperacion = totalOperacion;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Usuario getComprador() {
+        return comprador;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setComprador(Usuario comprador) {
+        this.comprador = comprador;
+    }
+
+    public Usuario getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Usuario vendedor) {
+        this.vendedor = vendedor;
     }
 
     public MetodoPago getMetodoPago() {
