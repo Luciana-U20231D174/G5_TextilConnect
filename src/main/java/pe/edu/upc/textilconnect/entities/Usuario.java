@@ -2,6 +2,7 @@ package pe.edu.upc.textilconnect.entities;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -30,6 +31,12 @@ public class Usuario {
     @Column(name = "fechaRegistroUsuario", nullable = false)
     private LocalDate fechaRegistroUsuario;
 
+    @Column(name = "promedioCalificacion", nullable = false, precision = 12, scale = 2)
+    private BigDecimal promedioCalificacion;
+
+    @Column(name = "totalCalificacion", nullable = false)
+    private int totalCalificacion;
+
     @ManyToOne
     @JoinColumn(name = "idRol")
     private Rol rol;
@@ -37,7 +44,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int idUsuario, String nombreUsuario, String emailUsuario, String contrasenaUsuario, String telefonoUsuario, String direccionUsuario, LocalDate fechaRegistroUsuario, Rol rol) {
+    public Usuario(int idUsuario, String nombreUsuario, String emailUsuario, String contrasenaUsuario, String telefonoUsuario, String direccionUsuario, LocalDate fechaRegistroUsuario, BigDecimal promedioCalificacion, int totalCalificacion, Rol rol) {
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
         this.emailUsuario = emailUsuario;
@@ -45,6 +52,8 @@ public class Usuario {
         this.telefonoUsuario = telefonoUsuario;
         this.direccionUsuario = direccionUsuario;
         this.fechaRegistroUsuario = fechaRegistroUsuario;
+        this.promedioCalificacion = promedioCalificacion;
+        this.totalCalificacion = totalCalificacion;
         this.rol = rol;
     }
 
@@ -102,6 +111,22 @@ public class Usuario {
 
     public void setFechaRegistroUsuario(LocalDate fechaRegistroUsuario) {
         this.fechaRegistroUsuario = fechaRegistroUsuario;
+    }
+
+    public BigDecimal getPromedioCalificacion() {
+        return promedioCalificacion;
+    }
+
+    public void setPromedioCalificacion(BigDecimal promedioCalificacion) {
+        this.promedioCalificacion = promedioCalificacion;
+    }
+
+    public int getTotalCalificacion() {
+        return totalCalificacion;
+    }
+
+    public void setTotalCalificacion(int totalCalificacion) {
+        this.totalCalificacion = totalCalificacion;
     }
 
     public Rol getRol() {

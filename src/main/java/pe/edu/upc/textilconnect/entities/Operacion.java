@@ -26,8 +26,12 @@ public class Operacion {
     private BigDecimal totalOperacion;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario")
-    private Usuario usuario;
+    @JoinColumn(name = "idVendedor")
+    private Usuario vendedor;
+
+    @ManyToOne
+    @JoinColumn(name = "idComprador")
+    private Usuario comprador;
 
     @ManyToOne
     @JoinColumn(name = "idMetodoPago")
@@ -36,13 +40,14 @@ public class Operacion {
     public Operacion() {
     }
 
-    public Operacion(int idOperacion, String estadoOperacion, LocalDate fechaCreacionOperacion, LocalDate fechaPagoOperacion, BigDecimal totalOperacion, Usuario usuario, MetodoPago metodoPago) {
+    public Operacion(int idOperacion, String estadoOperacion, LocalDate fechaCreacionOperacion, LocalDate fechaPagoOperacion, BigDecimal totalOperacion, Usuario vendedor, Usuario comprador, MetodoPago metodoPago) {
         this.idOperacion = idOperacion;
         this.estadoOperacion = estadoOperacion;
         this.fechaCreacionOperacion = fechaCreacionOperacion;
         this.fechaPagoOperacion = fechaPagoOperacion;
         this.totalOperacion = totalOperacion;
-        this.usuario = usuario;
+        this.vendedor = vendedor;
+        this.comprador = comprador;
         this.metodoPago = metodoPago;
     }
 
@@ -86,12 +91,20 @@ public class Operacion {
         this.totalOperacion = totalOperacion;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Usuario getVendedor() {
+        return vendedor;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setVendedor(Usuario vendedor) {
+        this.vendedor = vendedor;
+    }
+
+    public Usuario getComprador() {
+        return comprador;
+    }
+
+    public void setComprador(Usuario comprador) {
+        this.comprador = comprador;
     }
 
     public MetodoPago getMetodoPago() {
