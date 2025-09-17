@@ -70,4 +70,18 @@ public class MetodoPagoController {
         metodoPagoService.update(meto);
         return ResponseEntity.ok("Registro con ID " + meto.getIdMetodoPago() + " modificado correctamente.");
     }
+
+    @GetMapping({"/busquedas"})
+    public ResponseEntity<?> buscar(@RequestParam String n) {
+        List<MetodoPago> metodoPagos = this.metodoPagoService.buscarService(n);
+        if (metodoPagos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron metodos de pago con este nombre: " + n);
+        } else {
+            List<MetodoPagoDTO> listaDTO = metodoPagos.stream().map((x) -> {
+                ModelMapper m = new ModelMapper();
+                return (MetodoPagoDTO) m.map(x, MetodoPagoDTO.class);
+            }).collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        }
+    }
 }

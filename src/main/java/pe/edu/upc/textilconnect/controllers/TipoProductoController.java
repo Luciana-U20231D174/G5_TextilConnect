@@ -70,4 +70,18 @@ public class TipoProductoController {
         dS.update(prod);
         return ResponseEntity.ok("Registro con ID " + prod.getIdTipoProducto() + " modificado correctamente.");
     }
+
+    @GetMapping({"/busquedas"})
+    public ResponseEntity<?> buscar(@RequestParam String n) {
+        List<TipoProducto> tipoProductos = this.dS.buscarService(n);
+        if (tipoProductos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos con este nombre: " + n);
+        } else {
+            List<TipoProductoDTO> listaDTO = tipoProductos.stream().map((x) -> {
+                ModelMapper m = new ModelMapper();
+                return (TipoProductoDTO)m.map(x, TipoProductoDTO.class);
+            }).collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        }
+    }
 }
