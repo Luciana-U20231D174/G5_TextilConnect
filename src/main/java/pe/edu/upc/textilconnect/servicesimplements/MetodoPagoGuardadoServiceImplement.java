@@ -23,4 +23,10 @@ public class MetodoPagoGuardadoServiceImplement implements IMetodoPagoGuardadoSe
     public void insert(MetodoPagoGuardado metodoPagoGuardado) {
         metodoPagoGuardadoRepository.save(metodoPagoGuardado);
     }
+
+    public void delete(int id) {metodoPagoGuardadoRepository.deleteById(id);}
+
+    public void update(MetodoPagoGuardado metodoPagoGuardado) {metodoPagoGuardadoRepository.save(metodoPagoGuardado);}
+
+    public MetodoPagoGuardado listId(int id){return metodoPagoGuardadoRepository.findById(id).orElse(null);}
 }
