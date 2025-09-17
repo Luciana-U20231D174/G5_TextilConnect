@@ -23,4 +23,34 @@ public class ProductoServiceImplement implements IProductoService {
     public void insert(Producto producto) {
         productoRepository.save(producto);
     }
+
+    @Override
+    public Producto listId(int id) {
+        return productoRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void delete(int id) {
+        productoRepository.deleteById(id);
+    }
+
+    @Override
+    public void update(Producto producto) {
+        productoRepository.save(producto);
+    }
+
+    @Override
+    public List<Producto> buscarxNombre(String nombre) {
+        return productoRepository.buscarNombrePd(nombre);
+    }
+
+    @Override
+    public List<Producto> buscarxCategoria(String categoria) {
+        return productoRepository.buscarCategoriaPd(categoria);
+    }
+
+    @Override
+    public List<Producto> buscarxColor(String color) {
+        return productoRepository.buscarColorPd(color);
+    }
 }
