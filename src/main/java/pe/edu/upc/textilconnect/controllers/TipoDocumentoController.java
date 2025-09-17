@@ -70,4 +70,18 @@ public class TipoDocumentoController {
         dS.update(tp);
         return ResponseEntity.ok("Registro con ID " + tp.getIdTipoDocumento() + " modificado correctamente.");
     }
+
+    @GetMapping({"/busquedas"})
+    public ResponseEntity<?> buscar(@RequestParam String n) {
+        List<TipoDocumento> tipoDocumentos = this.dS.buscarService(n);
+        if (tipoDocumentos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron documentos con este nombre: " + n);
+        } else {
+            List<TipoDocumentoDTO> listaDTO = tipoDocumentos.stream().map((x) -> {
+                ModelMapper m = new ModelMapper();
+                return (TipoDocumentoDTO)m.map(x, TipoDocumentoDTO.class);
+            }).collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        }
+    }
 }

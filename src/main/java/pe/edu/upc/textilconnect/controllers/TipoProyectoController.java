@@ -70,4 +70,18 @@ public class TipoProyectoController {
         dS.update(proy);
         return ResponseEntity.ok("Registro con ID " + proy.getIdTipoProyecto() + " modificado correctamente.");
     }
+
+    @GetMapping({"/busquedas"})
+    public ResponseEntity<?> buscar(@RequestParam String n) {
+        List<TipoProyecto> tipoProyectos = this.dS.buscarService(n);
+        if (tipoProyectos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron proyectos con este nombre: " + n);
+        } else {
+            List<TipoProyectoDTO> listaDTO = tipoProyectos.stream().map((x) -> {
+                ModelMapper m = new ModelMapper();
+                return (TipoProyectoDTO) m.map(x, TipoProyectoDTO.class);
+            }).collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        }
+    }
 }
