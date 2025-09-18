@@ -23,4 +23,19 @@ public class FavoritoServiceImplement implements IFavoritoService {
     public void insert(Favorito favorito) {
         favoritoRepository.save(favorito);
     }
+
+    @Override
+    public Favorito listId(int id) {
+        return favoritoRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void delete(int id) {
+        favoritoRepository.deleteById(id);
+    }
+
+    @Override
+    public void update(Favorito favorito) {
+        favoritoRepository.save(favorito);
+    }
 }
