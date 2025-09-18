@@ -7,4 +7,9 @@ import java.util.List;
 public interface IProyectoService {
     List<Proyecto> list();
     public void insert(Proyecto proyecto);
+
+    Proyecto listId(int id);
+
+    public void delete(int id);
+    public void update(Proyecto Proyecto);
 }

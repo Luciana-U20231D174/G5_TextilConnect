@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.upc.textilconnect.entities.Proyecto;
 import pe.edu.upc.textilconnect.repositories.IProyectoRepository;
-import pe.edu.upc.textilconnect.repositories.IUsuarioRepository;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProyectoService;
 
 
@@ -24,4 +23,21 @@ public class ProyectoServiceImplement implements IProyectoService {
     public void insert(Proyecto proyecto) {
         proyectoRepository.save(proyecto);
     }
+
+    @Override
+    public Proyecto listId(int id) {
+        return proyectoRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void delete(int id) {
+        proyectoRepository.deleteById(id);
+
+    }
+
+    @Override
+    public void update(Proyecto Proyecto) {
+        proyectoRepository.save(Proyecto);
+    }
+
 }
