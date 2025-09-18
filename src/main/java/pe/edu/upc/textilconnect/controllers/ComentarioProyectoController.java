@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.ComentarioProyectoDTO;
 import pe.edu.upc.textilconnect.dtos.ComprobanteDTO;
 import pe.edu.upc.textilconnect.dtos.MetodoPagoDTO;
+import pe.edu.upc.textilconnect.dtos.ProductoDTO;
 import pe.edu.upc.textilconnect.entities.ComentarioProyecto;
 import pe.edu.upc.textilconnect.entities.Comprobante;
 import pe.edu.upc.textilconnect.entities.MetodoPago;
+import pe.edu.upc.textilconnect.entities.Producto;
 import pe.edu.upc.textilconnect.servicesinterfaces.IComentarioProyectoService;
 
 import java.util.List;
@@ -35,5 +37,30 @@ public class ComentarioProyectoController {
             ModelMapper m = new ModelMapper();
             return (ComentarioProyectoDTO)m.map(y, ComentarioProyectoDTO.class);
         }).collect(Collectors.toList());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
+        ComentarioProyecto comentarioProyecto = comentarioProyectoService.listId(id);
+        if (comentarioProyecto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No existe un registro con el ID: " + id);
+        }
+        comentarioProyectoService.delete(id);
+        return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
+    }
+
+    @PutMapping
+    public ResponseEntity<String> modificar(@RequestBody ComentarioProyectoDTO cpdto) {
+        ModelMapper m = new ModelMapper();
+        ComentarioProyecto comentarioProyecto = m.map(cpdto, ComentarioProyecto.class);
+
+        ComentarioProyecto existente = comentarioProyectoService.listId(comentarioProyecto.getIdComentarioProyecto());
+        if (existente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se puede modificar. No existe un registro con el ID: " + comentarioProyecto.getIdComentarioProyecto());
+        }
+        comentarioProyectoService.update(comentarioProyecto);
+        return ResponseEntity.ok("Registro con ID " + comentarioProyecto.getComentarioProyecto() + " modificado correctamente.");
     }
 }
