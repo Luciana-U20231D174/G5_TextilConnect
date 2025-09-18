@@ -11,4 +11,5 @@ public interface IMetodoPagoGuardadoService {
     public void update(MetodoPagoGuardado metodoPagoGuardado );
     public MetodoPagoGuardado listId(int id);
     public List<MetodoPagoGuardado> listarxusuario(int idusuario);
+    public List<MetodoPagoGuardado> buscarxmarcaTarjeta(String marca);
 }
