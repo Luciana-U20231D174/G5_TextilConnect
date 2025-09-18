@@ -5,7 +5,7 @@ import pe.edu.upc.textilconnect.entities.Usuario;
 import java.time.LocalDate;
 
 public class MetodoPagoGuardadoDTOInsert {
-    private int idUsuario;
+    private int idmetodoPagoGuardado;
     private String aliasMetodoPagoGuardado;
     private String tipoMetodoPagoGuardado;
     private String ultimos4MetodoPagoGuardado;
@@ -16,12 +16,12 @@ public class MetodoPagoGuardadoDTOInsert {
     private LocalDate fechaRegistroMetodoPagoGuardado;
     private Usuario usuario;
 
-    public int getIdUsuario() {
-        return idUsuario;
+    public int getIdmetodoPagoGuardado() {
+        return idmetodoPagoGuardado;
     }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setIdmetodoPagoGuardado(int idmetodoPagoGuardado) {
+        this.idmetodoPagoGuardado = idmetodoPagoGuardado;
     }
 
     public String getAliasMetodoPagoGuardado() {

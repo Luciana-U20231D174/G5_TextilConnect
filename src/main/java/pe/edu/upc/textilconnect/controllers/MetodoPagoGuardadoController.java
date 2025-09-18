@@ -12,6 +12,7 @@ import pe.edu.upc.textilconnect.entities.MetodoPagoGuardado;
 import pe.edu.upc.textilconnect.servicesinterfaces.IMetodoPagoGuardadoService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,7 +46,7 @@ public class MetodoPagoGuardadoController {
                     .body("No existe un registro con el ID: "+ id);
         }
         ModelMapper m = new ModelMapper();
-        MetodoPagoGuardadoDTOInsert mpgd= m.map(met, MetodoPagoGuardadoDTOInsert.class);
+        MetodoPagoGuardadoDTOList mpgd= m.map(met, MetodoPagoGuardadoDTOList.class);
         return ResponseEntity.ok(mpgd);
     }
 
@@ -61,17 +62,16 @@ public class MetodoPagoGuardadoController {
         return ResponseEntity.ok("Registro con ID " +id+ "eliminado correctamente");
     }
 
-    @PutMapping
-    public ResponseEntity<String> modificar(@RequestBody MetodoPagoGuardadoDTOList mdto){
-        ModelMapper m = new ModelMapper();
-        MetodoPagoGuardado meto=m.map(mdto, MetodoPagoGuardado.class);
-
-        MetodoPagoGuardado existente=metodoPagoGuardadoService.listId(meto.getIdMetodoPagoGuardado());
+    @PutMapping("/{id}")
+    public ResponseEntity<String> modificar(@PathVariable("id") Integer id, @RequestBody Map<String, String> request){
+        MetodoPagoGuardado existente=metodoPagoGuardadoService.listId(id);
         if (existente==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se encontro un registro con el ID: "+meto.getIdMetodoPagoGuardado());
+                    .body("No se encontro un registro con el ID: "+id);
         }
-        metodoPagoGuardadoService.update(meto);
-        return ResponseEntity.ok("Registro con ID" +meto.getIdMetodoPagoGuardado() + "modificado correctamente.");
+        String alias = request.get("aliasMetodoPagoGuardado");
+        existente.setAliasMetodoPagoGuardado(alias);
+        metodoPagoGuardadoService.update(existente);
+        return ResponseEntity.ok("Registro con ID" +id+ "modificado correctamente.");
     }
 }
