@@ -10,4 +10,5 @@ public interface IMetodoPagoGuardadoService {
     public void delete(int id);
     public void update(MetodoPagoGuardado metodoPagoGuardado );
     public MetodoPagoGuardado listId(int id);
+    public List<MetodoPagoGuardado> listarxusuario(int idusuario);
 }

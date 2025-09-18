@@ -24,9 +24,16 @@ public class MetodoPagoGuardadoServiceImplement implements IMetodoPagoGuardadoSe
         metodoPagoGuardadoRepository.save(metodoPagoGuardado);
     }
 
+    @Override
     public void delete(int id) {metodoPagoGuardadoRepository.deleteById(id);}
 
+    @Override
     public void update(MetodoPagoGuardado metodoPagoGuardado) {metodoPagoGuardadoRepository.save(metodoPagoGuardado);}
 
+    @Override
     public MetodoPagoGuardado listId(int id){return metodoPagoGuardadoRepository.findById(id).orElse(null);}
+
+    @Override
+    public List<MetodoPagoGuardado> listarxusuario(int idusuario){return metodoPagoGuardadoRepository.listarxusuario(idusuario);}
+
 }
