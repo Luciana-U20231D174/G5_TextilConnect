@@ -23,4 +23,5 @@ public class CalificacionServiceImplement implements ICalificacionService {
     public void insert(Calificacion calificacion) {
         calificacionRepository.save(calificacion);
     }
+
 }
