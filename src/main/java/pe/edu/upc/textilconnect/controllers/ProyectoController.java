@@ -59,6 +59,7 @@ public class ProyectoController {
         }
         proyectoService.update(proyecto);
         return ResponseEntity.ok("Registro con ID " + proyecto.getIdProyecto() + " modificado correctamente.");
+
     }
 
 }
