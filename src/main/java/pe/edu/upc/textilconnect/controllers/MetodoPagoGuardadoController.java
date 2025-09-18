@@ -2,6 +2,7 @@ package pe.edu.upc.textilconnect.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,5 +74,20 @@ public class MetodoPagoGuardadoController {
         existente.setAliasMetodoPagoGuardado(alias);
         metodoPagoGuardadoService.update(existente);
         return ResponseEntity.ok("Registro con ID" +id+ "modificado correctamente.");
+    }
+
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<?> listarPorUsuario(@PathVariable("idUsuario") int idUsuario) {
+        List<MetodoPagoGuardado> metodoPagoGuardados = metodoPagoGuardadoService.listarxusuario(idUsuario);
+
+        if (metodoPagoGuardados.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El usuario con ID " + idUsuario + " no tiene métodos de pago guardados.");
+        }
+        List<MetodoPagoGuardadoDTOList> listarDto= metodoPagoGuardados.stream().map(x->{
+            ModelMapper m = new ModelMapper();
+            return m.map(x, MetodoPagoGuardadoDTOList.class);
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(listarDto);
     }
 }
