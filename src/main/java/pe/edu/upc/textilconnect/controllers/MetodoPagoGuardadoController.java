@@ -90,4 +90,19 @@ public class MetodoPagoGuardadoController {
         }).collect(Collectors.toList());
         return ResponseEntity.ok(listarDto);
     }
+
+    @GetMapping("/marcatarjeta")
+    public ResponseEntity<?> listarMarcaTarjeta(@RequestParam String marca) {
+        List<MetodoPagoGuardado> metodoPagoGuardados=metodoPagoGuardadoService.buscarxmarcaTarjeta(marca);
+        if (metodoPagoGuardados.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontraron métodos de pago con la marca: " + marca);
+        }
+        List<MetodoPagoGuardadoDTOList> listaDTO = metodoPagoGuardados.stream().map(x -> {
+            ModelMapper m = new ModelMapper();
+            return m.map(x, MetodoPagoGuardadoDTOList.class);
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(listaDTO);
+    }
 }

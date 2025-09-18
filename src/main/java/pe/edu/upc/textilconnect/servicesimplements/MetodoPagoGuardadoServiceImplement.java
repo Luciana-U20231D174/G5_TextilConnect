@@ -36,4 +36,6 @@ public class MetodoPagoGuardadoServiceImplement implements IMetodoPagoGuardadoSe
     @Override
     public List<MetodoPagoGuardado> listarxusuario(int idusuario){return metodoPagoGuardadoRepository.listarxusuario(idusuario);}
 
+    public List<MetodoPagoGuardado> buscarxmarcatarjeta(String marca){return metodoPagoGuardadoRepository.buscarxmarcatarjeta(marca);}
+
 }
