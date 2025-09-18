@@ -1,6 +1,8 @@
 package pe.edu.upc.textilconnect.dtos;
 
 
+import pe.edu.upc.textilconnect.entities.Usuario;
+
 import java.time.LocalDate;
 
 public class MetodoPagoGuardadoDTOList {
@@ -58,4 +60,5 @@ public class MetodoPagoGuardadoDTOList {
     public void setFechaRegistroMetodoPagoGuardado(LocalDate fechaRegistroMetodoPagoGuardado) {
         this.fechaRegistroMetodoPagoGuardado = fechaRegistroMetodoPagoGuardado;
     }
+
 }
