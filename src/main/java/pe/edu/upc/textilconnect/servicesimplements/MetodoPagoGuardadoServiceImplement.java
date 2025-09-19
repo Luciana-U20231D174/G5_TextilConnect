@@ -25,17 +25,28 @@ public class MetodoPagoGuardadoServiceImplement implements IMetodoPagoGuardadoSe
     }
 
     @Override
-    public void delete(int id) {metodoPagoGuardadoRepository.deleteById(id);}
+    public void delete(int id) {
+        metodoPagoGuardadoRepository.deleteById(id);
+    }
 
     @Override
-    public void update(MetodoPagoGuardado metodoPagoGuardado) {metodoPagoGuardadoRepository.save(metodoPagoGuardado);}
+    public void update(MetodoPagoGuardado metodoPagoGuardado) {
+        metodoPagoGuardadoRepository.save(metodoPagoGuardado);
+    }
 
     @Override
-    public MetodoPagoGuardado listId(int id){return metodoPagoGuardadoRepository.findById(id).orElse(null);}
+    public MetodoPagoGuardado listId(int id) {
+        return metodoPagoGuardadoRepository.findById(id).orElse(null);
+    }
 
     @Override
-    public List<MetodoPagoGuardado> listarxusuario(int idusuario){return metodoPagoGuardadoRepository.listarxusuario(idusuario);}
+    public List<MetodoPagoGuardado> listarxusuario(int idusuario) {
+        return metodoPagoGuardadoRepository.listarxusuario(idusuario);
+    }
 
-    public List<MetodoPagoGuardado> buscarxmarcatarjeta(String marca){return metodoPagoGuardadoRepository.buscarxmarcatarjeta(marca);}
+    @Override
+    public List<MetodoPagoGuardado> buscarxmarcaTarjeta(String marca) {
+        return metodoPagoGuardadoRepository.buscarxmarcaTarjeta(marca);
+    }
 
 }
