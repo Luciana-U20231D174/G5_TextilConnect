@@ -6,13 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.ComentarioProyectoDTO;
-import pe.edu.upc.textilconnect.dtos.ComprobanteDTO;
-import pe.edu.upc.textilconnect.dtos.MetodoPagoDTO;
-import pe.edu.upc.textilconnect.dtos.ProductoDTO;
+import pe.edu.upc.textilconnect.dtos.ComentarioProyectoResponseDTO;
 import pe.edu.upc.textilconnect.entities.ComentarioProyecto;
-import pe.edu.upc.textilconnect.entities.Comprobante;
-import pe.edu.upc.textilconnect.entities.MetodoPago;
-import pe.edu.upc.textilconnect.entities.Producto;
 import pe.edu.upc.textilconnect.servicesinterfaces.IComentarioProyectoService;
 
 import java.util.List;
@@ -32,10 +27,15 @@ public class ComentarioProyectoController {
     }
 
     @GetMapping
-    public List<ComentarioProyectoDTO> listar() {
-        return this.comentarioProyectoService.list().stream().map((y) -> {
-            ModelMapper m = new ModelMapper();
-            return (ComentarioProyectoDTO)m.map(y, ComentarioProyectoDTO.class);
+    public List<ComentarioProyectoResponseDTO> listar() {
+        return this.comentarioProyectoService.list().stream().map((c) -> {
+            ComentarioProyectoResponseDTO dto = new ComentarioProyectoResponseDTO();
+            dto.setIdComentarioProyecto(c.getIdComentarioProyecto());
+            dto.setComentarioProyecto(c.getComentarioProyecto());
+            dto.setFechaComentario(c.getFechaComentario());
+            dto.setIdProyecto(c.getProyecto().getIdProyecto());
+            dto.setIdUsuario(c.getUsuario().getIdUsuario());
+            return dto;
         }).collect(Collectors.toList());
     }
 
@@ -62,5 +62,30 @@ public class ComentarioProyectoController {
         }
         comentarioProyectoService.update(comentarioProyecto);
         return ResponseEntity.ok("Registro con ID " + comentarioProyecto.getComentarioProyecto() + " modificado correctamente.");
+    }
+
+    @GetMapping("/proyecto/{idProyecto}")
+    public ResponseEntity<?> listarPorProyecto(@PathVariable("idProyecto") int idProyecto) {
+        List<ComentarioProyecto> lista = comentarioProyectoService.listarPorProyecto(idProyecto);
+        if (lista.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontraron comentarios para el proyecto con ID: " + idProyecto);
+        }
+        List<ComentarioProyectoResponseDTO> listaDTO = lista.stream().map((c) -> {
+            ComentarioProyectoResponseDTO dto = new ComentarioProyectoResponseDTO();
+            dto.setIdComentarioProyecto(c.getIdComentarioProyecto());
+            dto.setComentarioProyecto(c.getComentarioProyecto());
+            dto.setFechaComentario(c.getFechaComentario());
+            dto.setIdProyecto(c.getProyecto().getIdProyecto());
+            dto.setIdUsuario(c.getUsuario().getIdUsuario());
+            return dto;
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(listaDTO);
+    }
+
+    @GetMapping("/proyecto/{idProyecto}/count")
+    public ResponseEntity<?> contarPorProyecto(@PathVariable("idProyecto") int idProyecto) {
+        int total = comentarioProyectoService.contarPorProyecto(idProyecto);
+        return ResponseEntity.ok("El proyecto con ID " + idProyecto + " tiene " + total + " comentario(s).");
     }
 }
