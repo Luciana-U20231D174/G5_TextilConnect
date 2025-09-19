@@ -41,4 +41,12 @@ public class ComentarioProyectoServiceImplement implements IComentarioProyectoSe
     public void update(ComentarioProyecto comentarioProyecto) {
         comentarioProyectoRepository.save(comentarioProyecto);
 }
+
+    @Override
+    public List<ComentarioProyecto> listarPorProyecto(int idProyecto) { return comentarioProyectoRepository.listarPorProyecto(idProyecto); }
+
+    @Override
+    public int contarPorProyecto(int idProyecto) {
+        return comentarioProyectoRepository.contarPorProyecto(idProyecto);
+    }
 }
