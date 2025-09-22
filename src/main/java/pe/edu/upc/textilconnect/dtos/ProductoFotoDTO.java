@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class ProductoFotoDTO {
     private int idProductoFoto;
     private String urlProductoFoto;
-    private String principalProductoFoto;
+    private Boolean principalProductoFoto;
     private LocalDate fechaSubidaProductoFoto;
     private Producto producto;
 
@@ -27,11 +27,11 @@ public class ProductoFotoDTO {
         this.urlProductoFoto = urlProductoFoto;
     }
 
-    public String getPrincipalProductoFoto() {
+    public Boolean getPrincipalProductoFoto() {
         return principalProductoFoto;
     }
 
-    public void setPrincipalProductoFoto(String principalProductoFoto) {
+    public void setPrincipalProductoFoto(Boolean principalProductoFoto) {
         this.principalProductoFoto = principalProductoFoto;
     }
 
