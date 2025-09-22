@@ -4,12 +4,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pe.edu.upc.textilconnect.entities.Rol;
 import pe.edu.upc.textilconnect.entities.Usuario;
 
 import java.util.List;
 
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuario,Integer> {
+    public Usuario findOneByUsername(String username);
+
     @Query("Select usuario from Usuario usuario where usuario.nombreUsuario like %:nombre%")
     public List<Usuario> buscarNombreU(@Param("nombre") String nombre);
 
