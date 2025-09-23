@@ -22,11 +22,11 @@ public class JwtUsuarioDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario u = repo.findOneByUsername(username);
+    public UserDetails loadUserByUsername(String nombreUsuario) throws UsernameNotFoundException {
+        Usuario u = repo.findOneByUsername(nombreUsuario);
 
         if (u == null) {
-            throw new UsernameNotFoundException(String.format("Usuario no encontrado para el usuario %s", username));
+            throw new UsernameNotFoundException(String.format("Usuario no encontrado para el usuario %s", nombreUsuario));
         }
 
         Set<GrantedAuthority> authorities = new HashSet<>();
