@@ -2,105 +2,103 @@ package pe.edu.upc.textilconnect.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.upc.textilconnect.dtos.MetodoPagoGuardadoDTOInsert;
-import pe.edu.upc.textilconnect.dtos.MetodoPagoGuardadoDTOList;
-import pe.edu.upc.textilconnect.entities.MetodoPago;
-import pe.edu.upc.textilconnect.entities.MetodoPagoGuardado;
-import pe.edu.upc.textilconnect.servicesinterfaces.IMetodoPagoGuardadoService;
+import pe.edu.upc.textilconnect.dtos.TarjetaDTOInsert;
+import pe.edu.upc.textilconnect.dtos.TarjetaDTOList;
+import pe.edu.upc.textilconnect.entities.Tarjeta;
+import pe.edu.upc.textilconnect.servicesinterfaces.ITarjetaService;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/metodospagosguardados")
-public class MetodoPagoGuardadoController {
+@RequestMapping("/tarjeta")
+public class TarjetaController {
 
     @Autowired
-    private IMetodoPagoGuardadoService metodoPagoGuardadoService;
+    private ITarjetaService tarjetaService;
 
     @PostMapping
-    public void insertar(@RequestBody MetodoPagoGuardadoDTOInsert mpgdto) {
+    public void insertar(@RequestBody TarjetaDTOInsert mpgdto) {
         ModelMapper m = new ModelMapper();
-        MetodoPagoGuardado mpg = (MetodoPagoGuardado)m.map(mpgdto, MetodoPagoGuardado.class);
-        this.metodoPagoGuardadoService.insert(mpg);
+        Tarjeta mpg = (Tarjeta)m.map(mpgdto, Tarjeta.class);
+        this.tarjetaService.insert(mpg);
     }
 
     @GetMapping({"/usuarios"})
-    public List<MetodoPagoGuardadoDTOList> listar() {
-        return this.metodoPagoGuardadoService.list().stream().map((y) -> {
+    public List<TarjetaDTOList> listar() {
+        return this.tarjetaService.list().stream().map((y) -> {
             ModelMapper m = new ModelMapper();
-            return (MetodoPagoGuardadoDTOList)m.map(y, MetodoPagoGuardadoDTOList.class);
+            return (TarjetaDTOList)m.map(y, TarjetaDTOList.class);
         }).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
-        MetodoPagoGuardado met=metodoPagoGuardadoService.listId(id);
+        Tarjeta met=tarjetaService.listId(id);
         if(met==null){
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: "+ id);
         }
         ModelMapper m = new ModelMapper();
-        MetodoPagoGuardadoDTOList mpgd= m.map(met, MetodoPagoGuardadoDTOList.class);
+        TarjetaDTOList mpgd= m.map(met, TarjetaDTOList.class);
         return ResponseEntity.ok(mpgd);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id)
     {
-        MetodoPagoGuardado meto=metodoPagoGuardadoService.listId(id);
+        Tarjeta meto=tarjetaService.listId(id);
         if (meto==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: "+ id);
         }
-        metodoPagoGuardadoService.delete(id);
+        tarjetaService.delete(id);
         return ResponseEntity.ok("Registro con ID " +id+ "eliminado correctamente");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> modificar(@PathVariable("id") Integer id, @RequestBody Map<String, String> request){
-        MetodoPagoGuardado existente=metodoPagoGuardadoService.listId(id);
+        Tarjeta existente=tarjetaService.listId(id);
         if (existente==null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No se encontro un registro con el ID: "+id);
         }
-        String alias = request.get("aliasMetodoPagoGuardado");
-        existente.setAliasMetodoPagoGuardado(alias);
-        metodoPagoGuardadoService.update(existente);
+        String alias = request.get("aliasTarjeta");
+        existente.setAliasTarjeta(alias);
+        tarjetaService.update(existente);
         return ResponseEntity.ok("Registro con ID" +id+ "modificado correctamente.");
     }
 
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<?> listarPorUsuario(@PathVariable("idUsuario") int idUsuario) {
-        List<MetodoPagoGuardado> metodoPagoGuardados = metodoPagoGuardadoService.listarxusuario(idUsuario);
+        List<Tarjeta> tarjetas = tarjetaService.listarxusuario(idUsuario);
 
-        if (metodoPagoGuardados.isEmpty()) {
+        if (tarjetas.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("El usuario con ID " + idUsuario + " no tiene métodos de pago guardados.");
         }
-        List<MetodoPagoGuardadoDTOList> listarDto= metodoPagoGuardados.stream().map(x->{
+        List<TarjetaDTOList> listarDto= tarjetas.stream().map(x->{
             ModelMapper m = new ModelMapper();
-            return m.map(x, MetodoPagoGuardadoDTOList.class);
+            return m.map(x, TarjetaDTOList.class);
         }).collect(Collectors.toList());
         return ResponseEntity.ok(listarDto);
     }
 
     @GetMapping("/marcatarjeta")
     public ResponseEntity<?> listarMarcaTarjeta(@RequestParam String marca) {
-        List<MetodoPagoGuardado> metodoPagoGuardados=metodoPagoGuardadoService.buscarxmarcaTarjeta(marca);
-        if (metodoPagoGuardados.isEmpty()) {
+        List<Tarjeta> tarjetas =tarjetaService.buscarxmarcaTarjeta(marca);
+        if (tarjetas.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No se encontraron métodos de pago con la marca: " + marca);
         }
-        List<MetodoPagoGuardadoDTOList> listaDTO = metodoPagoGuardados.stream().map(x -> {
+        List<TarjetaDTOList> listaDTO = tarjetas.stream().map(x -> {
             ModelMapper m = new ModelMapper();
-            return m.map(x, MetodoPagoGuardadoDTOList.class);
+            return m.map(x, TarjetaDTOList.class);
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(listaDTO);
