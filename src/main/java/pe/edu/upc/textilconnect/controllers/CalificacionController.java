@@ -4,9 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.CalificacionDTO;
-import pe.edu.upc.textilconnect.dtos.OperacionDTO;
 import pe.edu.upc.textilconnect.entities.Calificacion;
-import pe.edu.upc.textilconnect.entities.Operacion;
 import pe.edu.upc.textilconnect.servicesinterfaces.ICalificacionService;
 
 import java.util.List;
