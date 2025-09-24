@@ -13,7 +13,7 @@ public class TarjetaDTOInsert {
     private String tokenReferenciaTarjeta;
     private LocalDate vencimientoTarjeta;
     private Boolean activaTarjeta;
-    private LocalDate fechaTarjeta;
+    private LocalDate fechaRegistroTarjeta;
     private Usuario usuario;
 
     public int getIdTarjeta() {
@@ -80,12 +80,12 @@ public class TarjetaDTOInsert {
         this.activaTarjeta = activaTarjeta;
     }
 
-    public LocalDate getFechaTarjeta() {
-        return fechaTarjeta;
+    public LocalDate getFechaRegistroTarjeta() {
+        return fechaRegistroTarjeta;
     }
 
-    public void setFechaTarjeta(LocalDate fechaTarjeta) {
-        this.fechaTarjeta = fechaTarjeta;
+    public void setFechaRegistroTarjeta(LocalDate fechaRegistroTarjeta) {
+        this.fechaRegistroTarjeta = fechaRegistroTarjeta;
     }
 
     public Usuario getUsuario() {

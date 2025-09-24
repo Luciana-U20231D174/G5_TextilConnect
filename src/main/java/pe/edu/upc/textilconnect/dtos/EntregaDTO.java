@@ -1,6 +1,6 @@
 package pe.edu.upc.textilconnect.dtos;
 
-import pe.edu.upc.textilconnect.entities.Operacion;
+import pe.edu.upc.textilconnect.entities.Pedido;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ public class EntregaDTO {
     private BigDecimal longitudEntrega;
     private LocalDateTime fechaEntrega;
     private String estadoEntrega;
-    private Operacion operacion;
+    private Pedido pedido;
 
     public int getIdEntrega() {
         return idEntrega;
@@ -71,11 +71,11 @@ public class EntregaDTO {
         this.estadoEntrega = estadoEntrega;
     }
 
-    public Operacion getOperacion() {
-        return operacion;
+    public Pedido getPedido() {
+        return pedido;
     }
 
-    public void setOperacion(Operacion operacion) {
-        this.operacion = operacion;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 }

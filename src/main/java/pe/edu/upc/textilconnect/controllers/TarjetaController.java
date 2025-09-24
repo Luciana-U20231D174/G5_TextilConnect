@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/tarjeta")
+@RequestMapping("/tarjetas")
 public class TarjetaController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class TarjetaController {
                     .body("No existe un registro con el ID: "+ id);
         }
         ModelMapper m = new ModelMapper();
-        TarjetaDTOList mpgd= m.map(met, TarjetaDTOList.class);
+        TarjetaDTOInsert mpgd= m.map(met, TarjetaDTOInsert.class);
         return ResponseEntity.ok(mpgd);
     }
 
@@ -75,7 +75,7 @@ public class TarjetaController {
     }
 
     @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<?> listarPorUsuario(@PathVariable("idUsuario") int idUsuario) {
+    public ResponseEntity<?> listarPorUsuario(@PathVariable("id") int idUsuario) {
         List<Tarjeta> tarjetas = tarjetaService.listarxusuario(idUsuario);
 
         if (tarjetas.isEmpty()) {
