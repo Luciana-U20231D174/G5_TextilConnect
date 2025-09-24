@@ -1,13 +1,15 @@
 package pe.edu.upc.textilconnect.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Table (name = "Usuario")
-public class Usuario {
+public class Usuario implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,13 +40,13 @@ public class Usuario {
     private int totalCalificacion;
 
     @ManyToOne
-    @JoinColumn(name = "idRol")
-    private Rol rol;
+    @JoinColumn(name = "idRol", nullable = false)
+    private Rol rols;
 
     public Usuario() {
     }
 
-    public Usuario(int idUsuario, String nombreUsuario, String emailUsuario, String contrasenaUsuario, String telefonoUsuario, String direccionUsuario, LocalDate fechaRegistroUsuario, BigDecimal promedioCalificacion, int totalCalificacion, Rol rol) {
+    public Usuario(int idUsuario, String nombreUsuario, String emailUsuario, String contrasenaUsuario, String telefonoUsuario, String direccionUsuario, LocalDate fechaRegistroUsuario, BigDecimal promedioCalificacion, int totalCalificacion, Rol rols) {
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
         this.emailUsuario = emailUsuario;
@@ -54,7 +56,7 @@ public class Usuario {
         this.fechaRegistroUsuario = fechaRegistroUsuario;
         this.promedioCalificacion = promedioCalificacion;
         this.totalCalificacion = totalCalificacion;
-        this.rol = rol;
+        this.rols = rols;
     }
 
     public int getIdUsuario() {
@@ -129,11 +131,15 @@ public class Usuario {
         this.totalCalificacion = totalCalificacion;
     }
 
-    public Rol getRol() {
-        return rol;
+    public Rol getRols() {
+        return rols;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setRols(Rol rols) {
+        this.rols = rols;
+    }
+
+    public Rol getRol() {
+        return rols;
     }
 }
