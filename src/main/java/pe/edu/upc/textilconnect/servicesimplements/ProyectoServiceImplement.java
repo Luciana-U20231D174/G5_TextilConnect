@@ -2,6 +2,8 @@ package pe.edu.upc.textilconnect.servicesimplements;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pe.edu.upc.textilconnect.dtos.ProyectoCountDTO;
+import pe.edu.upc.textilconnect.dtos.ProyectoListDTO;
 import pe.edu.upc.textilconnect.entities.Proyecto;
 import pe.edu.upc.textilconnect.repositories.IProyectoRepository;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProyectoService;
@@ -38,6 +40,20 @@ public class ProyectoServiceImplement implements IProyectoService {
     @Override
     public void update(Proyecto Proyecto) {
         proyectoRepository.save(Proyecto);
+    }
+
+    @Override
+    public List<ProyectoListDTO> listarProyectosVisiblesPorUsuario(int idUsuario) {
+        return proyectoRepository.listarProyectosVisiblesPorUsuario(idUsuario)
+                .stream()
+                .map(p -> new ProyectoListDTO(p.getTituloProyecto(), p.getDescripcionProyecto(), p.getFechaCreacion()))
+                .toList();
+    }
+
+    @Override
+    public ProyectoCountDTO contarProyectosPorTipo(int idTipoProyecto) {
+        int cantidad = proyectoRepository.contarProyectosPorTipo(idTipoProyecto);
+        return new ProyectoCountDTO(cantidad);
     }
 
 }

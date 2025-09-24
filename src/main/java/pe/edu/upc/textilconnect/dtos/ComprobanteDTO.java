@@ -1,6 +1,6 @@
 package pe.edu.upc.textilconnect.dtos;
 
-import pe.edu.upc.textilconnect.entities.Operacion;
+import pe.edu.upc.textilconnect.entities.Pedido;
 import pe.edu.upc.textilconnect.entities.TipoDocumento;
 
 import java.math.BigDecimal;
@@ -13,7 +13,7 @@ public class ComprobanteDTO {
     private String razonSocialComprobante;
     private BigDecimal igvComprobante;
     private BigDecimal totalComprobante;
-    private Operacion operacion;
+    private Pedido pedido;
     private TipoDocumento tipoDocumento;
 
     public int getIdComprobante() {
@@ -64,12 +64,12 @@ public class ComprobanteDTO {
         this.totalComprobante = totalComprobante;
     }
 
-    public Operacion getOperacion() {
-        return operacion;
+    public Pedido getPedido() {
+        return pedido;
     }
 
-    public void setOperacion(Operacion operacion) {
-        this.operacion = operacion;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public TipoDocumento getTipoDocumento() {

@@ -1,6 +1,6 @@
 package pe.edu.upc.textilconnect.dtos;
 
-import pe.edu.upc.textilconnect.entities.Operacion;
+import pe.edu.upc.textilconnect.entities.Pedido;
 import pe.edu.upc.textilconnect.entities.Usuario;
 
 import java.time.LocalDate;
@@ -10,7 +10,7 @@ public class CalificacionDTO {
     private int estrellas;
     private String comentario;
     private LocalDate fechaCalificacion;
-    private Operacion operacion;
+    private Pedido pedido;
     private Usuario calificador;
     private Usuario calificado;
 
@@ -46,12 +46,12 @@ public class CalificacionDTO {
         this.fechaCalificacion = fechaCalificacion;
     }
 
-    public Operacion getOperacion() {
-        return operacion;
+    public Pedido getPedido() {
+        return pedido;
     }
 
-    public void setOperacion(Operacion operacion) {
-        this.operacion = operacion;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public Usuario getCalificador() {

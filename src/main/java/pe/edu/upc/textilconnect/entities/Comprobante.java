@@ -28,8 +28,8 @@ public class Comprobante {
     private BigDecimal totalComprobante;
 
     @ManyToOne
-    @JoinColumn(name = "idOperacion")
-    private Operacion operacion;
+    @JoinColumn(name = "idPedido")
+    private Pedido pedido;
 
     @ManyToOne
     @JoinColumn(name = "idTipoDocumento")
@@ -38,14 +38,14 @@ public class Comprobante {
     public Comprobante() {
     }
 
-    public Comprobante(int idComprobante, String numeroComprobante, LocalDate fechaComprobante, String razonSocialComprobante, BigDecimal igvComprobante, BigDecimal totalComprobante, Operacion operacion, TipoDocumento tipoDocumento) {
+    public Comprobante(int idComprobante, String numeroComprobante, LocalDate fechaComprobante, String razonSocialComprobante, BigDecimal igvComprobante, BigDecimal totalComprobante, Pedido pedido, TipoDocumento tipoDocumento) {
         this.idComprobante = idComprobante;
         this.numeroComprobante = numeroComprobante;
         this.fechaComprobante = fechaComprobante;
         this.razonSocialComprobante = razonSocialComprobante;
         this.igvComprobante = igvComprobante;
         this.totalComprobante = totalComprobante;
-        this.operacion = operacion;
+        this.pedido = pedido;
         this.tipoDocumento = tipoDocumento;
     }
 
@@ -97,12 +97,12 @@ public class Comprobante {
         this.totalComprobante = totalComprobante;
     }
 
-    public Operacion getOperacion() {
-        return operacion;
+    public Pedido getPedido() {
+        return pedido;
     }
 
-    public void setOperacion(Operacion operacion) {
-        this.operacion = operacion;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public TipoDocumento getTipoDocumento() {

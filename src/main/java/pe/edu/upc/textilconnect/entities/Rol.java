@@ -1,42 +1,44 @@
-package pe.edu.upc.textilconnect.entities;
+    package pe.edu.upc.textilconnect.entities;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(
-        name = "Rol"
-)
-public class  Rol {
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
+    import jakarta.persistence.*;
+    @Entity
+    @Table(
+            name = "Rol"
     )
-    private int idRol;
+    public class  Rol {
+        @Id
+        @GeneratedValue(
+               strategy = GenerationType.IDENTITY
+        )
+        private int idRol;
 
-    @Column(name = "nombreRol",length = 50,nullable = false)
-    private String nombreRol;
+        @Column(name = "nombreRol", length = 50, nullable = false)
+        private String nombreRol;
 
-    public Rol() {
+        // ❌ Eliminado el @ManyToOne hacia Usuario
+        // Ahora Rol ya no tiene relación directa con Usuario
+
+        public Rol() {}
+
+        public Rol(int idRol, String nombreRol) {
+            this.idRol = idRol;
+            this.nombreRol = nombreRol;
+        }
+
+        // getters y setters
+        public int getIdRol() {
+            return idRol;
+        }
+
+        public void setIdRol(int idRol) {
+            this.idRol = idRol;
+        }
+
+        public String getNombreRol() {
+            return nombreRol;
+        }
+
+        public void setNombreRol(String nombreRol) {
+            this.nombreRol = nombreRol;
+        }
     }
-
-    public Rol(int idRol, String nombreRol) {
-        this.idRol = idRol;
-        this.nombreRol = nombreRol;
-    }
-
-    public int getIdRol() {
-        return idRol;
-    }
-
-    public void setIdRol(int idRol) {
-        this.idRol = idRol;
-    }
-
-    public String getNombreRol() {
-        return nombreRol;
-    }
-
-    public void setNombreRol(String nombreRol) {
-        this.nombreRol = nombreRol;
-    }
-}

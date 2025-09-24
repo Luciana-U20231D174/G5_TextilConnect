@@ -22,8 +22,8 @@ public class Calificacion {
     private LocalDate fechaCalificacion;
 
     @ManyToOne
-    @JoinColumn(name = "idOperacion")
-    private Operacion operacion;
+    @JoinColumn(name = "idPedido")
+    private Pedido pedido;
 
     @ManyToOne
     @JoinColumn(name = "idCalificador")
@@ -36,12 +36,12 @@ public class Calificacion {
     public Calificacion() {
     }
 
-    public Calificacion(int idCalificacion, int estrellas, String comentario, LocalDate fechaCalificacion, Operacion operacion, Usuario calificador, Usuario calificado) {
+    public Calificacion(int idCalificacion, int estrellas, String comentario, LocalDate fechaCalificacion, Pedido pedido, Usuario calificador, Usuario calificado) {
         this.idCalificacion = idCalificacion;
         this.estrellas = estrellas;
         this.comentario = comentario;
         this.fechaCalificacion = fechaCalificacion;
-        this.operacion = operacion;
+        this.pedido = pedido;
         this.calificador = calificador;
         this.calificado = calificado;
     }
@@ -78,12 +78,12 @@ public class Calificacion {
         this.fechaCalificacion = fechaCalificacion;
     }
 
-    public Operacion getOperacion() {
-        return operacion;
+    public Pedido getPedido() {
+        return pedido;
     }
 
-    public void setOperacion(Operacion operacion) {
-        this.operacion = operacion;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public Usuario getCalificador() {

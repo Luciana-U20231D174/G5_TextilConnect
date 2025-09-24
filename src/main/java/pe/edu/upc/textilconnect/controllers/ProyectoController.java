@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.upc.textilconnect.dtos.ProyectoDTO;
-import pe.edu.upc.textilconnect.dtos.UsuarioDTOInsert;
-import pe.edu.upc.textilconnect.dtos.UsuarioDTOList;
+import pe.edu.upc.textilconnect.dtos.*;
 import pe.edu.upc.textilconnect.entities.Proyecto;
 import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProyectoService;
@@ -60,6 +58,15 @@ public class ProyectoController {
         proyectoService.update(proyecto);
         return ResponseEntity.ok("Registro con ID " + proyecto.getIdProyecto() + " modificado correctamente.");
 
+    }
+    @GetMapping("/usuario/{idUsuario}")
+    public List<ProyectoListDTO> listarProyectosVisiblesPorUsuario(@PathVariable int idUsuario) {
+        return proyectoService.listarProyectosVisiblesPorUsuario(idUsuario);
+    }
+
+    @GetMapping("/tipo/{idTipoProyecto}/cantidad")
+    public ProyectoCountDTO contarProyectosPorTipo(@PathVariable int idTipoProyecto) {
+        return proyectoService.contarProyectosPorTipo(idTipoProyecto);
     }
 
 }
