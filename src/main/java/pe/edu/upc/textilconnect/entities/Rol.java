@@ -1,12 +1,15 @@
     package pe.edu.upc.textilconnect.entities;
 
     import jakarta.persistence.*;
-
     @Entity
-    @Table(name = "Rol")
-    public class Rol {
+    @Table(
+            name = "Rol"
+    )
+    public class  Rol {
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(
+               strategy = GenerationType.IDENTITY
+        )
         private int idRol;
 
         @Column(name = "nombreRol", length = 50, nullable = false)
