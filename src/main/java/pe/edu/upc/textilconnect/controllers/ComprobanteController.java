@@ -33,13 +33,13 @@ public class ComprobanteController {
             return (ComprobanteDTO)m.map(y, ComprobanteDTO.class);
         }).collect(Collectors.toList());
     }
-    @GetMapping("/operacion/{idOperacion}")
-    public List<ComprobanteListDTO> listarPorOperacion(@PathVariable int idOperacion) {
-        return comprobanteService.listarPorOperacionDTO(idOperacion);
+    @GetMapping("/pedido/{idPedido}")
+    public List<ComprobanteListDTO> listarPorPedido(@PathVariable int idPedido) {
+        return comprobanteService.listarPorOperacionDTO(idPedido);
     }
 
-    @GetMapping("/operacion/{idOperacion}/cantidad")
-    public ComprobanteCountDTO contarPorOperacion(@PathVariable int idOperacion) {
-        return comprobanteService.contarPorOperacionDTO(idOperacion);
+    @GetMapping("/pedido/{idPedido}/cantidad")
+    public ComprobanteCountDTO contarPorPedido(@PathVariable int idPedido) {
+        return comprobanteService.contarPorOperacionDTO(idPedido);
     }
 }
