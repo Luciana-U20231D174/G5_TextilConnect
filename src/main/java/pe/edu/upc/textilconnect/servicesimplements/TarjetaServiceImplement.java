@@ -46,7 +46,9 @@ public class TarjetaServiceImplement implements ITarjetaService {
     }
 
     @Override
-    public List<Tarjeta> buscarxmarcaTarjeta(String marca) {
-        return tarjetaRepository.buscarxmarcaTarjeta(marca);
+    public int contarxmarca(String marca) {
+        return tarjetaRepository.contarxmarca(marca);
     }
+
+
 }

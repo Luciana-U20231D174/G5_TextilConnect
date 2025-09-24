@@ -89,18 +89,9 @@ public class TarjetaController {
         return ResponseEntity.ok(listarDto);
     }
 
-    @GetMapping("/marcatarjeta")
-    public ResponseEntity<?> listarMarcaTarjeta(@RequestParam String marca) {
-        List<Tarjeta> tarjetas =tarjetaService.buscarxmarcaTarjeta(marca);
-        if (tarjetas.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se encontraron métodos de pago con la marca: " + marca);
-        }
-        List<TarjetaDTOList> listaDTO = tarjetas.stream().map(x -> {
-            ModelMapper m = new ModelMapper();
-            return m.map(x, TarjetaDTOList.class);
-        }).collect(Collectors.toList());
-
-        return ResponseEntity.ok(listaDTO);
+    @GetMapping("/count/{marca}")
+    public ResponseEntity<?> contarPorMarca(@PathVariable String marca) {
+        int cantidad = tarjetaService.contarxmarca(marca);
+        return ResponseEntity.ok(cantidad);
     }
 }

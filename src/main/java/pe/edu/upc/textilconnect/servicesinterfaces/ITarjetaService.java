@@ -11,5 +11,5 @@ public interface ITarjetaService {
     public void update(Tarjeta tarjeta);
     public Tarjeta listId(int id);
     public List<Tarjeta> listarxusuario(int idusuario);
-    public List<Tarjeta> buscarxmarcaTarjeta(String marca);
+    public int contarxmarca(String marca);
 }

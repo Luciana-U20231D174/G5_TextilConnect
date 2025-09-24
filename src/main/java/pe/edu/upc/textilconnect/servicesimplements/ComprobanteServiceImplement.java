@@ -28,8 +28,8 @@ public class ComprobanteServiceImplement implements IComprobanteService {
     }
 
     @Override
-    public List<ComprobanteListDTO> listarPorOperacionDTO(int idOperacion) {
-        return comprobanteRepository.listarPorOperacion(idOperacion)
+    public List<ComprobanteListDTO> listarPorOperacionDTO(int idPedido) {
+        return comprobanteRepository.listarPorPedido(idPedido)
                 .stream()
                 .map(c -> new ComprobanteListDTO(
                         c.getNumeroComprobante(),
@@ -40,8 +40,8 @@ public class ComprobanteServiceImplement implements IComprobanteService {
     }
 
     @Override
-    public ComprobanteCountDTO contarPorOperacionDTO(int idOperacion) {
-        int total = comprobanteRepository.contarPorOperacion(idOperacion);
+    public ComprobanteCountDTO contarPorOperacionDTO(int idPedido) {
+        int total = comprobanteRepository.contarPorPedido(idPedido);
         return new ComprobanteCountDTO(total);
     }
 

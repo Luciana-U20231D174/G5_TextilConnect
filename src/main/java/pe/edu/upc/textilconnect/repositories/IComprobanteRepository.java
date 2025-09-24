@@ -10,10 +10,10 @@ import java.util.List;
 
 @Repository
 public interface IComprobanteRepository extends JpaRepository<Comprobante,Integer> {
-    @Query("SELECT c FROM Comprobante c WHERE c.operacion.idOperacion = :idOperacion ORDER BY c.fechaComprobante DESC")
-    public List<Comprobante> listarPorOperacion(@Param("idOperacion") int idOperacion);
+    @Query("SELECT c FROM Comprobante c WHERE c.pedido.idPedido = :idPedido ORDER BY c.fechaComprobante DESC")
+    public List<Comprobante> listarPorPedido(@Param("idPedido") int idPedido);
 
-    @Query("SELECT COUNT(c) FROM Comprobante c WHERE c.operacion.idOperacion = :idOperacion")
-    public int contarPorOperacion(@Param("idOperacion") int idOperacion);
+    @Query("SELECT COUNT(c) FROM Comprobante c WHERE c.pedido.idPedido = :idPedido")
+    public int contarPorPedido(@Param("idPedido") int idPedido);
 
 }

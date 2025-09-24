@@ -11,6 +11,6 @@ public interface IComprobanteService {
     public List<Comprobante> list();
     public void insert(Comprobante comprobante);
 
-    public List<ComprobanteListDTO> listarPorOperacionDTO(int idOperacion);
-    public ComprobanteCountDTO contarPorOperacionDTO(int idOperacion);
+    public List<ComprobanteListDTO> listarPorOperacionDTO(int idPedido);
+    public ComprobanteCountDTO contarPorOperacionDTO(int idPedido);
 }

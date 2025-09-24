@@ -13,6 +13,6 @@ public interface ITarjetaRepository extends JpaRepository<Tarjeta,Integer> {
     @Query("SELECT m FROM Tarjeta m WHERE m.usuario.idUsuario = :idUsuario")
     public List<Tarjeta> listarxusuario(int idUsuario);
 
-    @Query("Select m FROM Tarjeta m WHERE m.marcaTarjeta like %:marca%")
-    public List<Tarjeta> buscarxmarcaTarjeta(@Param("marcatarjeta") String marca);
+    @Query("SELECT COUNT(t) FROM Tarjeta t WHERE t.marcaTarjeta like %:marca%")
+    public int contarxmarca(@Param("marcatarjeta") String marca);
 }
