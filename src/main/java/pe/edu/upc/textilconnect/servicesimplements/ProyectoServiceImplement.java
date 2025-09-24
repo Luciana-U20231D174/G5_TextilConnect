@@ -32,12 +32,16 @@ public class ProyectoServiceImplement implements IProyectoService {
     @Override
     public void delete(int id) {
         proyectoRepository.deleteById(id);
-
     }
 
     @Override
     public void update(Proyecto Proyecto) {
         proyectoRepository.save(Proyecto);
+    }
+
+    @Override
+    public List<Proyecto> buscarxTitulo(String titulo) {
+        return proyectoRepository.buscarTituloPy(titulo);
     }
 
 }

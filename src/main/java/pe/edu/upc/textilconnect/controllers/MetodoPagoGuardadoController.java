@@ -30,7 +30,7 @@ public class MetodoPagoGuardadoController {
         this.metodoPagoGuardadoService.insert(mpg);
     }
 
-    @GetMapping({"/usuarios"})
+    @GetMapping()
     public List<MetodoPagoGuardadoDTOList> listar() {
         return this.metodoPagoGuardadoService.list().stream().map((y) -> {
             ModelMapper m = new ModelMapper();

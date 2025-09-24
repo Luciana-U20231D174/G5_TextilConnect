@@ -71,7 +71,7 @@ public class TipoDocumentoController {
         return ResponseEntity.ok("Registro con ID " + tp.getIdTipoDocumento() + " modificado correctamente.");
     }
 
-    @GetMapping({"/busquedas"})
+    @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<TipoDocumento> tipoDocumentos = this.dS.buscarService(n);
         if (tipoDocumentos.isEmpty()) {

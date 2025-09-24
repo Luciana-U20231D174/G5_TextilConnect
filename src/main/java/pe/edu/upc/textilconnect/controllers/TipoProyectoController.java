@@ -71,7 +71,7 @@ public class TipoProyectoController {
         return ResponseEntity.ok("Registro con ID " + proy.getIdTipoProyecto() + " modificado correctamente.");
     }
 
-    @GetMapping({"/busquedas"})
+    @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<TipoProyecto> tipoProyectos = this.dS.buscarService(n);
         if (tipoProyectos.isEmpty()) {

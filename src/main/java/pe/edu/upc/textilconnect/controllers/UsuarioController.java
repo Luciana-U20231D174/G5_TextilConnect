@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.upc.textilconnect.dtos.RolDTO;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOInsert;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOList;
 import pe.edu.upc.textilconnect.entities.Usuario;
@@ -28,7 +27,7 @@ public class UsuarioController {
         this.usuarioService.insert(u);
     }
 
-    @GetMapping({"/roles"})
+    @GetMapping
     public List<UsuarioDTOList> listar() {
         return this.usuarioService.list().stream().map((y) -> {
             ModelMapper m = new ModelMapper();
@@ -74,7 +73,7 @@ public class UsuarioController {
         return ResponseEntity.ok("Registro con ID " + usuario.getIdUsuario() + " modificado correctamente.");
     }
 
-    @GetMapping({"/bnombres"})
+    @GetMapping("/bnombres")
     public ResponseEntity<?> buscarNombre(@RequestParam String n) {
         List<Usuario> usuarios = this.usuarioService.buscarxNombre(n);
         if (usuarios.isEmpty()) {
@@ -88,7 +87,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping({"/bemails"})
+    @GetMapping("/bemails")
     public ResponseEntity<?> buscarEmail(@RequestParam String e) {
         List<Usuario> usuarios = this.usuarioService.buscarxEmail(e);
         if (usuarios.isEmpty()) {

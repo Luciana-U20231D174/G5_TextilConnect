@@ -70,7 +70,7 @@ public class RolController {
         return ResponseEntity.ok("Registro con ID " + rol.getIdRol() + " modificado correctamente.");
     }
 
-    @GetMapping({"/busquedas"})
+    @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<Rol> roles = this.dS.buscarService(n);
         if (roles.isEmpty()) {
