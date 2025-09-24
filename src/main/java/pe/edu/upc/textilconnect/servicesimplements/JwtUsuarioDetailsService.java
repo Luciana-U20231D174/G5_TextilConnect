@@ -22,11 +22,11 @@ public class JwtUsuarioDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String nombreUsuario) throws UsernameNotFoundException {
-        Usuario u = repo.findOneByUsername(nombreUsuario);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario u = repo.findByNombreUsuario(username);
 
         if (u == null) {
-            throw new UsernameNotFoundException(String.format("Usuario no encontrado para el usuario %s", nombreUsuario));
+            throw new UsernameNotFoundException(String.format("Usuario no encontrado para el usuario %s", username));
         }
 
         Set<GrantedAuthority> authorities = new HashSet<>();
@@ -41,14 +41,15 @@ public class JwtUsuarioDetailsService implements UserDetailsService {
         }
 
         return new org.springframework.security.core.userdetails.User(
-                (u.getEmailUsuario() != null ? u.getEmailUsuario() : u.getNombreUsuario()),
-                u.getContrasenaUsuario(), // Asegúrate que esté en BCrypt
+                u.getNombreUsuario(),      // 👈 usar siempre el nombre de usuario
+                u.getContrasenaUsuario(),  // contraseña encriptada (BCrypt en BD)
                 true,   // enabled
                 true,   // accountNonExpired
                 true,   // credentialsNonExpired
                 true,   // accountNonLocked
-                authorities
+                authorities                // roles/authorities
         );
+
 
     }
 }
