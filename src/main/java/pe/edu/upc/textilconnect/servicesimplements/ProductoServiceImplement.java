@@ -6,6 +6,7 @@ import pe.edu.upc.textilconnect.entities.Producto;
 import pe.edu.upc.textilconnect.repositories.IProductoRepository;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProductoService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -52,5 +53,10 @@ public class ProductoServiceImplement implements IProductoService {
     @Override
     public List<Producto> buscarxColor(String color) {
         return productoRepository.buscarColorPd(color);
+    }
+
+    @Override
+    public List<Producto> buscarxPrecio(BigDecimal min, BigDecimal max) {
+        return productoRepository.buscarPrecioPd(min,max);
     }
 }

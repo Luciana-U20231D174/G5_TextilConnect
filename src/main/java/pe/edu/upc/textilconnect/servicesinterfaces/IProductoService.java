@@ -3,6 +3,7 @@ package pe.edu.upc.textilconnect.servicesinterfaces;
 import pe.edu.upc.textilconnect.entities.Producto;
 import pe.edu.upc.textilconnect.entities.Rol;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IProductoService {
@@ -14,4 +15,6 @@ public interface IProductoService {
     public List<Producto> buscarxNombre(String nombre);
     public List<Producto> buscarxCategoria(String categoria);
     public List<Producto> buscarxColor(String color);
+    List<Producto> buscarxPrecio(BigDecimal min, BigDecimal max);
+
 }

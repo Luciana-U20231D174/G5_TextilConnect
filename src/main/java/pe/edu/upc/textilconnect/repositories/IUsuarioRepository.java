@@ -10,9 +10,11 @@ import java.util.List;
 
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuario,Integer> {
-    @Query("Select usuario from Usuario usuario where usuario.nombreUsuario like %:nombre%")
-    public List<Usuario> buscarNombreU(@Param("nombre") String nombre);
+    @Query("SELECT u FROM Usuario u WHERE u.nombreUsuario LIKE CONCAT('%', :nombre, '%')")
+    List<Usuario> buscarNombreU(@Param("nombre") String nombre);
 
-    @Query("Select usuario from Usuario usuario where usuario.emailUsuario like %:email%")
-    public List<Usuario> buscarEmailU(@Param("email") String email);
+
+    @Query("SELECT u FROM Usuario u WHERE u.emailUsuario LIKE CONCAT('%', :email, '%')")
+    List<Usuario> buscarEmailU(@Param("email") String email);
+
 }
