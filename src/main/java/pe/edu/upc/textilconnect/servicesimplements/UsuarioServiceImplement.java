@@ -19,6 +19,7 @@ public class UsuarioServiceImplement implements IUsuarioService {
         return usuarioRepository.findAll();
     }
 
+
     @Override
     public void insert(Usuario usuario) {
         usuarioRepository.save(usuario);

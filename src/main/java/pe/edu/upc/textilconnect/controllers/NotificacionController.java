@@ -24,7 +24,7 @@ public class NotificacionController {
         this.notificacionService.insert(n);
     }
 
-    @GetMapping({"/usuarios"})
+    @GetMapping()
     public List<NotificacionDTO> listar() {
         return this.notificacionService.list().stream().map((y) -> {
             ModelMapper m = new ModelMapper();

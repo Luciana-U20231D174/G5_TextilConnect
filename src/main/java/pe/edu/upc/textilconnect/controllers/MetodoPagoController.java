@@ -71,7 +71,7 @@ public class MetodoPagoController {
         return ResponseEntity.ok("Registro con ID " + meto.getIdMetodoPago() + " modificado correctamente.");
     }
 
-    @GetMapping({"/busquedas"})
+    @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<MetodoPago> metodoPagos = this.metodoPagoService.buscarService(n);
         if (metodoPagos.isEmpty()) {

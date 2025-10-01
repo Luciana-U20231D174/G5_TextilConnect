@@ -71,7 +71,7 @@ public class TipoProductoController {
         return ResponseEntity.ok("Registro con ID " + prod.getIdTipoProducto() + " modificado correctamente.");
     }
 
-    @GetMapping({"/busquedas"})
+    @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<TipoProducto> tipoProductos = this.dS.buscarService(n);
         if (tipoProductos.isEmpty()) {
