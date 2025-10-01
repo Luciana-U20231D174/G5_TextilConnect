@@ -60,7 +60,7 @@ public class UsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity<String> modificar(@RequestBody UsuarioDTOList udto) {
+    public ResponseEntity<String> modificar(@RequestBody UsuarioDTOInsert udto) {
         ModelMapper m = new ModelMapper();
         Usuario usuario = m.map(udto, Usuario.class);
 

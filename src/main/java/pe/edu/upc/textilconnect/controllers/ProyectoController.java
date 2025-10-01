@@ -5,11 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.upc.textilconnect.dtos.ProductoDTO;
 import pe.edu.upc.textilconnect.dtos.ProyectoDTO;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOInsert;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOList;
-import pe.edu.upc.textilconnect.entities.Producto;
 import pe.edu.upc.textilconnect.entities.Proyecto;
 import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProyectoService;
@@ -61,32 +59,7 @@ public class ProyectoController {
         }
         proyectoService.update(proyecto);
         return ResponseEntity.ok("Registro con ID " + proyecto.getIdProyecto() + " modificado correctamente.");
+
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
-        Proyecto proyecto = proyectoService.listId(id);
-        if (proyecto == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("No existe un registro con el ID: " + id);
-        }
-        ModelMapper m = new ModelMapper();
-        ProyectoDTO pydto = m.map(proyecto, ProyectoDTO.class);
-        return ResponseEntity.ok(pydto);
-    }
-
-    @GetMapping({"/btitulos"})
-    public ResponseEntity<?> buscarTitulo(@RequestParam String t) {
-        List<Proyecto> proyectos = this.proyectoService.buscarxTitulo(t);
-        if (proyectos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron proyectos con este titulo: " + t);
-        } else {
-            List<ProyectoDTO> listaDTO = proyectos.stream().map((x) -> {
-                ModelMapper m = new ModelMapper();
-                return (ProyectoDTO) m.map(x, ProyectoDTO.class);
-            }).collect(Collectors.toList());
-            return ResponseEntity.ok(listaDTO);
-        }
-    }
 }

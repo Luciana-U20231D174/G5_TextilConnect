@@ -3,7 +3,9 @@ package pe.edu.upc.textilconnect.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pe.edu.upc.textilconnect.dtos.ComprobanteCountDTO;
 import pe.edu.upc.textilconnect.dtos.ComprobanteDTO;
+import pe.edu.upc.textilconnect.dtos.ComprobanteListDTO;
 import pe.edu.upc.textilconnect.entities.Comprobante;
 import pe.edu.upc.textilconnect.servicesinterfaces.IComprobanteService;
 
@@ -30,5 +32,14 @@ public class ComprobanteController {
             ModelMapper m = new ModelMapper();
             return (ComprobanteDTO)m.map(y, ComprobanteDTO.class);
         }).collect(Collectors.toList());
+    }
+    @GetMapping("/pedido/{idPedido}")
+    public List<ComprobanteListDTO> listarPorPedido(@PathVariable int idPedido) {
+        return comprobanteService.listarPorOperacionDTO(idPedido);
+    }
+
+    @GetMapping("/pedido/{idPedido}/cantidad")
+    public ComprobanteCountDTO contarPorPedido(@PathVariable int idPedido) {
+        return comprobanteService.contarPorOperacionDTO(idPedido);
     }
 }

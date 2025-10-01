@@ -32,13 +32,13 @@ public class Entrega {
     private String estadoEntrega;
 
     @ManyToOne
-    @JoinColumn(name = "idOperacion")
-    private Operacion operacion;
+    @JoinColumn(name = "idPedido")
+    private Pedido pedido;
 
     public Entrega() {
     }
 
-    public Entrega(int idEntrega, String tipoEntrega, String direccionEntrega, BigDecimal latitudEntrega, BigDecimal longitudEntrega, LocalDateTime fechaEntrega, String estadoEntrega, Operacion operacion) {
+    public Entrega(int idEntrega, String tipoEntrega, String direccionEntrega, BigDecimal latitudEntrega, BigDecimal longitudEntrega, LocalDateTime fechaEntrega, String estadoEntrega, Pedido pedido) {
         this.idEntrega = idEntrega;
         this.tipoEntrega = tipoEntrega;
         this.direccionEntrega = direccionEntrega;
@@ -46,7 +46,7 @@ public class Entrega {
         this.longitudEntrega = longitudEntrega;
         this.fechaEntrega = fechaEntrega;
         this.estadoEntrega = estadoEntrega;
-        this.operacion = operacion;
+        this.pedido = pedido;
     }
 
     public int getIdEntrega() {
@@ -105,11 +105,11 @@ public class Entrega {
         this.estadoEntrega = estadoEntrega;
     }
 
-    public Operacion getOperacion() {
-        return operacion;
+    public Pedido getPedido() {
+        return pedido;
     }
 
-    public void setOperacion(Operacion operacion) {
-        this.operacion = operacion;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 }
