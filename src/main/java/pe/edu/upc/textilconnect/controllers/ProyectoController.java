@@ -58,5 +58,21 @@ public class ProyectoController {
 
     }
 
+    @GetMapping("/btitulos")
+    public ResponseEntity<?> buscarTitulo(@RequestParam String titulo) {
+        List<Proyecto> proyectos = proyectoService.buscarxTitulo(titulo);
 
+        if (proyectos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontraron proyectos con el título: " + titulo);
+        } else {
+            List<ProyectoDTOList> listaDTO = proyectos.stream()
+                    .map(p -> {
+                        ModelMapper m = new ModelMapper();
+                        return m.map(p, ProyectoDTOList.class);
+                    })
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        }
+    }
 }
