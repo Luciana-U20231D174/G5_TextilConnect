@@ -58,7 +58,7 @@ public class ProyectoController {
 
     }
 
-    @GetMapping("/btitulos")
+    @GetMapping("/btitulo")
     public ResponseEntity<?> buscarTitulo(@RequestParam String titulo) {
         List<Proyecto> proyectos = proyectoService.buscarxTitulo(titulo);
 
