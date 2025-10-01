@@ -23,4 +23,24 @@ public class EntregaServiceImplement implements IEntregaService {
     public void insert(Entrega entrega) {
         entregaRepository.save(entrega);
     }
+
+    @Override
+    public Entrega listId(int id) {
+        return entregaRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void update(Entrega entrega) {
+        entregaRepository.save(entrega);
+    }
+
+    @Override
+    public List<Entrega> buscarxEstado(String estado) {
+        return entregaRepository.buscarEstadoE(estado);
+    }
+
+    @Override
+    public List<Entrega> buscarxTipo(String tipo) {
+        return entregaRepository.buscarTipoE(tipo);
+    }
 }

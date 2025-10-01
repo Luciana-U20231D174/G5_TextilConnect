@@ -40,4 +40,14 @@ public class ProyectoServiceImplement implements IProyectoService {
         proyectoRepository.save(Proyecto);
     }
 
+    @Override
+    public List<Proyecto> buscarxTitulo(String titulo) {
+        return proyectoRepository.buscarTitloPy(titulo);
+    }
+
+    @Override
+    public List<Proyecto> buscarxUsuario(Integer idUsuario) {
+        return proyectoRepository.buscarUsuarioPy(idUsuario);
+    }
+
 }

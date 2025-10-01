@@ -2,7 +2,6 @@ package pe.edu.upc.textilconnect.dtos;
 
 public class ProyectoCountDTO {
     private int cantidad;
-
     public ProyectoCountDTO(int cantidad) {
         this.cantidad = cantidad;
     }

@@ -1,17 +1,14 @@
 package pe.edu.upc.textilconnect.dtos;
 
+import pe.edu.upc.textilconnect.entities.Usuario;
+
 import java.time.LocalDate;
 
-public class ProyectoListDTO {
+public class ProyectoDTOList {
     private String tituloProyecto;
     private String descripcionProyecto;
     private LocalDate fechaCreacion;
-
-    public ProyectoListDTO(String tituloProyecto, String descripcionProyecto, LocalDate fechaCreacion) {
-        this.tituloProyecto = tituloProyecto;
-        this.descripcionProyecto = descripcionProyecto;
-        this.fechaCreacion = fechaCreacion;
-    }
+    private Usuario usuario;
 
     public String getTituloProyecto() {
         return tituloProyecto;
@@ -35,5 +32,13 @@ public class ProyectoListDTO {
 
     public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

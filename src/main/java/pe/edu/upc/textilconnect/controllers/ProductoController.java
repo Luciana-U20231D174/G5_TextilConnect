@@ -11,6 +11,7 @@ import pe.edu.upc.textilconnect.entities.Producto;
 import pe.edu.upc.textilconnect.entities.Rol;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProductoService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,4 +115,24 @@ public class ProductoController {
             return ResponseEntity.ok(listaDTO);
         }
     }
+
+    @GetMapping("/bprecio")
+    public ResponseEntity<?> buscarPorRangoPrecio(@RequestParam BigDecimal min,
+                                                  @RequestParam BigDecimal max) {
+        List<Producto> productos = this.productoService.buscarxPrecio(min, max);
+
+        if (productos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontraron productos en el rango: " + min + " - " + max);
+        } else {
+            List<ProductoDTO> listaDTO = productos.stream()
+                    .map(p -> {
+                        ModelMapper m = new ModelMapper();
+                        return m.map(p, ProductoDTO.class);
+                    })
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        }
+    }
+
 }
