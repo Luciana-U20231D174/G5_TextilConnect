@@ -1,5 +1,6 @@
 package pe.edu.upc.textilconnect.securities;
 
+
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,41 +13,45 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pe.edu.upc.textilconnect.servicesimplements.JwtUsuarioDetailsService;
+import pe.edu.upc.textilconnect.servicesimplements.JwtUserDetailsService;
 
 import java.io.IOException;
 
+//Clase 6
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
     @Autowired
-    private JwtUsuarioDetailsService jwtUsuarioDetailsService;
+    private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         final String requestTokenHeader = request.getHeader("Authorization");
         String username = null;
         String jwtToken = null;
-
+        // JWT Token is in the form "Bearer token". Remove Bearer word and get
+        // only the Token
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
-            try{
+            try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            }catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 System.out.println("No se puede encontrar el token JWT");
             } catch (ExpiredJwtException e) {
                 System.out.println("Token JWT ha expirado");
             }
         } else {
-        logger.warn("JWT Token no inicia con la palabra Bearer");
-        System.out.println(requestTokenHeader);
+            logger.warn("JWT Token no inicia con la palabra Bearer");
+            System.out.println(requestTokenHeader);
         }
 
+
+        // Once we get the token validate it.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = this.jwtUsuarioDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 
             // if token is valid configure Spring Security to manually set
             // authentication
@@ -62,6 +67,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-        filterChain.doFilter(request, response);
+        chain.doFilter(request, response);
     }
+
+
 }
