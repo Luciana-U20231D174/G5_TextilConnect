@@ -1,44 +1,51 @@
-    package pe.edu.upc.textilconnect.entities;
+package pe.edu.upc.textilconnect.entities;
 
-    import jakarta.persistence.*;
-    @Entity
-    @Table(
-            name = "Rol"
-    )
-    public class  Rol {
-        @Id
-        @GeneratedValue(
-               strategy = GenerationType.IDENTITY
-        )
-        private int idRol;
+import jakarta.persistence.*;
 
-        @Column(name = "nombreRol", length = 50, nullable = false)
-        private String nombreRol;
+import java.io.Serializable;
 
-        // ❌ Eliminado el @ManyToOne hacia Usuario
-        // Ahora Rol ya no tiene relación directa con Usuario
+@Entity
+@Table(name = "Rol")
+public class Rol implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idRol;
 
-        public Rol() {}
+    @Column(name = "nombreRol", length = 200, nullable = false)
+    private String nombreRol;
 
-        public Rol(int idRol, String nombreRol) {
-            this.idRol = idRol;
-            this.nombreRol = nombreRol;
-        }
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Usuario usuario;
 
-        // getters y setters
-        public int getIdRol() {
-            return idRol;
-        }
+    public Rol() {}
 
-        public void setIdRol(int idRol) {
-            this.idRol = idRol;
-        }
-
-        public String getNombreRol() {
-            return nombreRol;
-        }
-
-        public void setNombreRol(String nombreRol) {
-            this.nombreRol = nombreRol;
-        }
+    public Rol(int idRol, String nombreRol) {
+        this.idRol = idRol;
+        this.nombreRol = nombreRol;
     }
+
+    public int getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
+    }
+
+    public String getNombreRol() {
+        return nombreRol;
+    }
+
+    public void setNombreRol(String nombreRol) {
+        this.nombreRol = nombreRol;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+}
