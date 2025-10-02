@@ -1,11 +1,12 @@
 package pe.edu.upc.textilconnect.entities;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table (name = "Usuario")
@@ -21,8 +22,11 @@ public class Usuario implements Serializable {
     @Column(name = "emailUsuario", length = 100, nullable = false, unique = true)
     private String emailUsuario;
 
-    @Column(name = "contrasenaUsuario", length = 255, nullable = false)
-    private String contrasenaUsuario;
+    @Column(name = "username", length = 50, nullable = false)
+    private String username;
+
+    @Column(name = "password", length = 200, nullable = false)
+    private String password;
 
     @Column(name = "telefonoUsuario", length = 20, nullable = false)
     private String telefonoUsuario;
@@ -39,24 +43,13 @@ public class Usuario implements Serializable {
     @Column(name = "totalCalificacion", nullable = false)
     private int totalCalificacion;
 
-    @ManyToOne
-    @JoinColumn(name = "idRol", nullable = false)
-    private Rol rols;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Rol> roles;
+
+    private Boolean estado;
 
     public Usuario() {
-    }
-
-    public Usuario(int idUsuario, String nombreUsuario, String emailUsuario, String contrasenaUsuario, String telefonoUsuario, String direccionUsuario, LocalDate fechaRegistroUsuario, BigDecimal promedioCalificacion, int totalCalificacion, Rol rols) {
-        this.idUsuario = idUsuario;
-        this.nombreUsuario = nombreUsuario;
-        this.emailUsuario = emailUsuario;
-        this.contrasenaUsuario = contrasenaUsuario;
-        this.telefonoUsuario = telefonoUsuario;
-        this.direccionUsuario = direccionUsuario;
-        this.fechaRegistroUsuario = fechaRegistroUsuario;
-        this.promedioCalificacion = promedioCalificacion;
-        this.totalCalificacion = totalCalificacion;
-        this.rols = rols;
     }
 
     public int getIdUsuario() {
@@ -83,13 +76,7 @@ public class Usuario implements Serializable {
         this.emailUsuario = emailUsuario;
     }
 
-    public String getContrasenaUsuario() {
-        return contrasenaUsuario;
-    }
 
-    public void setContrasenaUsuario(String contrasenaUsuario) {
-        this.contrasenaUsuario = contrasenaUsuario;
-    }
 
     public String getTelefonoUsuario() {
         return telefonoUsuario;
@@ -131,15 +118,30 @@ public class Usuario implements Serializable {
         this.totalCalificacion = totalCalificacion;
     }
 
-    public Rol getRols() {
-        return rols;
+    public List<Rol> getRoles() {
+        return roles;
     }
 
-    public void setRols(Rol rols) {
-        this.rols = rols;
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
     }
 
-    public Rol getRol() {
-        return rols;
+
+    public String getUsername() {
+        return username;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {this.password = password;}
+
+    public Boolean getEstado() {return estado;}
+
+    public void setEstado(Boolean estado) {this.estado = estado;}
 }

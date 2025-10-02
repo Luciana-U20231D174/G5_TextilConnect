@@ -10,6 +10,8 @@ import java.util.List;
 
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuario,Integer> {
+    public Usuario findOneByUsername(String username);
+
     @Query("SELECT u FROM Usuario u WHERE u.nombreUsuario LIKE CONCAT('%', :nombre, '%')")
     List<Usuario> buscarNombreU(@Param("nombre") String nombre);
 
