@@ -95,19 +95,6 @@ public class ComentarioProyectoController {
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
-    @PutMapping
-    public ResponseEntity<String> modificar(@RequestBody ComentarioProyectoDTO cpdto) {
-        ModelMapper m = new ModelMapper();
-        ComentarioProyecto comentarioProyecto = m.map(cpdto, ComentarioProyecto.class);
-
-        ComentarioProyecto existente = comentarioProyectoService.listId(comentarioProyecto.getIdComentarioProyecto());
-        if (existente == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se puede modificar. No existe un registro con el ID: " + comentarioProyecto.getIdComentarioProyecto());
-        }
-        comentarioProyectoService.update(comentarioProyecto);
-        return ResponseEntity.ok("Registro con ID " + comentarioProyecto.getComentarioProyecto() + " modificado correctamente.");
-    }
 
     @GetMapping("/proyecto/{idProyecto}")
     public ResponseEntity<?> listarPorProyecto(@PathVariable("idProyecto") int idProyecto) {
