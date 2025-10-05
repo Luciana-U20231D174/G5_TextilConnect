@@ -28,7 +28,7 @@ public class TarjetaController {
         this.tarjetaService.insert(mpg);
     }
 
-    @GetMapping({"/usuarios"})
+    @GetMapping()
     public List<TarjetaDTOList> listar() {
         return this.tarjetaService.list().stream().map((y) -> {
             ModelMapper m = new ModelMapper();
@@ -75,7 +75,7 @@ public class TarjetaController {
     }
 
     @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<?> listarPorUsuario(@PathVariable("id") int idUsuario) {
+    public ResponseEntity<?> listarPorUsuario(@PathVariable("idUsuario") int idUsuario) {
         List<Tarjeta> tarjetas = tarjetaService.listarxusuario(idUsuario);
 
         if (tarjetas.isEmpty()) {
@@ -89,9 +89,9 @@ public class TarjetaController {
         return ResponseEntity.ok(listarDto);
     }
 
-    @GetMapping("/count/{marca}")
+    @GetMapping("/cantidad/{marca}")
     public ResponseEntity<?> contarPorMarca(@PathVariable String marca) {
         int cantidad = tarjetaService.contarxmarca(marca);
-        return ResponseEntity.ok(cantidad);
+        return ResponseEntity.ok("La cantidad de tarjetas " + marca + " es " + cantidad);
     }
 }

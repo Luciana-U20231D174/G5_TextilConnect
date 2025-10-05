@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.ComprobanteCountDTO;
 import pe.edu.upc.textilconnect.dtos.ComprobanteDTO;
 import pe.edu.upc.textilconnect.dtos.ComprobanteListDTO;
-import pe.edu.upc.textilconnect.dtos.EntregaDTO;
 import pe.edu.upc.textilconnect.entities.Comprobante;
 import pe.edu.upc.textilconnect.servicesinterfaces.IComprobanteService;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,8 +48,8 @@ public class ComprobanteController {
     }
 
     @GetMapping("/brangofechas")
-    public ResponseEntity<?> buscarRangoFechas(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
-                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
+    public ResponseEntity<?> buscarRangoFechas(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin) {
         List<Comprobante> comprobantes = comprobanteService.buscarxRangoFechas(inicio, fin);
 
         if (comprobantes.isEmpty()) {

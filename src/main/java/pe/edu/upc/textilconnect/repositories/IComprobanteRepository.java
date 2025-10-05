@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pe.edu.upc.textilconnect.entities.Comprobante;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -18,5 +18,5 @@ public interface IComprobanteRepository extends JpaRepository<Comprobante,Intege
     public int contarPorPedido(@Param("idPedido") int idPedido);
 
     @Query("SELECT c FROM Comprobante c WHERE c.fechaComprobante BETWEEN :inicio AND :fin")
-    List<Comprobante> buscarRangoFechasC(@Param("inicio") LocalDateTime inicio, @Param("fin") LocalDateTime fin);
+    List<Comprobante> buscarRangoFechasC(@Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin);
 }
