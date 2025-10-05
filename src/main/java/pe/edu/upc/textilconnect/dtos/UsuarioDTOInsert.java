@@ -9,7 +9,7 @@ public class UsuarioDTOInsert {
     private int idUsuario;
     private String nombreUsuario;
     private String emailUsuario;
-    private String contrasenaUsuario;
+    private String password;
     private String telefonoUsuario;
     private String direccionUsuario;
     private LocalDate fechaRegistroUsuario;
@@ -41,12 +41,12 @@ public class UsuarioDTOInsert {
         this.emailUsuario = emailUsuario;
     }
 
-    public String getContrasenaUsuario() {
-        return contrasenaUsuario;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContrasenaUsuario(String contrasenaUsuario) {
-        this.contrasenaUsuario = contrasenaUsuario;
+    public void getPassword(String password) {
+        this.password = password;
     }
 
     public String getTelefonoUsuario() {

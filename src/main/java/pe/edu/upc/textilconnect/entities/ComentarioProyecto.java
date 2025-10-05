@@ -1,7 +1,7 @@
 package pe.edu.upc.textilconnect.entities;
 
 import jakarta.persistence.*;
-
+import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +14,8 @@ public class ComentarioProyecto {
     @Column(name = "comentarioProyecto",length = 50, nullable = false)
     private String comentarioProyecto;
 
-    @Column(name = "fechaComentario",nullable = false)
+    @CreationTimestamp
+    @Column(name = "fechaComentario", nullable = false, updatable = false)
     private LocalDateTime fechaComentario;
 
     @ManyToOne

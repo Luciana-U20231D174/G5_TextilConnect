@@ -57,7 +57,6 @@ public class ProyectoController {
         return ResponseEntity.ok("Registro con ID " + proyecto.getIdProyecto() + " modificado correctamente.");
 
     }
-
     @GetMapping("/btitulo")
     public ResponseEntity<?> buscarTitulo(@RequestParam String titulo) {
         List<Proyecto> proyectos = proyectoService.buscarxTitulo(titulo);
@@ -74,5 +73,19 @@ public class ProyectoController {
                     .collect(Collectors.toList());
             return ResponseEntity.ok(listaDTO);
         }
+    }
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<?> buscarUsuario(@PathVariable("idUsuario") int idUsuario) {
+        List<Proyecto> proyectos = proyectoService.buscarxUsuario(idUsuario);
+
+        if (proyectos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El usuario con ID " + idUsuario + " no tiene proyectos guardados.");
+        }
+        List<ProyectoDTOList> listarDto= proyectos.stream().map(x->{
+            ModelMapper m = new ModelMapper();
+            return m.map(x, ProyectoDTOList.class);
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(listarDto);
     }
 }

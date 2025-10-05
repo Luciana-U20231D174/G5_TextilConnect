@@ -10,6 +10,6 @@ public interface ITarjetaService {
     public void delete(int id);
     public void update(Tarjeta tarjeta);
     public Tarjeta listId(int id);
-    public List<Tarjeta> listarxusuario(int idusuario);
+    public List<Tarjeta> listarxusuario(int idUsuario);
     public int contarxmarca(String marca);
 }
