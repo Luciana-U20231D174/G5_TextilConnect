@@ -2,7 +2,7 @@ package pe.edu.upc.textilconnect.entities;
 
 import jakarta.persistence.*;
 //import org.springframework.security.core.userdetails.UserDetails;
-
+import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,7 +34,8 @@ public class Usuario implements Serializable {
     @Column(name = "direccionUsuario", length = 200, nullable = false)
     private String direccionUsuario;
 
-    @Column(name = "fechaRegistroUsuario", nullable = false)
+    @CreationTimestamp
+    @Column(name = "fechaRegistroUsuario", nullable = false, updatable = false)
     private LocalDate fechaRegistroUsuario;
 
     @Column(name = "promedioCalificacion", nullable = false, precision = 12, scale = 2)
