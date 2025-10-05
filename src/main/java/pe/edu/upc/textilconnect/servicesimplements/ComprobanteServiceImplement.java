@@ -8,7 +8,7 @@ import pe.edu.upc.textilconnect.entities.Comprobante;
 import pe.edu.upc.textilconnect.repositories.IComprobanteRepository;
 import pe.edu.upc.textilconnect.servicesinterfaces.IComprobanteService;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +47,7 @@ public class ComprobanteServiceImplement implements IComprobanteService {
     }
 
     @Override
-    public List<Comprobante> buscarxRangoFechas(LocalDateTime inicio, LocalDateTime fin) {
+    public List<Comprobante> buscarxRangoFechas(LocalDate inicio, LocalDate fin) {
         return comprobanteRepository.buscarRangoFechasC(inicio, fin);
     }
 }

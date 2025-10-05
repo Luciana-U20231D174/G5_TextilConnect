@@ -41,8 +41,8 @@ public class TarjetaServiceImplement implements ITarjetaService {
     }
 
     @Override
-    public List<Tarjeta> listarxusuario(int idusuario) {
-        return tarjetaRepository.listarxusuario(idusuario);
+    public List<Tarjeta> listarxusuario(int idUsuario) {
+        return tarjetaRepository.listarxusuario(idUsuario);
     }
 
     @Override
