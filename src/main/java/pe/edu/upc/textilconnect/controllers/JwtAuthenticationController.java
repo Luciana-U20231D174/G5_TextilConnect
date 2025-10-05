@@ -9,11 +9,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import pe.edu.upc.textilconnect.dtos.JwtRequestDTO;
 import pe.edu.upc.textilconnect.dtos.JwtResponseDTO;
 import pe.edu.upc.textilconnect.securities.JwtTokenUtil;
 import pe.edu.upc.textilconnect.servicesimplements.JwtUsuarioDetailsService;
 
+@RestController
 public class JwtAuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -29,6 +31,7 @@ public class JwtAuthenticationController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponseDTO(token));
     }
+
 
     private void authenticate(String username, String password) throws Exception {
         try {
