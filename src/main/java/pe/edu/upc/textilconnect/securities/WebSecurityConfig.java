@@ -20,8 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 
-//@Profile(value = {"development", "production"})
-//Clase S7
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -61,9 +60,12 @@ public class WebSecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/login", "/v3/api-docs/**",
-                                "/swagger-ui.html",
-                                "/swagger-ui/**").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/",
+                                "/swagger-ui/",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -72,5 +74,13 @@ public class WebSecurityConfig {
                 .sessionManagement(Customizer.withDefaults());
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService jwtUserDetailsService) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(jwtUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
 }
