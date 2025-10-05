@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOInsert;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOList;
@@ -25,7 +26,9 @@ public class UsuarioController {
     @Autowired
     private IUsuarioService usuarioService;
 
+
     @PostMapping
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<UsuarioResponseDTO> insertar(
             @RequestBody @Valid UsuarioRequestDTO dto) {   // ← aquí sí está el nombre: dto
 
@@ -83,6 +86,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<?> modificar(@PathVariable Integer id,
                                        @RequestBody @Valid UsuarioRequestDTO dto) {
         Usuario existente = usuarioService.listId(id);
