@@ -1,22 +1,35 @@
 package pe.edu.upc.textilconnect.dtos;
 
-import pe.edu.upc.textilconnect.entities.Rol;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class UsuarioDTOInsert {
     private int idUsuario;
+
     private String nombreUsuario;
     private String emailUsuario;
+
+    // 🔐 Necesarios para autenticación
+    private String username;
+    private String password;
+
+    // Compatibilidad (si el frontend aún usa este nombre)
     private String contrasenaUsuario;
+
     private String telefonoUsuario;
     private String direccionUsuario;
     private LocalDate fechaRegistroUsuario;
+
     private BigDecimal promedioCalificacion;
     private int totalCalificacion;
-    private Rol rol;
 
+    // ✅ En vez de un Rol completo → lista de IDs
+    private List<Integer> rolesIds;
+
+    private Boolean estado;
+
+    // ----- Getters y Setters -----
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -39,6 +52,22 @@ public class UsuarioDTOInsert {
 
     public void setEmailUsuario(String emailUsuario) {
         this.emailUsuario = emailUsuario;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getContrasenaUsuario() {
@@ -89,11 +118,19 @@ public class UsuarioDTOInsert {
         this.totalCalificacion = totalCalificacion;
     }
 
-    public Rol getRol() {
-        return rol;
+    public List<Integer> getRolesIds() {
+        return rolesIds;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setRolesIds(List<Integer> rolesIds) {
+        this.rolesIds = rolesIds;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 }
