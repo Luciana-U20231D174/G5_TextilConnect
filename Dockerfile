@@ -1,12 +1,9 @@
-# Etapa 1: Compilación
-FROM eclipse-temurin:24-jdk AS build
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 COPY . .
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
-# Etapa 2: Ejecución
-FROM eclipse-temurin:24-jre
+FROM amazoncorretto:17-alpine-jdk
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-EXPOSE 8080
+COPY --from=build /app/target/TextilConnect-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

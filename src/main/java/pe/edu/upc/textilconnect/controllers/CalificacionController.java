@@ -21,7 +21,6 @@ public class CalificacionController {
     @Autowired
     private ICalificacionService calificacionService;
 
-    // POST: crear calificación
     @PostMapping
     public ResponseEntity<CalificacionResponseDTO> insertar(
             @RequestBody @Valid CalificacionRequestDTO dto) {
@@ -43,7 +42,6 @@ public class CalificacionController {
 
         calificacionService.insert(c);
 
-        // Respuesta plana (como en ComentarioProyecto)
         CalificacionResponseDTO out = new CalificacionResponseDTO();
         out.setIdCalificacion(c.getIdCalificacion());
         out.setEstrellas(c.getEstrellas());
@@ -56,7 +54,6 @@ public class CalificacionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(out);
     }
 
-    // GET: listar todas las calificaciones (respuesta plana)
     @GetMapping
     public List<CalificacionResponseDTO> listar() {
         return calificacionService.list().stream().map(c -> {

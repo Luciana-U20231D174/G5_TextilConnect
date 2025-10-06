@@ -10,7 +10,6 @@ public class UsuarioDTOInsert {
     private String nombreUsuario;
     private String emailUsuario;
 
-    // 🔐 Necesarios para autenticación
     private String username;
     private String password;
 
@@ -24,12 +23,10 @@ public class UsuarioDTOInsert {
     private BigDecimal promedioCalificacion;
     private int totalCalificacion;
 
-    // ✅ En vez de un Rol completo → lista de IDs
     private List<Integer> rolesIds;
 
     private Boolean estado;
 
-    // ----- Getters y Setters -----
     public int getIdUsuario() {
         return idUsuario;
     }
