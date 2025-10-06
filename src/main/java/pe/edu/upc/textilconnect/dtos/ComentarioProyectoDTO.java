@@ -5,7 +5,7 @@ import pe.edu.upc.textilconnect.entities.Usuario;
 
 import java.time.LocalDateTime;
 
-public class ComentarioProyectoDTO {
+public class    ComentarioProyectoDTO {
     private int idComentarioProyecto;
     private String comentarioProyecto;
     private LocalDateTime fechaComentario;

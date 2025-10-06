@@ -21,10 +21,25 @@ public class EntregaController {
     private IEntregaService entregaService;
 
     @PostMapping
-    public void insertar(@RequestBody EntregaDTO edto) {
+    public ResponseEntity<?> insertar(@RequestBody EntregaDTO edto) {
+        // Forzar nuevo registro (ignorar el id que venga en el JSON)
+        edto.setIdEntrega(0); // si cambias el DTO a Integer: edto.setIdEntrega(null);
+
+        // Setear fecha por defecto si no llega
+        if (edto.getFechaEntrega() == null) {
+            edto.setFechaEntrega(java.time.LocalDateTime.now());
+        }
+
+        // Validación mínima de relación
+        if (edto.getPedido() == null || edto.getPedido().getIdPedido() == 0) {
+            return ResponseEntity.badRequest().body("Falta pedido.idPedido");
+        }
+
         ModelMapper m = new ModelMapper();
-        Entrega e = (Entrega) m.map(edto, Entrega.class);
-        this.entregaService.insert(e);
+        Entrega e = m.map(edto, Entrega.class);
+
+        entregaService.insert(e);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping

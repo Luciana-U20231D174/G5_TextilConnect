@@ -21,7 +21,6 @@ public class CalificacionController {
     @Autowired
     private ICalificacionService calificacionService;
 
-    // POST: crear calificación
     @PostMapping
     public ResponseEntity<CalificacionResponseDTO> insertar(
             @RequestBody @Valid CalificacionRequestDTO dto) {
@@ -32,6 +31,7 @@ public class CalificacionController {
 
         c.setFechaCalificacion(java.time.LocalDate.now());
 
+        // Asociar por ID, sin cargar entidades completas
         Pedido p = new Pedido(); p.setIdPedido(dto.getIdPedido());
         Usuario calificador = new Usuario(); calificador.setIdUsuario(dto.getIdCalificador());
         Usuario calificado  = new Usuario();  calificado.setIdUsuario(dto.getIdCalificado());
