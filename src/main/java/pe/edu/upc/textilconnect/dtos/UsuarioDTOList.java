@@ -1,14 +1,22 @@
 package pe.edu.upc.textilconnect.dtos;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class UsuarioDTOList {
+    private Integer idUsuario;
     private String nombreUsuario;
     private String emailUsuario;
-    private LocalDate fechaRegistroUsuario;
-    private BigDecimal promedioCalifacion;
-    private int totalCalificacion;
+    private String telefonoUsuario;
+    private String direccionUsuario;
+    private BigDecimal promedioCalificacion;
+
+    public Integer getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 
     public String getNombreUsuario() {
         return nombreUsuario;
@@ -26,27 +34,27 @@ public class UsuarioDTOList {
         this.emailUsuario = emailUsuario;
     }
 
-    public LocalDate getFechaRegistroUsuario() {
-        return fechaRegistroUsuario;
+    public String getTelefonoUsuario() {
+        return telefonoUsuario;
     }
 
-    public void setFechaRegistroUsuario(LocalDate fechaRegistroUsuario) {
-        this.fechaRegistroUsuario = fechaRegistroUsuario;
+    public void setTelefonoUsuario(String telefonoUsuario) {
+        this.telefonoUsuario = telefonoUsuario;
     }
 
-    public BigDecimal getPromedioCalifacion() {
-        return promedioCalifacion;
+    public String getDireccionUsuario() {
+        return direccionUsuario;
     }
 
-    public void setPromedioCalifacion(BigDecimal promedioCalifacion) {
-        this.promedioCalifacion = promedioCalifacion;
+    public void setDireccionUsuario(String direccionUsuario) {
+        this.direccionUsuario = direccionUsuario;
     }
 
-    public int getTotalCalificacion() {
-        return totalCalificacion;
+    public BigDecimal getPromedioCalificacion() {
+        return promedioCalificacion;
     }
 
-    public void setTotalCalificacion(int totalCalificacion) {
-        this.totalCalificacion = totalCalificacion;
+    public void setPromedioCalificacion(BigDecimal promedioCalificacion) {
+        this.promedioCalificacion = promedioCalificacion;
     }
 }

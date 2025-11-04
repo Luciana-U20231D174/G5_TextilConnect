@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.ProductoDTO;
-import pe.edu.upc.textilconnect.dtos.RolDTO;
 import pe.edu.upc.textilconnect.entities.Producto;
-import pe.edu.upc.textilconnect.entities.Rol;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProductoService;
 
 import java.math.BigDecimal;

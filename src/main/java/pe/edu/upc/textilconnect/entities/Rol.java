@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "Rol")
+@Table(name = "rol", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "nombreRol"})})
 public class Rol implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idRol;
+    private Integer idRol;
 
-    @Column(name = "nombreRol", length = 200, nullable = false)
+    @Column(name = "nombreRol", length = 50, nullable = false)
     private String nombreRol;
 
     @ManyToOne
@@ -20,16 +21,11 @@ public class Rol implements Serializable {
 
     public Rol() {}
 
-    public Rol(int idRol, String nombreRol) {
-        this.idRol = idRol;
-        this.nombreRol = nombreRol;
-    }
-
-    public int getIdRol() {
+    public Integer getIdRol() {
         return idRol;
     }
 
-    public void setIdRol(int idRol) {
+    public void setIdRol(Integer idRol) {
         this.idRol = idRol;
     }
 

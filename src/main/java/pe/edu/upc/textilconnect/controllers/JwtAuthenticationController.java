@@ -20,7 +20,7 @@ import pe.edu.upc.textilconnect.servicesimplements.JwtUserDetailsService;
 //Clase 3
 @RestController
 @CrossOrigin
-public class    JwtAuthenticationController {
+public class JwtAuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -36,7 +36,6 @@ public class    JwtAuthenticationController {
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponseDTO(token));
     }
-
 
     private void authenticate(String username, String password) throws Exception {
         try {
