@@ -1,23 +1,29 @@
 package pe.edu.upc.textilconnect.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upc.textilconnect.entities.Usuario;
-
-import java.util.List;
 
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuario,Integer> {
+
+    @Modifying
+    @Query("delete from Usuario u where u.idUsuario = :id")
+    void deleteuserid(@Param("id") Integer id);
     public Usuario findOneByUsername(String username);
 
-    @Query("SELECT u FROM Usuario u WHERE u.nombreUsuario LIKE CONCAT('%', :nombre, '%')")
-    List<Usuario> buscarNombreU(@Param("nombre") String nombre);
+    //BUSCAR POR correo
+    @Query("select count(u.username) from Usuario u where u.username =:username")
+    public int buscarUsername(@Param("username") String nombre);
 
 
-    @Query("SELECT u FROM Usuario u WHERE u.emailUsuario LIKE CONCAT('%', :email, '%')")
-    List<Usuario> buscarEmailU(@Param("email") String email);
-
-    Usuario findByNombreUsuario(String username);
+    //INSERTAR ROLES
+    @Transactional
+    @Modifying
+    @Query(value = "insert into roles (rol, user_id) VALUES (:rol, :user_id)", nativeQuery = true)
+    public void insRol(@Param("rol") String authority, @Param("user_id") int user_id);
 }

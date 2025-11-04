@@ -3,6 +3,7 @@ package pe.edu.upc.textilconnect.dtos;
 import java.io.Serializable;
 
 public class JwtResponseDTO implements Serializable {
+
     private static final long serialVersionUID = -8091879091924046844L;
     private final String jwttoken;
 
@@ -14,4 +15,5 @@ public class JwtResponseDTO implements Serializable {
         super();
         this.jwttoken = jwttoken;
     }
+
 }

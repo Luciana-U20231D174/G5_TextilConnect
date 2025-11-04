@@ -10,5 +10,5 @@ public interface IRolService {
     public Rol listId(int id);
     public void delete(int id);
     public void update(Rol rol);
-    public List<Rol> buscarService(String nombre);
+    Rol listId(Integer id);
 }

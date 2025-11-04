@@ -2,36 +2,25 @@ package pe.edu.upc.textilconnect.dtos;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 public class UsuarioDTOInsert {
-    private int idUsuario;
-
+    private Integer idUsuario;
     private String nombreUsuario;
     private String emailUsuario;
-
     private String username;
     private String password;
-
-    // Compatibilidad (si el frontend aún usa este nombre)
-    private String contrasenaUsuario;
-
     private String telefonoUsuario;
     private String direccionUsuario;
     private LocalDate fechaRegistroUsuario;
-
+    private Boolean enabled;
     private BigDecimal promedioCalificacion;
     private int totalCalificacion;
 
-    private List<Integer> rolesIds;
-
-    private Boolean estado;
-
-    public int getIdUsuario() {
+    public Integer getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
     }
 
@@ -67,14 +56,6 @@ public class UsuarioDTOInsert {
         this.password = password;
     }
 
-    public String getContrasenaUsuario() {
-        return contrasenaUsuario;
-    }
-
-    public void setContrasenaUsuario(String contrasenaUsuario) {
-        this.contrasenaUsuario = contrasenaUsuario;
-    }
-
     public String getTelefonoUsuario() {
         return telefonoUsuario;
     }
@@ -99,6 +80,14 @@ public class UsuarioDTOInsert {
         this.fechaRegistroUsuario = fechaRegistroUsuario;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public BigDecimal getPromedioCalificacion() {
         return promedioCalificacion;
     }
@@ -113,21 +102,5 @@ public class UsuarioDTOInsert {
 
     public void setTotalCalificacion(int totalCalificacion) {
         this.totalCalificacion = totalCalificacion;
-    }
-
-    public List<Integer> getRolesIds() {
-        return rolesIds;
-    }
-
-    public void setRolesIds(List<Integer> rolesIds) {
-        this.rolesIds = rolesIds;
-    }
-
-    public Boolean getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
     }
 }
