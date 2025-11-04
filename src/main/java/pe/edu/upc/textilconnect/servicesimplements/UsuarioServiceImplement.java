@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.repositories.IRolRepository;
 import pe.edu.upc.textilconnect.repositories.IUsuarioRepository;
+import pe.edu.upc.textilconnect.servicesinterfaces.IUsuarioService;
 
 import java.util.List;
 

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.upc.textilconnect.entities.Rol;
 import pe.edu.upc.textilconnect.repositories.IRolRepository;
+import pe.edu.upc.textilconnect.servicesinterfaces.IRolService;
 
 import java.util.List;
 
