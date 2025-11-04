@@ -24,9 +24,21 @@ public class ComprobanteServiceImplement implements IComprobanteService {
     }
 
     @Override
-    public void insert(Comprobante comprobante) {
-        comprobanteRepository.save(comprobante);
+    public void insert(Comprobante comprobante) {comprobanteRepository.save(comprobante);
     }
+
+    @Override
+    public Comprobante listId(int id) {
+        return comprobanteRepository.findById(id).orElse(new Comprobante());
+    }
+
+    @Override
+    public void delete(int id) { comprobanteRepository.deleteById(id);
+
+    }
+
+    @Override
+    public void update(Comprobante Comprobante) { comprobanteRepository.save(Comprobante);}
 
     @Override
     public List<ComprobanteListDTO> listarPorOperacionDTO(int idPedido) {

@@ -23,4 +23,15 @@ public class ProductoFotoServiceImplement implements IProductoFotoService {
     public void insert(ProductoFoto productoFoto) {
         productoFotoRepository.save(productoFoto);
     }
+
+    @Override
+    public ProductoFoto listId(int id) {
+        return productoFotoRepository.findById(id).orElse(new ProductoFoto());
+    }
+
+    @Override
+    public void delete(int id) { productoFotoRepository.deleteById(id); }
+
+    @Override
+    public void update(ProductoFoto ProductoFoto) { productoFotoRepository.save(ProductoFoto);}
 }

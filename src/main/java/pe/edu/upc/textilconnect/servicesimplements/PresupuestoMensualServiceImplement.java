@@ -22,4 +22,15 @@ public class PresupuestoMensualServiceImplement implements IPresupuestoMensualSe
     public void insert(PresupuestoMensual presupuestoMensual) {
         presupuestoMensualRepository.save(presupuestoMensual);
     }
+
+    @Override
+    public PresupuestoMensual listId(int id) {
+        return presupuestoMensualRepository.findById(id).orElse(new PresupuestoMensual());
+    }
+
+    @Override
+    public void delete(int id) { presupuestoMensualRepository.deleteById(id);}
+
+    @Override
+    public void update(PresupuestoMensual PresupuestoMensual) { presupuestoMensualRepository.save(PresupuestoMensual);}
 }

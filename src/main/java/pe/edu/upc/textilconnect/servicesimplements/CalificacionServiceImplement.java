@@ -24,4 +24,19 @@ public class CalificacionServiceImplement implements ICalificacionService {
         calificacionRepository.save(calificacion);
     }
 
+    @Override
+    public Calificacion listId(int id) {
+        return calificacionRepository.findById(id).orElse(new Calificacion());
+    }
+
+    @Override
+    public void delete(int id) {
+        calificacionRepository.deleteById(id);
+    }
+
+    @Override
+    public void update(Calificacion calificacion) {
+        calificacionRepository.save(calificacion);
+    }
+
 }
