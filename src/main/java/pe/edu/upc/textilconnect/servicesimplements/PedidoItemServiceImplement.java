@@ -24,4 +24,15 @@ public class PedidoItemServiceImplement implements IPedidoItemService {
     public void insert(PedidoItem pedidoItem) {
         pedidoItemRepository.save(pedidoItem);
     }
+
+    @Override
+    public PedidoItem listId(int id) {
+        return pedidoItemRepository.findById(id).orElse(new PedidoItem());
+    }
+
+    @Override
+    public void delete(int id) {pedidoItemRepository.deleteById(id);}
+
+    @Override
+    public void update(PedidoItem PedidoItem) { pedidoItemRepository.save(PedidoItem);}
 }

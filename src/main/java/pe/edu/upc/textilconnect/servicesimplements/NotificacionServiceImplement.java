@@ -23,4 +23,15 @@ public class NotificacionServiceImplement implements INotificacionService {
     public void insert(Notificacion notificacion) {
         notificacionRepository.save(notificacion);
     }
+
+    @Override
+    public Notificacion listId(int id) {
+        return notificacionRepository.findById(id).orElse(new Notificacion());
+    }
+
+    @Override
+    public void delete(int id) {notificacionRepository.deleteById(id);}
+
+    @Override
+    public void update(Notificacion Notificacion) { notificacionRepository.save(Notificacion);}
 }
