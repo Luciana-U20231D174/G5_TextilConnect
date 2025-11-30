@@ -6,6 +6,7 @@ import pe.edu.upc.textilconnect.entities.Tarjeta;
 import pe.edu.upc.textilconnect.repositories.ITarjetaRepository;
 import pe.edu.upc.textilconnect.servicesinterfaces.ITarjetaService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -41,14 +42,19 @@ public class TarjetaServiceImplement implements ITarjetaService {
     }
 
     @Override
+    public List<Object[]> contarPorTodasLasMarcas() {
+        return tarjetaRepository.contarPorTodasLasMarcas();
+    }
+
+
+    @Override
     public List<Tarjeta> listarxusuario(int idUsuario) {
         return tarjetaRepository.listarxusuario(idUsuario);
     }
 
+
     @Override
-    public int contarxmarca(String marca) {
-        return tarjetaRepository.contarxmarca(marca);
+    public List<Tarjeta> listarPorRangoVencimiento(LocalDate inicio, LocalDate fin) {
+        return tarjetaRepository.listarPorRangoVencimiento(inicio, fin);
     }
-
-
 }

@@ -5,12 +5,11 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "Usuario")
-public class Usuario implements Serializable
-{
+public class Usuario implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idUsuario;
@@ -35,115 +34,62 @@ public class Usuario implements Serializable
 
     @Column(name = "fechaRegistroUsuario", nullable = false)
     private LocalDate fechaRegistroUsuario;
+
     private Boolean enabled;
 
     @Column(name = "promedioCalificacion", nullable = false, precision = 12, scale = 2)
-    private BigDecimal promedioCalificacion;
+    private BigDecimal promedioCalificacion = BigDecimal.ZERO;
 
     @Column(name = "totalCalificacion", nullable = false)
-    private int totalCalificacion;
+    private int totalCalificacion = 0;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
-    private List<Rol> roles;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idRol", nullable = false)
+    private Rol rol;
 
+    public Usuario() {}
 
-    public Usuario() {
+    @PrePersist
+    public void prePersist() {
+        if (promedioCalificacion == null) {
+            promedioCalificacion = BigDecimal.ZERO;
+        }
+        // totalCalificacion ya está en 0 por defecto
     }
 
-    public Integer getIdUsuario() {
-        return idUsuario;
-    }
+    public Integer getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
 
-    public void setIdUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario;
-    }
+    public String getNombreUsuario() { return nombreUsuario; }
+    public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
+    public String getEmailUsuario() { return emailUsuario; }
+    public void setEmailUsuario(String emailUsuario) { this.emailUsuario = emailUsuario; }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getEmailUsuario() {
-        return emailUsuario;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setEmailUsuario(String emailUsuario) {
-        this.emailUsuario = emailUsuario;
-    }
+    public String getTelefonoUsuario() { return telefonoUsuario; }
+    public void setTelefonoUsuario(String telefonoUsuario) { this.telefonoUsuario = telefonoUsuario; }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getDireccionUsuario() { return direccionUsuario; }
+    public void setDireccionUsuario(String direccionUsuario) { this.direccionUsuario = direccionUsuario; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public LocalDate getFechaRegistroUsuario() { return fechaRegistroUsuario; }
+    public void setFechaRegistroUsuario(LocalDate fechaRegistroUsuario) { this.fechaRegistroUsuario = fechaRegistroUsuario; }
 
-    public String getPassword() {
-        return password;
-    }
+    public Boolean getEnabled() { return enabled; }
+    public void setEnabled(Boolean enabled) { this.enabled = enabled; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public BigDecimal getPromedioCalificacion() { return promedioCalificacion; }
+    public void setPromedioCalificacion(BigDecimal promedioCalificacion) { this.promedioCalificacion = promedioCalificacion; }
 
-    public String getTelefonoUsuario() {
-        return telefonoUsuario;
-    }
+    public int getTotalCalificacion() { return totalCalificacion; }
+    public void setTotalCalificacion(int totalCalificacion) { this.totalCalificacion = totalCalificacion; }
 
-    public void setTelefonoUsuario(String telefonoUsuario) {
-        this.telefonoUsuario = telefonoUsuario;
-    }
-
-    public String getDireccionUsuario() {
-        return direccionUsuario;
-    }
-
-    public void setDireccionUsuario(String direccionUsuario) {
-        this.direccionUsuario = direccionUsuario;
-    }
-
-    public LocalDate getFechaRegistroUsuario() {
-        return fechaRegistroUsuario;
-    }
-
-    public void setFechaRegistroUsuario(LocalDate fechaRegistroUsuario) {
-        this.fechaRegistroUsuario = fechaRegistroUsuario;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public BigDecimal getPromedioCalificacion() {
-        return promedioCalificacion;
-    }
-
-    public void setPromedioCalificacion(BigDecimal promedioCalificacion) {
-        this.promedioCalificacion = promedioCalificacion;
-    }
-
-    public int getTotalCalificacion() {
-        return totalCalificacion;
-    }
-
-    public void setTotalCalificacion(int totalCalificacion) {
-        this.totalCalificacion = totalCalificacion;
-    }
-
-    public List<Rol> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Rol> roles) {
-        this.roles = roles;
-    }
+    public Rol getRol() { return rol; }
+    public void setRol(Rol rol) { this.rol = rol; }
 }

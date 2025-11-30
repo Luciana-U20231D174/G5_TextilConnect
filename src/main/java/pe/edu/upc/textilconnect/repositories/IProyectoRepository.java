@@ -16,4 +16,15 @@ public interface IProyectoRepository extends JpaRepository<Proyecto,Integer> {
 
         @Query("SELECT p FROM Proyecto p WHERE p.usuario.idUsuario = :idUsuario")
         List<Proyecto> buscarUsuarioPy(@Param("idUsuario") Integer idUsuario);
+
+    @Query("""
+       SELECT u.username AS username,
+              COUNT(p) AS cantidadProyectos
+       FROM Usuario u
+       LEFT JOIN Proyecto p ON p.usuario.idUsuario = u.idUsuario
+       GROUP BY u.idUsuario, u.username
+       ORDER BY COUNT(p) DESC
+       """)
+    List<Object[]> listarUsuariosConMasProyectos();
+
 }

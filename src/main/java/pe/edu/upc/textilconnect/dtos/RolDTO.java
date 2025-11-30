@@ -1,26 +1,16 @@
 package pe.edu.upc.textilconnect.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import pe.edu.upc.textilconnect.entities.Usuario;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RolDTO {
-    private Integer idRol;
-    private String nombre;
 
-    @JsonIgnoreProperties({
-            "roles",
-            "username",
-            "password",
-            "nombreUsuario",
-            "emailUsuario",
-            "telefonoUsuario",
-            "direccionUsuario",
-            "fechaRegistroUsuario",
-            "enabled",
-            "promedioCalificacion",
-            "totalCalificacion"
-    })
-    private Usuario usuario;
+    private Integer idRol;
+    private String nombreRol;
+
+    // Constructor vacío (lo usa ModelMapper / Jackson)
+    public RolDTO() {
+    }
 
     public Integer getIdRol() {
         return idRol;
@@ -30,19 +20,11 @@ public class RolDTO {
         this.idRol = idRol;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreRol() {
+        return nombreRol;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setNombreRol(String nombreRol) {
+        this.nombreRol = nombreRol;
     }
 }

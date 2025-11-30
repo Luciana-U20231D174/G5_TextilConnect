@@ -16,4 +16,7 @@ public interface IComentarioProyectoRepository extends JpaRepository<ComentarioP
 
     @Query("SELECT COUNT(c) FROM ComentarioProyecto c WHERE c.proyecto.idProyecto = :idProyecto")
     public int contarPorProyecto(@Param("idProyecto") int idProyecto);
+
+    @Query("SELECT c.proyecto.tituloProyecto, COUNT(c) FROM ComentarioProyecto c GROUP BY c.proyecto.tituloProyecto")
+    List<Object[]> contarComentariosPorProyecto();
 }

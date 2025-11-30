@@ -1,9 +1,11 @@
 package pe.edu.upc.textilconnect.controllers;
 
+import jakarta.annotation.security.PermitAll;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.MetodoPagoDTO;
 import pe.edu.upc.textilconnect.entities.MetodoPago;
@@ -18,6 +20,7 @@ public class MetodoPagoController {
     @Autowired
     private IMetodoPagoService metodoPagoService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public List<MetodoPagoDTO> listar() {
         return this.metodoPagoService.list().stream().map((y) -> {
@@ -26,6 +29,7 @@ public class MetodoPagoController {
         }).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public void insertar(@RequestBody MetodoPagoDTO dto) {
         ModelMapper m =new ModelMapper();
@@ -33,6 +37,7 @@ public class MetodoPagoController {
         this.metodoPagoService.insert(meto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         MetodoPago meto = metodoPagoService.listId(id);
@@ -46,6 +51,7 @@ public class MetodoPagoController {
         return ResponseEntity.ok(dto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         MetodoPago meto = metodoPagoService.listId(id);
@@ -57,6 +63,7 @@ public class MetodoPagoController {
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody MetodoPagoDTO dto) {
         ModelMapper m = new ModelMapper();
@@ -71,6 +78,7 @@ public class MetodoPagoController {
         return ResponseEntity.ok("Registro con ID " + meto.getIdMetodoPago() + " modificado correctamente.");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<MetodoPago> metodoPagos = this.metodoPagoService.buscarService(n);

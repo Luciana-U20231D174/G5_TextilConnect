@@ -1,9 +1,11 @@
 package pe.edu.upc.textilconnect.controllers;
 
+import jakarta.annotation.security.PermitAll;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.TipoProyectoDTO;
 import pe.edu.upc.textilconnect.entities.TipoProyecto;
@@ -18,21 +20,24 @@ public class TipoProyectoController {
     @Autowired
     private ITipoProyectoService dS;
 
+    @PermitAll
     @GetMapping
     public List<TipoProyectoDTO> listar() {
         return this.dS.list().stream().map((y) -> {
-            ModelMapper m =new ModelMapper();
-            return (TipoProyectoDTO)m.map(y, TipoProyectoDTO.class);
+            ModelMapper m = new ModelMapper();
+            return (TipoProyectoDTO) m.map(y, TipoProyectoDTO.class);
         }).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public void insertar(@RequestBody TipoProyectoDTO dto) {
-        ModelMapper m =new ModelMapper();
-        TipoProyecto proy = (TipoProyecto)m.map(dto,TipoProyecto.class);
+        ModelMapper m = new ModelMapper();
+        TipoProyecto proy = (TipoProyecto) m.map(dto, TipoProyecto.class);
         this.dS.insert(proy);
     }
 
+    @PermitAll
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         TipoProyecto proy = dS.listId(id);
@@ -46,6 +51,7 @@ public class TipoProyectoController {
         return ResponseEntity.ok(dto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         TipoProyecto proy = dS.listId(id);
@@ -57,6 +63,7 @@ public class TipoProyectoController {
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody TipoProyectoDTO dto) {
         ModelMapper m = new ModelMapper();
@@ -71,6 +78,7 @@ public class TipoProyectoController {
         return ResponseEntity.ok("Registro con ID " + proy.getIdTipoProyecto() + " modificado correctamente.");
     }
 
+    @PermitAll
     @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<TipoProyecto> tipoProyectos = this.dS.buscarService(n);

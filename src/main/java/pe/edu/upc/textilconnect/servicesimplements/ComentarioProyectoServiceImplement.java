@@ -49,4 +49,9 @@ public class ComentarioProyectoServiceImplement implements IComentarioProyectoSe
     public int contarPorProyecto(int idProyecto) {
         return comentarioProyectoRepository.contarPorProyecto(idProyecto);
     }
+
+    @Override
+    public List<Object[]> contarComentariosPorProyecto() {
+        return comentarioProyectoRepository.contarComentariosPorProyecto();
+    }
 }

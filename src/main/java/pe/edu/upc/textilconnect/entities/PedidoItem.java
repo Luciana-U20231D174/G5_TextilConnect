@@ -1,7 +1,7 @@
+// src/main/java/pe/edu/upc/textilconnect/entities/PedidoItem.java
 package pe.edu.upc.textilconnect.entities;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 
 @Entity
@@ -18,6 +18,10 @@ public class PedidoItem {
     @Column(name = "precioPedidoItem", nullable = false, precision = 12, scale = 2)
     private BigDecimal precioPedidoItem;
 
+    // NUEVO: URL de imagen
+    @Column(name = "imagenUrl", length = 500, nullable = true)
+    private String imagenUrl;
+
     @ManyToOne
     @JoinColumn(name = "idPedido")
     private Pedido pedido;
@@ -29,10 +33,16 @@ public class PedidoItem {
     public PedidoItem() {
     }
 
-    public PedidoItem(int idPedidoItem, int cantidadPedidoItem, BigDecimal precioPedidoItem, Pedido pedido, Producto producto) {
+    public PedidoItem(int idPedidoItem,
+                      int cantidadPedidoItem,
+                      BigDecimal precioPedidoItem,
+                      String imagenUrl,
+                      Pedido pedido,
+                      Producto producto) {
         this.idPedidoItem = idPedidoItem;
         this.cantidadPedidoItem = cantidadPedidoItem;
         this.precioPedidoItem = precioPedidoItem;
+        this.imagenUrl = imagenUrl;
         this.pedido = pedido;
         this.producto = producto;
     }
@@ -59,6 +69,14 @@ public class PedidoItem {
 
     public void setPrecioPedidoItem(BigDecimal precioPedidoItem) {
         this.precioPedidoItem = precioPedidoItem;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 
     public Pedido getPedido() {

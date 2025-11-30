@@ -6,9 +6,13 @@ public class UsuarioDTOList {
     private Integer idUsuario;
     private String nombreUsuario;
     private String emailUsuario;
+    private String username;
     private String telefonoUsuario;
-    private String direccionUsuario;
+    private String nombreRol;
+
+    // ⭐ Campos nuevos para mostrar en el listar
     private BigDecimal promedioCalificacion;
+    private int totalCalificacion;
 
     public Integer getIdUsuario() {
         return idUsuario;
@@ -34,6 +38,14 @@ public class UsuarioDTOList {
         this.emailUsuario = emailUsuario;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getTelefonoUsuario() {
         return telefonoUsuario;
     }
@@ -42,12 +54,12 @@ public class UsuarioDTOList {
         this.telefonoUsuario = telefonoUsuario;
     }
 
-    public String getDireccionUsuario() {
-        return direccionUsuario;
+    public String getNombreRol() {
+        return nombreRol;
     }
 
-    public void setDireccionUsuario(String direccionUsuario) {
-        this.direccionUsuario = direccionUsuario;
+    public void setNombreRol(String nombreRol) {
+        this.nombreRol = nombreRol;
     }
 
     public BigDecimal getPromedioCalificacion() {
@@ -56,5 +68,13 @@ public class UsuarioDTOList {
 
     public void setPromedioCalificacion(BigDecimal promedioCalificacion) {
         this.promedioCalificacion = promedioCalificacion;
+    }
+
+    public int getTotalCalificacion() {
+        return totalCalificacion;
+    }
+
+    public void setTotalCalificacion(int totalCalificacion) {
+        this.totalCalificacion = totalCalificacion;
     }
 }

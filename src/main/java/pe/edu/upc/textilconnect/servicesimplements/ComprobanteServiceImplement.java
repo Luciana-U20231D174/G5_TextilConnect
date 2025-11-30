@@ -3,63 +3,73 @@ package pe.edu.upc.textilconnect.servicesimplements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.upc.textilconnect.dtos.ComprobanteCountDTO;
-import pe.edu.upc.textilconnect.dtos.ComprobanteListDTO;
 import pe.edu.upc.textilconnect.entities.Comprobante;
 import pe.edu.upc.textilconnect.repositories.IComprobanteRepository;
 import pe.edu.upc.textilconnect.servicesinterfaces.IComprobanteService;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class ComprobanteServiceImplement implements IComprobanteService {
 
     @Autowired
-    private IComprobanteRepository comprobanteRepository;
+    private IComprobanteRepository cR;
 
     @Override
-    public List<Comprobante> list() {
-        return comprobanteRepository.findAll();
+    public void insert(Comprobante c) {
+        cR.save(c);
     }
 
     @Override
-    public void insert(Comprobante comprobante) {comprobanteRepository.save(comprobante);
+    public List<Comprobante> list() {
+        return cR.findAll();
     }
 
     @Override
     public Comprobante listId(int id) {
-        return comprobanteRepository.findById(id).orElse(new Comprobante());
+        Optional<Comprobante> opt = cR.findById(id);
+        return opt.orElse(null);
     }
 
     @Override
-    public void delete(int id) { comprobanteRepository.deleteById(id);
-
+    public void delete(int id) {
+        cR.deleteById(id);
     }
 
     @Override
-    public void update(Comprobante Comprobante) { comprobanteRepository.save(Comprobante);}
+    public void update(Comprobante c) {
+        cR.save(c);
+    }
 
     @Override
-    public List<ComprobanteListDTO> listarPorOperacionDTO(int idPedido) {
-        return comprobanteRepository.listarPorPedido(idPedido)
-                .stream()
-                .map(c -> new ComprobanteListDTO(
-                        c.getNumeroComprobante(),
-                        c.getFechaComprobante(),
-                        c.getTotalComprobante()
-                ))
-                .collect(Collectors.toList());
+    public List<Comprobante> listarPorOperacion(int idPedido) {
+        return cR.listarPorOperacion(idPedido);
     }
 
     @Override
     public ComprobanteCountDTO contarPorOperacionDTO(int idPedido) {
-        int total = comprobanteRepository.contarPorPedido(idPedido);
-        return new ComprobanteCountDTO(total);
+        Long cantidad = cR.contarPorOperacion(idPedido);
+        if (cantidad == null) cantidad = 0L;
+
+        ComprobanteCountDTO dto = new ComprobanteCountDTO();
+        dto.setIdPedido(idPedido);
+        dto.setCantidadComprobantes(cantidad);
+        return dto;
     }
 
     @Override
     public List<Comprobante> buscarxRangoFechas(LocalDate inicio, LocalDate fin) {
-        return comprobanteRepository.buscarRangoFechasC(inicio, fin);
+        return cR.buscarxRangoFechas(inicio, fin);
+    }
+
+    @Override
+    public Double sumarIgvPorFecha(LocalDate fecha) {
+        Double resultado = cR.sumarIgvPorFecha(fecha);
+        if (resultado == null) {
+            return 0.0;
+        }
+        return resultado;
     }
 }

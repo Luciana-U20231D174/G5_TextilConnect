@@ -1,11 +1,13 @@
 package pe.edu.upc.textilconnect.controllers;
 
+import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.upc.textilconnect.dtos.ComentarioProyectoRequestDTO;
-import pe.edu.upc.textilconnect.dtos.ComentarioProyectoResponseDTO;
+import pe.edu.upc.textilconnect.dtos.ComentarioProyectoDTO;
 import pe.edu.upc.textilconnect.entities.ComentarioProyecto;
 import pe.edu.upc.textilconnect.entities.Proyecto;
 import pe.edu.upc.textilconnect.entities.Usuario;
@@ -17,37 +19,62 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/comentariosproyectos")
 public class ComentarioProyectoController {
+
     @Autowired
     private IComentarioProyectoService comentarioProyectoService;
 
+    // ================== INSERTAR ==================
+    @PreAuthorize("hasAnyAuthority('VENDEDOR','COMPRADOR')")
     @PostMapping
-    public ResponseEntity<ComentarioProyectoResponseDTO> insertar(
-            @RequestBody @jakarta.validation.Valid ComentarioProyectoRequestDTO dto) {
+    public ResponseEntity<ComentarioProyectoDTO> insertar(
+            @RequestBody @Valid ComentarioProyectoDTO dto) {
 
         ComentarioProyecto c = new ComentarioProyecto();
         c.setComentarioProyecto(dto.getComentarioProyecto());
 
-        // asociar por ID sin traer entidades completas de BD
-        Proyecto p = new Proyecto(); p.setIdProyecto(dto.getIdProyecto());
-        Usuario u = new Usuario();  u.setIdUsuario(dto.getIdUsuario());
-        c.setProyecto(p);
-        c.setUsuario(u);
+        // Asociación por ID (proyecto y usuario)
+        if (dto.getProyecto() != null && dto.getProyecto().getIdProyecto() != 0) {
+            Proyecto p = new Proyecto();
+            p.setIdProyecto(dto.getProyecto().getIdProyecto());
+            c.setProyecto(p);
+        }
+        if (dto.getUsuario() != null && dto.getUsuario().getIdUsuario() != 0) {
+            Usuario u = new Usuario();
+            u.setIdUsuario(dto.getUsuario().getIdUsuario());
+            c.setUsuario(u);
+        }
 
         comentarioProyectoService.insert(c);
 
-        // armar respuesta plana
-        ComentarioProyectoResponseDTO out = new ComentarioProyectoResponseDTO();
+        // DTO de salida (no lo usas mucho en Angular, pero lo dejamos prolijo)
+        ComentarioProyectoDTO out = new ComentarioProyectoDTO();
         out.setIdComentarioProyecto(c.getIdComentarioProyecto());
         out.setComentarioProyecto(c.getComentarioProyecto());
         out.setFechaComentario(c.getFechaComentario());
-        out.setIdProyecto(dto.getIdProyecto());
-        out.setIdUsuario(dto.getIdUsuario());
+
+        if (c.getProyecto() != null) {
+            Proyecto pOut = new Proyecto();
+            pOut.setIdProyecto(c.getProyecto().getIdProyecto());
+            pOut.setTituloProyecto(c.getProyecto().getTituloProyecto());
+            out.setProyecto(pOut);
+        }
+
+        if (c.getUsuario() != null) {
+            Usuario uOut = new Usuario();
+            uOut.setIdUsuario(c.getUsuario().getIdUsuario());
+            uOut.setNombreUsuario(c.getUsuario().getNombreUsuario());
+            out.setUsuario(uOut);
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(out);
     }
+
+    // ================== MODIFICAR ==================
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
     @PutMapping("/{id}")
-    public ResponseEntity<String> modificar(@PathVariable Integer id,
-                                            @RequestBody @jakarta.validation.Valid ComentarioProyectoRequestDTO dto) {
+    public ResponseEntity<String> modificar(
+            @PathVariable Integer id,
+            @RequestBody @Valid ComentarioProyectoDTO dto) {
 
         ComentarioProyecto existente = comentarioProyectoService.listId(id);
         if (existente == null) {
@@ -57,31 +84,53 @@ public class ComentarioProyectoController {
 
         existente.setComentarioProyecto(dto.getComentarioProyecto());
 
-        Proyecto p = new Proyecto(); p.setIdProyecto(dto.getIdProyecto());
-        Usuario  u = new Usuario();  u.setIdUsuario(dto.getIdUsuario());
-        existente.setProyecto(p);
-        existente.setUsuario(u);
+        if (dto.getProyecto() != null && dto.getProyecto().getIdProyecto() != 0) {
+            Proyecto p = new Proyecto();
+            p.setIdProyecto(dto.getProyecto().getIdProyecto());
+            existente.setProyecto(p);
+        }
+        if (dto.getUsuario() != null && dto.getUsuario().getIdUsuario() != 0) {
+            Usuario u = new Usuario();
+            u.setIdUsuario(dto.getUsuario().getIdUsuario());
+            existente.setUsuario(u);
+        }
 
         comentarioProyectoService.update(existente);
-
         return ResponseEntity.ok("Registro con ID " + id + " modificado correctamente.");
     }
 
-
-
+    // ================== LISTAR TODOS ==================
+    @PermitAll
     @GetMapping
-    public List<ComentarioProyectoResponseDTO> listar() {
-        return this.comentarioProyectoService.list().stream().map((c) -> {
-            ComentarioProyectoResponseDTO dto = new ComentarioProyectoResponseDTO();
+    public List<ComentarioProyectoDTO> listar() {
+        return this.comentarioProyectoService.list().stream().map(c -> {
+            ComentarioProyectoDTO dto = new ComentarioProyectoDTO();
             dto.setIdComentarioProyecto(c.getIdComentarioProyecto());
             dto.setComentarioProyecto(c.getComentarioProyecto());
             dto.setFechaComentario(c.getFechaComentario());
-            dto.setIdProyecto(c.getProyecto().getIdProyecto());
-            dto.setIdUsuario(c.getUsuario().getIdUsuario());
+
+            // Proyecto con ID + título
+            if (c.getProyecto() != null) {
+                Proyecto p = new Proyecto();
+                p.setIdProyecto(c.getProyecto().getIdProyecto());
+                p.setTituloProyecto(c.getProyecto().getTituloProyecto());
+                dto.setProyecto(p);
+            }
+
+            // Usuario con ID + nombre
+            if (c.getUsuario() != null) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(c.getUsuario().getIdUsuario());
+                u.setNombreUsuario(c.getUsuario().getNombreUsuario());
+                dto.setUsuario(u);
+            }
+
             return dto;
         }).collect(Collectors.toList());
     }
 
+    // ================== ELIMINAR ==================
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         ComentarioProyecto comentarioProyecto = comentarioProyectoService.listId(id);
@@ -93,7 +142,8 @@ public class ComentarioProyectoController {
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
-
+    // ================== LISTAR POR PROYECTO ==================
+    @PermitAll
     @GetMapping("/proyecto/{idProyecto}")
     public ResponseEntity<?> listarPorProyecto(@PathVariable("idProyecto") int idProyecto) {
         List<ComentarioProyecto> lista = comentarioProyectoService.listarPorProyecto(idProyecto);
@@ -101,21 +151,42 @@ public class ComentarioProyectoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No se encontraron comentarios para el proyecto con ID: " + idProyecto);
         }
-        List<ComentarioProyectoResponseDTO> listaDTO = lista.stream().map((c) -> {
-            ComentarioProyectoResponseDTO dto = new ComentarioProyectoResponseDTO();
+        List<ComentarioProyectoDTO> listaDTO = lista.stream().map(c -> {
+            ComentarioProyectoDTO dto = new ComentarioProyectoDTO();
             dto.setIdComentarioProyecto(c.getIdComentarioProyecto());
             dto.setComentarioProyecto(c.getComentarioProyecto());
             dto.setFechaComentario(c.getFechaComentario());
-            dto.setIdProyecto(c.getProyecto().getIdProyecto());
-            dto.setIdUsuario(c.getUsuario().getIdUsuario());
+
+            if (c.getProyecto() != null) {
+                Proyecto p = new Proyecto();
+                p.setIdProyecto(c.getProyecto().getIdProyecto());
+                p.setTituloProyecto(c.getProyecto().getTituloProyecto());
+                dto.setProyecto(p);
+            }
+
+            if (c.getUsuario() != null) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(c.getUsuario().getIdUsuario());
+                u.setNombreUsuario(c.getUsuario().getNombreUsuario());
+                dto.setUsuario(u);
+            }
+
             return dto;
         }).collect(Collectors.toList());
         return ResponseEntity.ok(listaDTO);
     }
 
+    // ================== CONTAR POR PROYECTO ==================
+    @PermitAll
     @GetMapping("/proyecto/{idProyecto}/count")
     public ResponseEntity<?> contarPorProyecto(@PathVariable("idProyecto") int idProyecto) {
         int total = comentarioProyectoService.contarPorProyecto(idProyecto);
         return ResponseEntity.ok("El proyecto con ID " + idProyecto + " tiene " + total + " comentario(s).");
+    }
+
+    @GetMapping("/comentarios/proyectos")
+    public ResponseEntity<?> contarComentariosPorProyecto() {
+        List<Object[]> lista = comentarioProyectoService.contarComentariosPorProyecto();
+        return ResponseEntity.ok(lista);
     }
 }

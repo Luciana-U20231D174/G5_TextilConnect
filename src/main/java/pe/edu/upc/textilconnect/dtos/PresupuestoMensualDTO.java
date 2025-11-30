@@ -1,6 +1,8 @@
+// src/main/java/pe/edu/upc/textilconnect/dtos/PresupuestoMensualDTO.java
 package pe.edu.upc.textilconnect.dtos;
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 import pe.edu.upc.textilconnect.entities.Usuario;
 
 import java.math.BigDecimal;
@@ -11,7 +13,12 @@ public class PresupuestoMensualDTO {
     private Short anioPresupuestoMensual;
     private Short mesPresupuestoMensual;
     private BigDecimal montoLimitePresupuestoMensual;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaPresupuestoMensual;
+
+    // Lo mandamos como objeto sencillo (id + nombre)
     private Usuario usuario;
 
     public int getIdPresupuestoMensual() {

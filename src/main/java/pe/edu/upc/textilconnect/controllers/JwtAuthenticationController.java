@@ -1,51 +1,61 @@
 package pe.edu.upc.textilconnect.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.JwtRequestDTO;
 import pe.edu.upc.textilconnect.dtos.JwtResponseDTO;
+import pe.edu.upc.textilconnect.entities.Usuario;
+import pe.edu.upc.textilconnect.repositories.IUsuarioRepository;
 import pe.edu.upc.textilconnect.securities.JwtTokenUtil;
 import pe.edu.upc.textilconnect.servicesimplements.JwtUserDetailsService;
 
-
-//Clase 3
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @Autowired
+    private IUsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> login(@RequestBody JwtRequestDTO req) throws Exception {
-        authenticate(req.getUsername(), req.getPassword());
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(req.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponseDTO(token));
-    }
+    public ResponseEntity<?> login(@RequestBody JwtRequestDTO req) {
 
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+        // 1. Buscar usuario
+        Usuario u = usuarioRepository.findOneByUsername(req.getUsername());
+        if (u == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuario o contraseña incorrectos");
         }
 
+        // 2. Verificar enabled
+        if (u.getEnabled() != null && !u.getEnabled()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuario deshabilitado");
+        }
 
+        // 3. Comparar password plano vs hash
+        boolean ok = passwordEncoder.matches(req.getPassword(), u.getPassword());
+        if (!ok) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuario o contraseña incorrectos");
+        }
+
+        // 4. Generar token
+        UserDetails userDetails = userDetailsService.loadUserByUsername(req.getUsername());
+        String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new JwtResponseDTO(token));
     }
 }

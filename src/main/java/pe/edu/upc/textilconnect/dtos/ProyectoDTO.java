@@ -1,5 +1,6 @@
 package pe.edu.upc.textilconnect.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import pe.edu.upc.textilconnect.entities.TipoProyecto;
 import pe.edu.upc.textilconnect.entities.Usuario;
 
@@ -13,69 +14,36 @@ public class ProyectoDTO {
     private String visibleProyecto;
     private LocalDate fechaCreacion;
     private TipoProyecto tipoProyecto;
+
+    @JsonIgnoreProperties({
+            "roles","password","telefonoUsuario","direccionUsuario","fechaRegistroUsuario",
+            "promedioCalificacion","totalCalificacion","enabled","username","emailUsuario"
+    })
     private Usuario usuario;
 
-    public int getIdProyecto() {
-        return idProyecto;
-    }
+    public ProyectoDTO() {}
 
-    public void setIdProyecto(int idProyecto) {
-        this.idProyecto = idProyecto;
-    }
+    public int getIdProyecto() { return idProyecto; }
+    public void setIdProyecto(int idProyecto) { this.idProyecto = idProyecto; }
 
-    public String getTituloProyecto() {
-        return tituloProyecto;
-    }
+    public String getTituloProyecto() { return tituloProyecto; }
+    public void setTituloProyecto(String tituloProyecto) { this.tituloProyecto = tituloProyecto; }
 
-    public void setTituloProyecto(String tituloProyecto) {
-        this.tituloProyecto = tituloProyecto;
-    }
+    public String getDescripcionProyecto() { return descripcionProyecto; }
+    public void setDescripcionProyecto(String descripcionProyecto) { this.descripcionProyecto = descripcionProyecto; }
 
-    public String getDescripcionProyecto() {
-        return descripcionProyecto;
-    }
+    public String getUrlProyecto() { return urlProyecto; }
+    public void setUrlProyecto(String urlProyecto) { this.urlProyecto = urlProyecto; }
 
-    public void setDescripcionProyecto(String descripcionProyecto) {
-        this.descripcionProyecto = descripcionProyecto;
-    }
+    public String getVisibleProyecto() { return visibleProyecto; }
+    public void setVisibleProyecto(String visibleProyecto) { this.visibleProyecto = visibleProyecto; }
 
-    public String getUrlProyecto() {
-        return urlProyecto;
-    }
+    public LocalDate getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDate fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
-    public void setUrlProyecto(String urlProyecto) {
-        this.urlProyecto = urlProyecto;
-    }
+    public TipoProyecto getTipoProyecto() { return tipoProyecto; }
+    public void setTipoProyecto(TipoProyecto tipoProyecto) { this.tipoProyecto = tipoProyecto; }
 
-    public String getVisibleProyecto() {
-        return visibleProyecto;
-    }
-
-    public void setVisibleProyecto(String visibleProyecto) {
-        this.visibleProyecto = visibleProyecto;
-    }
-
-    public LocalDate getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDate fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public TipoProyecto getTipoProyecto() {
-        return tipoProyecto;
-    }
-
-    public void setTipoProyecto(TipoProyecto tipoProyecto) {
-        this.tipoProyecto = tipoProyecto;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }

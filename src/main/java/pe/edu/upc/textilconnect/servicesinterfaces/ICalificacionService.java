@@ -1,14 +1,11 @@
-package pe.edu.upc.textilconnect.servicesinterfaces;
-
+package pe.edu.upc.textilconnect.servicesinterfaces;// pe.edu.upc.textilconnect.servicesinterfaces.ICalificacionService
 import pe.edu.upc.textilconnect.entities.Calificacion;
-import pe.edu.upc.textilconnect.entities.ComentarioProyecto;
-
 import java.util.List;
 
 public interface ICalificacionService {
     List<Calificacion> list();
-    public void insert(Calificacion calificacion);
-    public Calificacion listId(int id);
-    public void delete(int id);
-    public void update(Calificacion calificacion);
+    void insert(Calificacion calificacion);
+    Calificacion listId(int id);
+    void delete(int id);
+    void update(Calificacion calificacion);
 }

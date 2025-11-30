@@ -50,4 +50,10 @@ public class ProyectoServiceImplement implements IProyectoService {
         return proyectoRepository.buscarUsuarioPy(idUsuario);
     }
 
+    @Override
+    public List<Object[]> listarUsuariosConMasProyectos() {
+        return proyectoRepository.listarUsuariosConMasProyectos();
+    }
+
+
 }

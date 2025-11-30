@@ -2,6 +2,7 @@ package pe.edu.upc.textilconnect.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,27 +16,53 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/roles")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RolController {
+
     @Autowired
     private IRolService rS;
+
+    // LISTAR TODOS
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<RolDTO> listar(){
-        return rS.list().stream().map(y->{
+    @PreAuthorize("permitAll()")
+    public List<RolDTO> listar() {
+        return rS.list().stream().map(y -> {
             ModelMapper m = new ModelMapper();
-            return m.map(y,RolDTO.class);
+            return m.map(y, RolDTO.class);
         }).collect(Collectors.toList());
     }
+
+    // INSERTAR
     @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public void insertar(@RequestBody RolDTO dto){
-        ModelMapper m = new ModelMapper();
-        Rol r = m.map(dto, Rol.class);
-        rS.insert(r);
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<String> insertar(@RequestBody RolDTO dto) {
+        try {
+            ModelMapper m = new ModelMapper();
+            Rol r = m.map(dto, Rol.class);
+
+            // Forzamos INSERT: ignoramos cualquier id que venga del front
+            r.setIdRol(null);
+
+            rS.insert(r);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body("Rol creado correctamente.");
+        } catch (DataIntegrityViolationException ex) {
+            // Aquí caes si hay llave duplicada (nombreRol único)
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Ya existe un rol con el nombre: " + dto.getNombreRol());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocurrió un error al registrar el rol.");
+        }
     }
 
+    // BUSCAR POR ID
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Rol r = rS.listId(id);
         if (r == null) {
@@ -48,33 +75,52 @@ public class RolController {
         return ResponseEntity.ok(dto);
     }
 
-
+    // ELIMINAR
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
-        Rol r = rS.listId(id);
-        if (r == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No existe un registro con el ID: " + id);
+        try {
+            Rol r = rS.listId(id);
+            if (r == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No existe un registro con el ID: " + id);
+            }
+            rS.delete(id);
+            return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
+        } catch (DataIntegrityViolationException ex) {
+            // Por si el rol está asociado a usuarios, etc.
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("No se puede eliminar el rol porque está asociado a otros registros.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocurrió un error al eliminar el rol.");
         }
-        rS.delete(id);
-        return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
+    // MODIFICAR
     @PutMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<String> modificar(@RequestBody RolDTO dto) {
-        ModelMapper m = new ModelMapper();
-        Rol r = m.map(dto, Rol.class);
+        try {
+            ModelMapper m = new ModelMapper();
+            Rol r = m.map(dto, Rol.class);
 
-        Rol existente = rS.listId(r.getIdRol());
-        if (existente == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se puede modificar. No existe un registro con el ID: " + r.getIdRol());
+            Rol existente = rS.listId(r.getIdRol());
+            if (existente == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No se puede modificar. No existe un registro con el ID: " + r.getIdRol());
+            }
+
+            rS.update(r);
+            return ResponseEntity.ok("Registro con ID " + r.getIdRol() + " modificado correctamente.");
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Ya existe un rol con el nombre: " + dto.getNombreRol());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocurrió un error al modificar el rol.");
         }
-
-        rS.update(r);
-        return ResponseEntity.ok("Registro con ID " + r.getIdRol() + " modificado correctamente.");
     }
 }
-

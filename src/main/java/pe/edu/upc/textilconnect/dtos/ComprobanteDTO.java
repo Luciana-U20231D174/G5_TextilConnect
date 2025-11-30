@@ -1,8 +1,5 @@
 package pe.edu.upc.textilconnect.dtos;
 
-import pe.edu.upc.textilconnect.entities.Pedido;
-import pe.edu.upc.textilconnect.entities.TipoDocumento;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -13,8 +10,11 @@ public class ComprobanteDTO {
     private String razonSocialComprobante;
     private BigDecimal igvComprobante;
     private BigDecimal totalComprobante;
-    private Pedido pedido;
-    private TipoDocumento tipoDocumento;
+
+    // 👇 relaciones en formato simple
+    private Integer idPedido;
+    private Integer idTipoDocumento;
+    private String nombreTipoDocumento;
 
     public int getIdComprobante() {
         return idComprobante;
@@ -64,19 +64,27 @@ public class ComprobanteDTO {
         this.totalComprobante = totalComprobante;
     }
 
-    public Pedido getPedido() {
-        return pedido;
+    public Integer getIdPedido() {
+        return idPedido;
     }
 
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
+    public void setIdPedido(Integer idPedido) {
+        this.idPedido = idPedido;
     }
 
-    public TipoDocumento getTipoDocumento() {
-        return tipoDocumento;
+    public Integer getIdTipoDocumento() {
+        return idTipoDocumento;
     }
 
-    public void setTipoDocumento(TipoDocumento tipoDocumento) {
-        this.tipoDocumento = tipoDocumento;
+    public void setIdTipoDocumento(Integer idTipoDocumento) {
+        this.idTipoDocumento = idTipoDocumento;
+    }
+
+    public String getNombreTipoDocumento() {
+        return nombreTipoDocumento;
+    }
+
+    public void setNombreTipoDocumento(String nombreTipoDocumento) {
+        this.nombreTipoDocumento = nombreTipoDocumento;
     }
 }

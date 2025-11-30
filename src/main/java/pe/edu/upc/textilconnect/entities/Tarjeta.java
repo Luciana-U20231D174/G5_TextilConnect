@@ -1,5 +1,6 @@
 package pe.edu.upc.textilconnect.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -38,7 +39,9 @@ public class Tarjeta {
 
     @ManyToOne
     @JoinColumn(name = "idUsuario")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuario usuario;
+
 
     public Tarjeta() {
     }
