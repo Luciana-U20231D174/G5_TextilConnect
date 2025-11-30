@@ -1,23 +1,27 @@
 package pe.edu.upc.textilconnect.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "rol", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "nombreRol"})})
+@Table(name = "rol")
 public class Rol implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idRol;
 
-    @Column(name = "nombreRol", length = 50, nullable = false)
+    @Column(name = "nombreRol", length = 50, nullable = false, unique = true)
     private String nombreRol;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Usuario usuario;
+    // Opcional: lado inverso si quieres saber qué usuarios tienen este rol
+    @JsonIgnore
+    @OneToMany(mappedBy = "rol")
+    private List<Usuario> usuarios = new ArrayList<>();
 
     public Rol() {}
 
@@ -37,11 +41,11 @@ public class Rol implements Serializable {
         this.nombreRol = nombreRol;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public List<Usuario> getUsuarios() {
+        return usuarios;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 }

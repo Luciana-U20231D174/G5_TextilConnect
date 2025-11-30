@@ -1,18 +1,21 @@
 package pe.edu.upc.textilconnect.dtos;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-public class UsuarioDTOList {
+public class UsuarioDTOAdminUpdate {
+
     private Integer idUsuario;
     private String nombreUsuario;
     private String emailUsuario;
     private String username;
     private String telefonoUsuario;
-    private String nombreRol;
-
-    // ⭐ Campos nuevos para mostrar en el listar
+    private String direccionUsuario;
+    private LocalDate fechaRegistroUsuario;
+    private Boolean enabled;
     private BigDecimal promedioCalificacion;
     private int totalCalificacion;
+    private Integer idRol; // id del rol seleccionado
 
     public Integer getIdUsuario() {
         return idUsuario;
@@ -54,12 +57,28 @@ public class UsuarioDTOList {
         this.telefonoUsuario = telefonoUsuario;
     }
 
-    public String getNombreRol() {
-        return nombreRol;
+    public String getDireccionUsuario() {
+        return direccionUsuario;
     }
 
-    public void setNombreRol(String nombreRol) {
-        this.nombreRol = nombreRol;
+    public void setDireccionUsuario(String direccionUsuario) {
+        this.direccionUsuario = direccionUsuario;
+    }
+
+    public LocalDate getFechaRegistroUsuario() {
+        return fechaRegistroUsuario;
+    }
+
+    public void setFechaRegistroUsuario(LocalDate fechaRegistroUsuario) {
+        this.fechaRegistroUsuario = fechaRegistroUsuario;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public BigDecimal getPromedioCalificacion() {
@@ -76,5 +95,13 @@ public class UsuarioDTOList {
 
     public void setTotalCalificacion(int totalCalificacion) {
         this.totalCalificacion = totalCalificacion;
+    }
+
+    public Integer getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(Integer idRol) {
+        this.idRol = idRol;
     }
 }

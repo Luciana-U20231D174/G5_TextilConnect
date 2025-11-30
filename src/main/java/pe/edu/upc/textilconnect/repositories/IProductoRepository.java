@@ -21,6 +21,6 @@ public interface IProductoRepository extends JpaRepository<Producto,Integer> {
     public List<Producto> buscarColorPd(@Param("color") String color);
 
     @Query("SELECT p FROM Producto p WHERE p.precioProducto BETWEEN :min AND :max")
-    List<Producto> buscarPrecioPd(@Param("min") BigDecimal min,
-                                        @Param("max") BigDecimal max);
+    List<Producto> buscarPrecioPd(@Param("min") double min,
+                                        @Param("max") double max);
 }

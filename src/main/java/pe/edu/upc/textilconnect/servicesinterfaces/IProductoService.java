@@ -14,6 +14,6 @@ public interface IProductoService {
     public List<Producto> buscarxNombre(String nombre);
     public List<Producto> buscarxCategoria(String categoria);
     public List<Producto> buscarxColor(String color);
-    List<Producto> buscarxPrecio(BigDecimal min, BigDecimal max);
+    List<Producto> buscarxPrecio(double min, double max);
 
 }

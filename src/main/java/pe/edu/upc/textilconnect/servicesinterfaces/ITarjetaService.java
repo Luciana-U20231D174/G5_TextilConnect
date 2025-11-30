@@ -2,6 +2,7 @@ package pe.edu.upc.textilconnect.servicesinterfaces;
 
 import pe.edu.upc.textilconnect.entities.Tarjeta;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ITarjetaService {
@@ -10,6 +11,10 @@ public interface ITarjetaService {
     public void delete(int id);
     public void update(Tarjeta tarjeta);
     public Tarjeta listId(int id);
-    public List<Tarjeta> listarxusuario(int idUsuario);
-    public int contarxmarca(String marca);
+    public List<Object[]> contarPorTodasLasMarcas();
+
+    List<Tarjeta> listarxusuario(int idUsuario);
+
+    public List<Tarjeta> listarPorRangoVencimiento(LocalDate inicio, LocalDate fin);
+
 }

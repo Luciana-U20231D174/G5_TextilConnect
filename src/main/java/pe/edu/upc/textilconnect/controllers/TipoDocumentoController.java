@@ -1,9 +1,11 @@
 package pe.edu.upc.textilconnect.controllers;
 
+import jakarta.annotation.security.PermitAll;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.TipoDocumentoDTO;
 import pe.edu.upc.textilconnect.entities.TipoDocumento;
@@ -14,25 +16,36 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tiposdocumentos")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TipoDocumentoController {
+
     @Autowired
     private ITipoDocumentoService dS;
 
-    @GetMapping
-    public List<TipoDocumentoDTO> listar(){
-        return this.dS.list().stream().map((y)->{
+    // ============= LISTAR =============
+    // GET http://localhost:8080/tiposdocumentos/listar
+    @PreAuthorize("permitAll()")
+    @GetMapping("/listar")
+    public List<TipoDocumentoDTO> listar() {
+        return this.dS.list().stream().map(y -> {
             ModelMapper m = new ModelMapper();
-            return (TipoDocumentoDTO)m.map(y,TipoDocumentoDTO.class);
+            return m.map(y, TipoDocumentoDTO.class);
         }).collect(Collectors.toList());
     }
 
+    // ============= INSERTAR =============
+    // POST http://localhost:8080/tiposdocumentos
+    @PreAuthorize("permitAll()")
     @PostMapping
-    public void insertar(@RequestBody TipoDocumentoDTO dto){
-        ModelMapper m =new ModelMapper();
-        TipoDocumento td=(TipoDocumento)m.map(dto,TipoDocumento.class);
+    public void insertar(@RequestBody TipoDocumentoDTO dto) {
+        ModelMapper m = new ModelMapper();
+        TipoDocumento td = m.map(dto, TipoDocumento.class);
         this.dS.insert(td);
     }
 
+    // ============= LISTAR POR ID =============
+    // GET http://localhost:8080/tiposdocumentos/{id}
+    @PreAuthorize("permitAll()")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         TipoDocumento tip = dS.listId(id);
@@ -46,6 +59,9 @@ public class TipoDocumentoController {
         return ResponseEntity.ok(dto);
     }
 
+    // ============= ELIMINAR =============
+    // DELETE http://localhost:8080/tiposdocumentos/{id}
+    @PreAuthorize("permitAll()")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         TipoDocumento td = dS.listId(id);
@@ -57,6 +73,9 @@ public class TipoDocumentoController {
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
+    // ============= MODIFICAR =============
+    // PUT http://localhost:8080/tiposdocumentos
+    @PreAuthorize("permitAll()")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody TipoDocumentoDTO dto) {
         ModelMapper m = new ModelMapper();
@@ -71,15 +90,19 @@ public class TipoDocumentoController {
         return ResponseEntity.ok("Registro con ID " + tp.getIdTipoDocumento() + " modificado correctamente.");
     }
 
-    @GetMapping({"/bnombres"})
+    // ============= BÚSQUEDA POR NOMBRE =============
+    // GET http://localhost:8080/tiposdocumentos/bnombres?n=...
+    @PermitAll
+    @GetMapping("/bnombres")
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<TipoDocumento> tipoDocumentos = this.dS.buscarService(n);
         if (tipoDocumentos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron documentos con este nombre: " + n);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontraron documentos con este nombre: " + n);
         } else {
-            List<TipoDocumentoDTO> listaDTO = tipoDocumentos.stream().map((x) -> {
+            List<TipoDocumentoDTO> listaDTO = tipoDocumentos.stream().map(x -> {
                 ModelMapper m = new ModelMapper();
-                return (TipoDocumentoDTO)m.map(x, TipoDocumentoDTO.class);
+                return m.map(x, TipoDocumentoDTO.class);
             }).collect(Collectors.toList());
             return ResponseEntity.ok(listaDTO);
         }

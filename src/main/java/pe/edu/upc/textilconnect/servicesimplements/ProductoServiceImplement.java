@@ -56,7 +56,7 @@ public class ProductoServiceImplement implements IProductoService {
     }
 
     @Override
-    public List<Producto> buscarxPrecio(BigDecimal min, BigDecimal max) {
+    public List<Producto> buscarxPrecio(double min, double max) {
         return productoRepository.buscarPrecioPd(min,max);
     }
 }

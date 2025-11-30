@@ -1,3 +1,4 @@
+// src/main/java/pe/edu/upc/textilconnect/servicesimplements/PresupuestoMensualServiceImplement.java
 package pe.edu.upc.textilconnect.servicesimplements;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,10 @@ public class PresupuestoMensualServiceImplement implements IPresupuestoMensualSe
 
     @Autowired
     private IPresupuestoMensualRepository presupuestoMensualRepository;
+
     @Override
     public List<PresupuestoMensual> list() {
-        return  presupuestoMensualRepository.findAll();
+        return presupuestoMensualRepository.findAll();
     }
 
     @Override
@@ -25,12 +27,17 @@ public class PresupuestoMensualServiceImplement implements IPresupuestoMensualSe
 
     @Override
     public PresupuestoMensual listId(int id) {
-        return presupuestoMensualRepository.findById(id).orElse(new PresupuestoMensual());
+        // 👉 devolvemos null si no existe
+        return presupuestoMensualRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void delete(int id) { presupuestoMensualRepository.deleteById(id);}
+    public void delete(int id) {
+        presupuestoMensualRepository.deleteById(id);
+    }
 
     @Override
-    public void update(PresupuestoMensual PresupuestoMensual) { presupuestoMensualRepository.save(PresupuestoMensual);}
+    public void update(PresupuestoMensual presupuestoMensual) {
+        presupuestoMensualRepository.save(presupuestoMensual);
+    }
 }

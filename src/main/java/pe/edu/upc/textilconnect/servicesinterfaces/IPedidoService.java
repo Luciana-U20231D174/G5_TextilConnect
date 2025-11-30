@@ -3,6 +3,7 @@ package pe.edu.upc.textilconnect.servicesinterfaces;
 import pe.edu.upc.textilconnect.entities.Notificacion;
 import pe.edu.upc.textilconnect.entities.Pedido;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IPedidoService {
@@ -11,4 +12,5 @@ public interface IPedidoService {
     public Pedido listId(int id);
     public void delete(int id);
     public void update(Pedido Pedido);
+    public Double sumarPrecioTotalPorFecha(LocalDate fecha);
 }

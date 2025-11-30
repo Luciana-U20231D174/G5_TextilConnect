@@ -1,7 +1,7 @@
 package pe.edu.upc.textilconnect.dtos;
 
-import pe.edu.upc.textilconnect.entities.MetodoPago;
 import pe.edu.upc.textilconnect.entities.Usuario;
+import pe.edu.upc.textilconnect.entities.MetodoPago;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,8 +12,10 @@ public class PedidoDTO {
     private LocalDate fechaCreacionPedido;
     private LocalDate fechaPagoPedido;
     private BigDecimal totalPedido;
-    private Usuario comprador;
+
+    // Objetos “planos” solo para enviar a Angular
     private Usuario vendedor;
+    private Usuario comprador;
     private MetodoPago metodoPago;
 
     public int getIdPedido() {
@@ -56,20 +58,20 @@ public class PedidoDTO {
         this.totalPedido = totalPedido;
     }
 
-    public Usuario getComprador() {
-        return comprador;
-    }
-
-    public void setComprador(Usuario comprador) {
-        this.comprador = comprador;
-    }
-
     public Usuario getVendedor() {
         return vendedor;
     }
 
     public void setVendedor(Usuario vendedor) {
         this.vendedor = vendedor;
+    }
+
+    public Usuario getComprador() {
+        return comprador;
+    }
+
+    public void setComprador(Usuario comprador) {
+        this.comprador = comprador;
     }
 
     public MetodoPago getMetodoPago() {

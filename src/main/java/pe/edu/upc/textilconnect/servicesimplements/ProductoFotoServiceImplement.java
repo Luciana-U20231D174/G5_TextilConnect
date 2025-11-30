@@ -32,6 +32,7 @@ public class ProductoFotoServiceImplement implements IProductoFotoService {
     @Override
     public void delete(int id) { productoFotoRepository.deleteById(id); }
 
+
     @Override
     public void update(ProductoFoto ProductoFoto) { productoFotoRepository.save(ProductoFoto);}
 }

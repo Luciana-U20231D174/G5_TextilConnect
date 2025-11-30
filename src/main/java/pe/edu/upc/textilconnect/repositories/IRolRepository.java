@@ -11,8 +11,4 @@ public interface IRolRepository extends JpaRepository<Rol,Integer> {
     @Modifying
     @Query(value = "DELETE FROM rol WHERE id_rol = :id", nativeQuery = true)
     void deleteRolById(@Param("id") Integer id);
-
-    @Modifying
-    @Query("delete from Rol r where r.usuario.idUsuario = :idUser")
-    void deleteByUsuarioId(@Param("idUser") Integer idUser);
 }

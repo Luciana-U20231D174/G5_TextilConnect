@@ -13,4 +13,5 @@ public interface IProyectoService {
     public void update(Proyecto Proyecto);
     public List<Proyecto> buscarxTitulo(String titulo);
     public List<Proyecto> buscarxUsuario(Integer idUsuario);
+    List<Object[]> listarUsuariosConMasProyectos();
 }

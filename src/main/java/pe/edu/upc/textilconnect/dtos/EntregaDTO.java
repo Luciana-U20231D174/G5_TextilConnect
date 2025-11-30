@@ -1,5 +1,6 @@
 package pe.edu.upc.textilconnect.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import pe.edu.upc.textilconnect.entities.Pedido;
 
 import java.math.BigDecimal;
@@ -13,69 +14,33 @@ public class EntregaDTO {
     private BigDecimal longitudEntrega;
     private LocalDateTime fechaEntrega;
     private String estadoEntrega;
+
+    @JsonIgnoreProperties({"vendedor","comprador","metodoPago"})
     private Pedido pedido;
 
-    public int getIdEntrega() {
-        return idEntrega;
-    }
+    public EntregaDTO() {}
 
-    public void setIdEntrega(int idEntrega) {
-        this.idEntrega = idEntrega;
-    }
+    public int getIdEntrega() { return idEntrega; }
+    public void setIdEntrega(int idEntrega) { this.idEntrega = idEntrega; }
 
-    public String getTipoEntrega() {
-        return tipoEntrega;
-    }
+    public String getTipoEntrega() { return tipoEntrega; }
+    public void setTipoEntrega(String tipoEntrega) { this.tipoEntrega = tipoEntrega; }
 
-    public void setTipoEntrega(String tipoEntrega) {
-        this.tipoEntrega = tipoEntrega;
-    }
+    public String getDireccionEntrega() { return direccionEntrega; }
+    public void setDireccionEntrega(String direccionEntrega) { this.direccionEntrega = direccionEntrega; }
 
-    public String getDireccionEntrega() {
-        return direccionEntrega;
-    }
+    public BigDecimal getLatitudEntrega() { return latitudEntrega; }
+    public void setLatitudEntrega(BigDecimal latitudEntrega) { this.latitudEntrega = latitudEntrega; }
 
-    public void setDireccionEntrega(String direccionEntrega) {
-        this.direccionEntrega = direccionEntrega;
-    }
+    public BigDecimal getLongitudEntrega() { return longitudEntrega; }
+    public void setLongitudEntrega(BigDecimal longitudEntrega) { this.longitudEntrega = longitudEntrega; }
 
-    public BigDecimal getLatitudEntrega() {
-        return latitudEntrega;
-    }
+    public LocalDateTime getFechaEntrega() { return fechaEntrega; }
+    public void setFechaEntrega(LocalDateTime fechaEntrega) { this.fechaEntrega = fechaEntrega; }
 
-    public void setLatitudEntrega(BigDecimal latitudEntrega) {
-        this.latitudEntrega = latitudEntrega;
-    }
+    public String getEstadoEntrega() { return estadoEntrega; }
+    public void setEstadoEntrega(String estadoEntrega) { this.estadoEntrega = estadoEntrega; }
 
-    public BigDecimal getLongitudEntrega() {
-        return longitudEntrega;
-    }
-
-    public void setLongitudEntrega(BigDecimal longitudEntrega) {
-        this.longitudEntrega = longitudEntrega;
-    }
-
-    public LocalDateTime getFechaEntrega() {
-        return fechaEntrega;
-    }
-
-    public void setFechaEntrega(LocalDateTime fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
-    }
-
-    public String getEstadoEntrega() {
-        return estadoEntrega;
-    }
-
-    public void setEstadoEntrega(String estadoEntrega) {
-        this.estadoEntrega = estadoEntrega;
-    }
-
-    public Pedido getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
+    public Pedido getPedido() { return pedido; }
+    public void setPedido(Pedido pedido) { this.pedido = pedido; }
 }

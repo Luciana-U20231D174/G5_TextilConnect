@@ -2,43 +2,81 @@ package pe.edu.upc.textilconnect.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOInsert;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOList;
+import pe.edu.upc.textilconnect.dtos.UsuarioDTOAdminUpdate;
+import pe.edu.upc.textilconnect.entities.Rol;
 import pe.edu.upc.textilconnect.entities.Usuario;
+import pe.edu.upc.textilconnect.servicesinterfaces.IRolService;
 import pe.edu.upc.textilconnect.servicesinterfaces.IUsuarioService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/usuario") // 👈 MUY IMPORTANTE: sin method=...
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class UsuarioController {
+
     @Autowired
     private IUsuarioService uS;
 
-    @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<UsuarioDTOList> list() {
-        return uS.list().stream().map(y->{
-            ModelMapper m=new ModelMapper();
-            return m.map(y, UsuarioDTOList.class);
+    @Autowired
+    private IRolService rS;
+
+    // ---------- LISTAR (tabla) ----------
+    @PreAuthorize("permitAll()")
+    @GetMapping   // 👈 ESTE es el GET /usuario que tu front está llamando
+    public List<UsuarioDTOList> listar() {
+        List<Usuario> lista = uS.list();
+
+        return lista.stream().map(u -> {
+            UsuarioDTOList dto = new UsuarioDTOList();
+            dto.setIdUsuario(u.getIdUsuario());
+            dto.setNombreUsuario(u.getNombreUsuario());
+            dto.setEmailUsuario(u.getEmailUsuario());
+            dto.setUsername(u.getUsername());
+            dto.setTelefonoUsuario(u.getTelefonoUsuario());
+            dto.setNombreRol(u.getRol() != null ? u.getRol().getNombreRol() : null);
+            dto.setPromedioCalificacion(u.getPromedioCalificacion());
+            dto.setTotalCalificacion(u.getTotalCalificacion());
+            return dto;
         }).collect(Collectors.toList());
     }
 
-    @PostMapping
-    public void insert(@RequestBody UsuarioDTOInsert uDTO)
-    {
-        ModelMapper m=new ModelMapper();
-        Usuario u=m.map(uDTO, Usuario.class);
-        uS.insert(u);
+    // ---------- INSERTAR ----------
+    @PreAuthorize("permitAll()")
+    @PostMapping   // POST /usuario
+    public ResponseEntity<?> insert(@RequestBody UsuarioDTOInsert dto) {
+        try {
+            ModelMapper m = new ModelMapper();
+            Usuario u = m.map(dto, Usuario.class);
+
+            if (dto.getIdRol() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("El rol es obligatorio");
+            }
+
+            Rol r = new Rol();
+            r.setIdRol(dto.getIdRol());
+            u.setRol(r);
+
+            uS.insert(u);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Conflicto de datos: " + e.getMostSpecificCause().getMessage());
+        }
     }
 
-    @GetMapping("/{id}")
+    // ---------- LISTAR POR ID (para EDICIÓN ADMIN) ----------
     @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/{id}")   // GET /usuario/{id}
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Usuario u = uS.listId(id);
         if (u == null) {
@@ -46,37 +84,69 @@ public class UsuarioController {
                     .status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: " + id);
         }
+
         ModelMapper m = new ModelMapper();
-        UsuarioDTOList dto = m.map(u, UsuarioDTOList.class);
+        UsuarioDTOAdminUpdate dto = m.map(u, UsuarioDTOAdminUpdate.class);
+
+        if (u.getRol() != null) {
+            dto.setIdRol(u.getRol().getIdRol());
+        }
+
         return ResponseEntity.ok(dto);
     }
 
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
-        Usuario u = uS.listId(id);
-        if (u == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No existe un registro con el ID: " + id);
+    // ---------- ELIMINAR (lógico) ----------
+    @PreAuthorize("permitAll()")
+    @DeleteMapping("/{id}")   // DELETE /usuario/{id}
+    public ResponseEntity<?> eliminar(@PathVariable("id") int id) {
+        try {
+            uS.delete(id);
+            return ResponseEntity.ok("Usuario " + id + " eliminado (o deshabilitado) correctamente.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar usuario con ID " + id + ": " + e.getMessage());
         }
-        uS.delete(id);
-        return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
-    @PutMapping
+    // ---------- MODIFICAR (ADMIN, sin password) ----------
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> modificar(@RequestBody UsuarioDTOInsert dto) {
-        ModelMapper m = new ModelMapper();
-        Usuario u = m.map(dto, Usuario.class);
+    @PutMapping   // PUT /usuario
+    public ResponseEntity<String> modificar(@RequestBody UsuarioDTOAdminUpdate dto) {
+        try {
+            Usuario existe = uS.listId(dto.getIdUsuario());
+            if (existe == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No se puede modificar. No existe un registro con el ID: " + dto.getIdUsuario());
+            }
 
-        Usuario existente = uS.listId(u.getIdUsuario());
-        if (existente == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se puede modificar. No existe un registro con el ID: " + u.getIdUsuario());
+            ModelMapper m = new ModelMapper();
+            Usuario u = m.map(dto, Usuario.class);
+
+            if (dto.getIdRol() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("El rol es obligatorio");
+            }
+
+            Rol r = new Rol();
+            r.setIdRol(dto.getIdRol());
+            u.setRol(r);
+
+            uS.update(u);
+            return ResponseEntity.ok("Registro con ID " + dto.getIdUsuario() + " modificado correctamente.");
         }
-
-        uS.update(u);
-        return ResponseEntity.ok("Registro con ID " + u.getIdUsuario() + " modificado correctamente.");
+        catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            String detalle = (e.getMostSpecificCause() != null
+                    ? e.getMostSpecificCause().getMessage()
+                    : e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Conflicto de datos en BD: " + detalle);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al modificar: " + e.getMessage());
+        }
     }
 }

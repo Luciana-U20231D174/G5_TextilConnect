@@ -10,33 +10,33 @@ import org.springframework.stereotype.Service;
 import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.repositories.IUsuarioRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
-
-//Clase 2
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
-    @Autowired
-    private IUsuarioRepository repo;
 
+    @Autowired
+    private IUsuarioRepository usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario user = repo.findOneByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("User not exists", username));
+        Usuario u = usuarioRepository.findOneByUsername(username);
+        if (u == null) {
+            throw new UsernameNotFoundException("Usuario no encontrado: " + username);
         }
 
-        List<GrantedAuthority> roles = new ArrayList<>();
+        GrantedAuthority authority =
+                new SimpleGrantedAuthority(u.getRol().getNombreRol());
 
-        user.getRoles().forEach(rol -> {
-            roles.add(new SimpleGrantedAuthority(rol.getNombreRol()));
-        });
-
-        UserDetails ud = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getEnabled(), true, true, true, roles);
-
-        return ud;
+        // devolvemos el usuario de Spring con el HASH BCRYPT tal cual
+        return new org.springframework.security.core.userdetails.User(
+                u.getUsername(),
+                u.getPassword(),                           // hash bcrypt de BD
+                u.getEnabled() == null ? true : u.getEnabled(), // enabled
+                true,
+                true,
+                true,
+                Collections.singletonList(authority)
+        );
     }
 }

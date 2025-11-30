@@ -13,4 +13,5 @@ public interface IComentarioProyectoService {
     public void update(ComentarioProyecto comentarioProyecto);
     public List<ComentarioProyecto> listarPorProyecto(int idProyecto);
     public int contarPorProyecto(int idProyecto);
+    public List<Object[]> contarComentariosPorProyecto();
 }

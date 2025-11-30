@@ -6,6 +6,7 @@ import pe.edu.upc.textilconnect.entities.Pedido;
 import pe.edu.upc.textilconnect.repositories.IPedidoRepository;
 import pe.edu.upc.textilconnect.servicesinterfaces.IPedidoService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -35,4 +36,13 @@ public class PedidoServiceImplement implements IPedidoService {
 
     @Override
     public void update(Pedido Pedido) { pedidoRepository.save(Pedido);}
+
+    @Override
+    public Double sumarPrecioTotalPorFecha(LocalDate fecha) {
+        Double resultado = pedidoRepository.sumarTotalPorFecha(fecha);
+        if (resultado == null) {
+            return 0.0;
+        }
+        return resultado;
+    }
 }
