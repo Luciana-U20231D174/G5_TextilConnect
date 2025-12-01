@@ -1,6 +1,5 @@
 package pe.edu.upc.textilconnect.securities;
 
-
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,30 +16,26 @@ import pe.edu.upc.textilconnect.servicesimplements.JwtUserDetailsService;
 
 import java.io.IOException;
 
-//Clase 6
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain)
             throws ServletException, IOException {
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            // (no toques los headers CORS aquí si ya los seteas en un CorsFilter / Security)
-            response.setStatus(HttpServletResponse.SC_OK);
-            chain.doFilter(request, response);
-            return;
-        }
 
         final String requestTokenHeader = request.getHeader("Authorization");
         String username = null;
         String jwtToken = null;
-        // JWT Token is in the form "Bearer token". Remove Bearer word and get
-        // only the Token
+
+        // Token en formato "Bearer <token>"
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
@@ -51,43 +46,33 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println("Token JWT ha expirado");
             }
         } else {
+            // OJO: este log también se verá en OPTIONS o requests sin token
             logger.warn("JWT Token no inicia con la palabra Bearer");
             System.out.println(requestTokenHeader);
         }
 
-
-        // Once we get the token validate it.
+        // Si hay username y no hay autenticación aún en el contexto
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 
-            // if token is valid configure Spring Security to manually set
-            // authentication
+            // Validar token con UserDetails
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                // After setting the Authentication in the context, we specify
-                // that the current user is authenticated. So it passes the
-                // Spring Security Configurations successfully.
+
+                // Seteamos el usuario autenticado en el contexto de Spring Security
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+
         chain.doFilter(request, response);
-    }
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getServletPath();
-        // omitir validación en preflight y endpoints públicos
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) return true;
-        return path.startsWith("/login")
-                || path.startsWith("/auth")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/swagger-ui")
-                || path.equals("/")
-                || path.startsWith("/health")
-                || path.startsWith("/api/status");
     }
 }

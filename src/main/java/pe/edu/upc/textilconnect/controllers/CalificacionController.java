@@ -1,6 +1,5 @@
-package pe.edu.upc.textilconnect.controllers;// pe.edu.upc.textilconnect.controllers.CalificacionController
+package pe.edu.upc.textilconnect.controllers;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,8 @@ public class CalificacionController {
     private ICalificacionService calificacionService;
 
     // ---------- INSERTAR ----------
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','COMPRADOR')")
+    // Solo VENDEDOR y COMPRADOR pueden insertar
+    @PreAuthorize("hasAnyAuthority('VENDEDOR','ESTUDIANTE')")
     @PostMapping
     public ResponseEntity<CalificacionDTO> insertar(@RequestBody @Valid CalificacionDTO dto) {
         Calificacion c = new Calificacion();
@@ -72,7 +72,8 @@ public class CalificacionController {
     }
 
     // ---------- LISTAR TODOS ----------
-    @PermitAll
+    // Según tu resumen: ADMIN puede listar
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public List<CalificacionDTO> listar() {
         return calificacionService.list().stream().map(c -> {
@@ -82,16 +83,12 @@ public class CalificacionController {
             dto.setComentario(c.getComentario());
             dto.setFechaCalificacion(c.getFechaCalificacion());
 
-            // PEDIDO (puedes mostrar solo id o algo más, según tu entidad)
             if (c.getPedido() != null) {
                 Pedido p = new Pedido();
                 p.setIdPedido(c.getPedido().getIdPedido());
-                // si tu entidad Pedido tiene algún “nombre” o código, lo pones aquí
-                // p.setCodigoPedido(c.getPedido().getCodigoPedido());
                 dto.setPedido(p);
             }
 
-            // CALIFICADOR: id + nombre
             if (c.getCalificador() != null) {
                 Usuario u1 = new Usuario();
                 u1.setIdUsuario(c.getCalificador().getIdUsuario());
@@ -99,7 +96,6 @@ public class CalificacionController {
                 dto.setCalificador(u1);
             }
 
-            // CALIFICADO: id + nombre
             if (c.getCalificado() != null) {
                 Usuario u2 = new Usuario();
                 u2.setIdUsuario(c.getCalificado().getIdUsuario());
@@ -111,9 +107,9 @@ public class CalificacionController {
         }).collect(Collectors.toList());
     }
 
-
     // 🔹 LISTAR POR ID (para EDITAR)
-    @PermitAll
+    // También solo ADMIN según tu tabla (listar/consultar)
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Calificacion c = calificacionService.listId(id);
@@ -150,7 +146,8 @@ public class CalificacionController {
     }
 
     // 🔹 MODIFICAR
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','COMPRADOR')")
+    // Solo VENDEDOR y COMPRADOR pueden modificar
+    @PreAuthorize("hasAnyAuthority('VENDEDOR','ESTUDIANTE')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody CalificacionDTO dto) {
 
@@ -187,7 +184,8 @@ public class CalificacionController {
     }
 
     // 🔹 ELIMINAR
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','COMPRADOR','ADMIN')")
+    // Según tu resumen: solo ADMIN elimina calificaciones
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         Calificacion c = calificacionService.listId(id);

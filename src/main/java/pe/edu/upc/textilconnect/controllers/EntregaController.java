@@ -18,13 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 @RestController
 @RequestMapping("/entregas")
 public class EntregaController {
+
     @Autowired
     private IEntregaService entregaService;
 
+    // INSERTAR → ADMIN y VENDEDOR
     @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR')")
     @PostMapping
     public ResponseEntity<?> insertar(@RequestBody EntregaDTO edto) {
@@ -45,6 +46,7 @@ public class EntregaController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // LISTAR TODAS → solo ADMIN
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public List<EntregaDTO> listar() {
@@ -54,6 +56,7 @@ public class EntregaController {
         }).collect(Collectors.toList());
     }
 
+    // LISTAR POR ID → ADMIN y VENDEDOR
     @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
@@ -68,6 +71,7 @@ public class EntregaController {
         return ResponseEntity.ok(edto);
     }
 
+    // MODIFICAR → ADMIN y VENDEDOR
     @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody EntregaDTO edto) {
@@ -83,6 +87,7 @@ public class EntregaController {
         return ResponseEntity.ok("Registro con ID " + entrega.getIdEntrega() + " modificado correctamente.");
     }
 
+    // BUSCAR POR ESTADO → solo ADMIN
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping({"/bestados"})
     public ResponseEntity<?> buscarEstado(@RequestParam String estado) {
@@ -99,6 +104,7 @@ public class EntregaController {
         }
     }
 
+    // BUSCAR POR TIPO → solo ADMIN
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping({"/btipos"})
     public ResponseEntity<?> buscarTipo(@RequestParam String tipo) {
@@ -115,7 +121,7 @@ public class EntregaController {
         }
     }
 
-    // 🔥 NUEVO: ELIMINAR ENTREGA
+    // ELIMINAR → ADMIN y VENDEDOR
     @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
@@ -128,6 +134,8 @@ public class EntregaController {
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
+    // REPORTE /canceladas → solo ADMIN (reportes de entregas)
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/canceladas")
     public Map<String, Object> resumenPorRango(
             @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
@@ -148,6 +156,4 @@ public class EntregaController {
         return respuesta;
     }
 
-
 }
-

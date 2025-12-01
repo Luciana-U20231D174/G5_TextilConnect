@@ -12,7 +12,6 @@ import pe.edu.upc.textilconnect.dtos.ProductoListDTO;
 import pe.edu.upc.textilconnect.entities.Producto;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProductoService;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,51 +21,45 @@ public class ProductoController {
     @Autowired
     private IProductoService productoService;
 
-    @PreAuthorize("permitAll()")
+    // 🔹 INSERTAR (solo ADMIN)
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public void insertar(@RequestBody ProductoDTO pdto) {
         ModelMapper m = new ModelMapper();
-        Producto p = (Producto) m.map(pdto, Producto.class);
+        Producto p = m.map(pdto, Producto.class);
         this.productoService.insert(p);
     }
 
+    // 🔹 LISTAR TODOS (permitido para todos)
     @PermitAll
     @GetMapping
     public List<ProductoListDTO> listar() {
         return this.productoService.list().stream().map(producto -> {
             ProductoListDTO dto = new ProductoListDTO();
-
             dto.setIdProducto(producto.getIdProducto());
             dto.setNombreProducto(producto.getNombreProducto());
             dto.setPrecioProducto(producto.getPrecioProducto());
             dto.setStockProducto(producto.getStockProducto());
-
             if (producto.getTipoProducto() != null) {
                 dto.setNombreTipoProducto(producto.getTipoProducto().getNombreTipoProducto());
             }
-
             if (producto.getUsuario() != null) {
                 dto.setNombreUsuario(producto.getUsuario().getNombreUsuario());
             }
-
             return dto;
         }).collect(Collectors.toList());
     }
 
+    // 🔹 LISTAR POR ID
     @PermitAll
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Producto producto = productoService.listId(id);
-
         if (producto == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: " + id);
         }
-
-        // 👇 JSON plano, sin objetos anidados
         java.util.Map<String, Object> resp = new java.util.HashMap<>();
-
         resp.put("idProducto", producto.getIdProducto());
         resp.put("nombreProducto", producto.getNombreProducto());
         resp.put("descripcionProducto", producto.getDescripcionProducto());
@@ -77,17 +70,28 @@ public class ProductoController {
         resp.put("categoriaProducto", producto.getCategoriaProducto());
         resp.put("disponibleProducto", producto.getDisponibleProducto());
         resp.put("urlTipoProducto", producto.getUrlTipoProducto());
-
-        // IDs para los selects
-        resp.put("idTipoProducto",
-                producto.getTipoProducto() != null ? producto.getTipoProducto().getIdTipoProducto() : null);
-        resp.put("idUsuario",
-                producto.getUsuario() != null ? producto.getUsuario().getIdUsuario() : null);
-
+        resp.put("idTipoProducto", producto.getTipoProducto() != null ? producto.getTipoProducto().getIdTipoProducto() : null);
+        resp.put("idUsuario", producto.getUsuario() != null ? producto.getUsuario().getIdUsuario() : null);
         return ResponseEntity.ok(resp);
     }
 
-    @PreAuthorize("permitAll()")
+    // 🔹 MODIFICAR (solo ADMIN)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping
+    public ResponseEntity<String> modificar(@RequestBody ProductoDTO pddto) {
+        ModelMapper m = new ModelMapper();
+        Producto producto = m.map(pddto, Producto.class);
+        Producto existente = productoService.listId(producto.getIdProducto());
+        if (existente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se puede modificar. No existe un registro con el ID: " + producto.getIdProducto());
+        }
+        productoService.update(producto);
+        return ResponseEntity.ok("Registro con ID " + producto.getIdProducto() + " modificado correctamente.");
+    }
+
+    // 🔹 ELIMINAR (solo ADMIN)
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         Producto producto = productoService.listId(id);
@@ -99,84 +103,48 @@ public class ProductoController {
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
-    @PreAuthorize("permitAll()")
-    @PutMapping
-    public ResponseEntity<String> modificar(@RequestBody ProductoDTO pddto) {
-        ModelMapper m = new ModelMapper();
-        Producto producto = m.map(pddto, Producto.class);
-
-        Producto existente = productoService.listId(producto.getIdProducto());
-        if (existente == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se puede modificar. No existe un registro con el ID: " + producto.getIdProducto());
-        }
-        productoService.update(producto);
-        return ResponseEntity.ok("Registro con ID " + producto.getIdProducto() + " modificado correctamente.");
-    }
-
+    // 🔹 BUSQUEDAS (permitido para todos)
     @PermitAll
     @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscarNombre(@RequestParam String n) {
         List<Producto> productos = this.productoService.buscarxNombre(n);
-        if (productos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos con este nombre: " + n);
-        } else {
-            List<ProductoDTO> listaDTO = productos.stream().map((x) -> {
-                ModelMapper m = new ModelMapper();
-                return (ProductoDTO) m.map(x, ProductoDTO.class);
-            }).collect(Collectors.toList());
-            return ResponseEntity.ok(listaDTO);
-        }
+        if (productos.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontraron productos con este nombre: " + n);
+        List<ProductoDTO> listaDTO = productos.stream().map(x -> new ModelMapper().map(x, ProductoDTO.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(listaDTO);
     }
 
     @PermitAll
     @GetMapping({"/bcategorias"})
     public ResponseEntity<?> buscarCategoria(@RequestParam String ca) {
         List<Producto> productos = this.productoService.buscarxCategoria(ca);
-        if (productos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos con esta categoria: " + ca);
-        } else {
-            List<ProductoDTO> listaDTO = productos.stream().map((x) -> {
-                ModelMapper m = new ModelMapper();
-                return (ProductoDTO) m.map(x, ProductoDTO.class);
-            }).collect(Collectors.toList());
-            return ResponseEntity.ok(listaDTO);
-        }
+        if (productos.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontraron productos con esta categoria: " + ca);
+        List<ProductoDTO> listaDTO = productos.stream().map(x -> new ModelMapper().map(x, ProductoDTO.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(listaDTO);
     }
 
     @PermitAll
     @GetMapping({"/bcolores"})
     public ResponseEntity<?> buscarColor(@RequestParam String co) {
         List<Producto> productos = this.productoService.buscarxColor(co);
-        if (productos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron productos con este color: " + co);
-        } else {
-            List<ProductoDTO> listaDTO = productos.stream().map((x) -> {
-                ModelMapper m = new ModelMapper();
-                return (ProductoDTO) m.map(x, ProductoDTO.class);
-            }).collect(Collectors.toList());
-            return ResponseEntity.ok(listaDTO);
-        }
+        if (productos.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontraron productos con este color: " + co);
+        List<ProductoDTO> listaDTO = productos.stream().map(x -> new ModelMapper().map(x, ProductoDTO.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(listaDTO);
     }
 
     @PermitAll
     @GetMapping("/bprecio")
-    public ResponseEntity<?> buscarPorRangoPrecio(@RequestParam double min,
-                                                  @RequestParam double max) {
+    public ResponseEntity<?> buscarPorRangoPrecio(@RequestParam double min, @RequestParam double max) {
         List<Producto> productos = this.productoService.buscarxPrecio(min, max);
-
-        if (productos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("No se encontraron productos en el rango: " + min + " - " + max);
-        } else {
-            List<ProductoListDTO> listaDTO = productos.stream()
-                    .map(p -> {
-                        ModelMapper m = new ModelMapper();
-                        return m.map(p, ProductoListDTO.class);
-                    })
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(listaDTO);
-        }
+        if (productos.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontraron productos en el rango: " + min + " - " + max);
+        List<ProductoListDTO> listaDTO = productos.stream().map(p -> new ModelMapper().map(p, ProductoListDTO.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(listaDTO);
     }
-
 }

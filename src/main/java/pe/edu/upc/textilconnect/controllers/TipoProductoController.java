@@ -1,6 +1,5 @@
 package pe.edu.upc.textilconnect.controllers;
 
-import jakarta.annotation.security.PermitAll;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,35 +15,37 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tiposproductos")
+@CrossOrigin(origins = "[http://localhost:4200](http://localhost:4200)")
 public class TipoProductoController {
-
     @Autowired
     private ITipoProductoService dS;
 
-    @PreAuthorize("permitAll()")
+    // LISTAR (ADMIN, VENDEDOR o ESTUDIANTE)
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/listar")
     public List<TipoProductoDTO> listar() {
-        return this.dS.list().stream().map((y) -> {
+        return this.dS.list().stream().map(y -> {
             ModelMapper m = new ModelMapper();
-            return (TipoProductoDTO) m.map(y, TipoProductoDTO.class);
+            return m.map(y, TipoProductoDTO.class);
         }).collect(Collectors.toList());
     }
 
-    @PreAuthorize("permitAll()")
+    // INSERTAR (solo ADMIN)
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public void insertar(@RequestBody TipoProductoDTO dto) {
         ModelMapper m = new ModelMapper();
-        TipoProducto prod = (TipoProducto) m.map(dto, TipoProducto.class);
+        TipoProducto prod = m.map(dto, TipoProducto.class);
         this.dS.insert(prod);
     }
 
-    @PreAuthorize("permitAll()")
-    @GetMapping("/{id}")  // 👈 IMPORTANTE
+    // LISTAR POR ID (ADMIN, VENDEDOR o ESTUDIANTE)
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
+    @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         TipoProducto prod = dS.listId(id);
         if (prod == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: " + id);
         }
         ModelMapper m = new ModelMapper();
@@ -52,7 +53,8 @@ public class TipoProductoController {
         return ResponseEntity.ok(dto);
     }
 
-    @PreAuthorize("permitAll()")
+    // MODIFICAR (solo ADMIN)
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody TipoProductoDTO dto) {
         ModelMapper m = new ModelMapper();
@@ -67,7 +69,8 @@ public class TipoProductoController {
         return ResponseEntity.ok("Registro con ID " + prod.getIdTipoProducto() + " modificado correctamente.");
     }
 
-    @PreAuthorize("permitAll()")
+    // ELIMINAR (solo ADMIN)
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable("id") Integer id) {
         TipoProducto tipo = dS.listId(id);
@@ -80,11 +83,9 @@ public class TipoProductoController {
         try {
             dS.delete(id);
             return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("No se puede eliminar porque está asociado a productos.");
         }
     }
 }
-

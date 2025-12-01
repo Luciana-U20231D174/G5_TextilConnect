@@ -17,27 +17,28 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/metodospagos")
 public class MetodoPagoController {
+
     @Autowired
     private IMetodoPagoService metodoPagoService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping
     public List<MetodoPagoDTO> listar() {
         return this.metodoPagoService.list().stream().map((y) -> {
-            ModelMapper m =new ModelMapper();
-            return (MetodoPagoDTO)m.map(y, MetodoPagoDTO.class);
+            ModelMapper m = new ModelMapper();
+            return (MetodoPagoDTO) m.map(y, MetodoPagoDTO.class);
         }).collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public void insertar(@RequestBody MetodoPagoDTO dto) {
-        ModelMapper m =new ModelMapper();
-        MetodoPago meto = (MetodoPago)m.map(dto,MetodoPago.class);
+        ModelMapper m = new ModelMapper();
+        MetodoPago meto = (MetodoPago) m.map(dto, MetodoPago.class);
         this.metodoPagoService.insert(meto);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         MetodoPago meto = metodoPagoService.listId(id);
@@ -78,12 +79,13 @@ public class MetodoPagoController {
         return ResponseEntity.ok("Registro con ID " + meto.getIdMetodoPago() + " modificado correctamente.");
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping({"/bnombres"})
     public ResponseEntity<?> buscar(@RequestParam String n) {
         List<MetodoPago> metodoPagos = this.metodoPagoService.buscarService(n);
         if (metodoPagos.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron metodos de pago con este nombre: " + n);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontraron métodos de pago con este nombre: " + n);
         } else {
             List<MetodoPagoDTO> listaDTO = metodoPagos.stream().map((x) -> {
                 ModelMapper m = new ModelMapper();

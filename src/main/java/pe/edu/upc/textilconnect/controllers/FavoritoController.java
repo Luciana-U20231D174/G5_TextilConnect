@@ -1,6 +1,5 @@
 package pe.edu.upc.textilconnect.controllers;
 
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,25 +13,27 @@ import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.entities.Producto;
 import pe.edu.upc.textilconnect.entities.Proyecto;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/favoritos")
 public class FavoritoController {
+
     @Autowired
     private IFavoritoService favoritoService;
 
-    @PreAuthorize("hasAuthority('COMPRADOR')")
+    // INSERTAR → SOLO ESTUDIANTE
+    @PreAuthorize("hasAuthority('ESTUDIANTE')")
     @PostMapping
     public void insertar(@RequestBody FavoritoDTO fdto) {
         ModelMapper m = new ModelMapper();
-        Favorito f = (Favorito)m.map(fdto, Favorito.class);
-        this.favoritoService.insert(f);
+        Favorito f = m.map(fdto, Favorito.class);
+        favoritoService.insert(f);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    // LISTAR → ADMIN, VENDEDOR, ESTUDIANTE
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping
     public List<FavoritoDTO> listar() {
         return favoritoService.list().stream().map(f -> {
@@ -40,7 +41,6 @@ public class FavoritoController {
             dto.setIdFavorito(f.getIdFavorito());
             dto.setFechaFavorito(f.getFechaFavorito());
 
-            // USUARIO (solo id + nombre)
             if (f.getUsuario() != null) {
                 Usuario u = new Usuario();
                 u.setIdUsuario(f.getUsuario().getIdUsuario());
@@ -48,7 +48,6 @@ public class FavoritoController {
                 dto.setUsuario(u);
             }
 
-            // PRODUCTO (solo id + nombre)
             if (f.getProducto() != null) {
                 Producto p = new Producto();
                 p.setIdProducto(f.getProducto().getIdProducto());
@@ -56,7 +55,6 @@ public class FavoritoController {
                 dto.setProducto(p);
             }
 
-            // PROYECTO (solo id + nombre)
             if (f.getProyecto() != null) {
                 Proyecto pr = new Proyecto();
                 pr.setIdProyecto(f.getProyecto().getIdProyecto());
@@ -68,7 +66,8 @@ public class FavoritoController {
         }).collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    // ELIMINAR → ADMIN, VENDEDOR, ESTUDIANTE
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         Favorito favorito = favoritoService.listId(id);
@@ -80,7 +79,8 @@ public class FavoritoController {
         return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    // MODIFICAR → ADMIN, VENDEDOR, ESTUDIANTE
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody FavoritoDTO fdto) {
         ModelMapper m = new ModelMapper();
@@ -94,7 +94,9 @@ public class FavoritoController {
         favoritoService.update(favorito);
         return ResponseEntity.ok("Registro con ID " + favorito.getIdFavorito() + " modificado correctamente.");
     }
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+
+    // OBTENER POR ID → ADMIN, VENDEDOR, ESTUDIANTE
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Favorito f = favoritoService.listId(id);
@@ -130,5 +132,4 @@ public class FavoritoController {
 
         return ResponseEntity.ok(dto);
     }
-
 }

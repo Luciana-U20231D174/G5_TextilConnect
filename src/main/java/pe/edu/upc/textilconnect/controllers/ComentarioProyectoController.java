@@ -1,6 +1,5 @@
 package pe.edu.upc.textilconnect.controllers;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,8 @@ public class ComentarioProyectoController {
     private IComentarioProyectoService comentarioProyectoService;
 
     // ================== INSERTAR ==================
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','COMPRADOR')")
+    // VENDEDOR y COMPRADOR pueden insertar comentarios
+    @PreAuthorize("hasAnyAuthority('VENDEDOR','ESTUDIANTE')")
     @PostMapping
     public ResponseEntity<ComentarioProyectoDTO> insertar(
             @RequestBody @Valid ComentarioProyectoDTO dto) {
@@ -46,7 +46,7 @@ public class ComentarioProyectoController {
 
         comentarioProyectoService.insert(c);
 
-        // DTO de salida (no lo usas mucho en Angular, pero lo dejamos prolijo)
+        // DTO de salida
         ComentarioProyectoDTO out = new ComentarioProyectoDTO();
         out.setIdComentarioProyecto(c.getIdComentarioProyecto());
         out.setComentarioProyecto(c.getComentarioProyecto());
@@ -70,7 +70,8 @@ public class ComentarioProyectoController {
     }
 
     // ================== MODIFICAR ==================
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    // ADMIN, VENDEDOR y COMPRADOR pueden modificar comentarios
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PutMapping("/{id}")
     public ResponseEntity<String> modificar(
             @PathVariable Integer id,
@@ -100,7 +101,8 @@ public class ComentarioProyectoController {
     }
 
     // ================== LISTAR TODOS ==================
-    @PermitAll
+    // Solo ADMIN puede listar todos los comentarios
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public List<ComentarioProyectoDTO> listar() {
         return this.comentarioProyectoService.list().stream().map(c -> {
@@ -130,6 +132,7 @@ public class ComentarioProyectoController {
     }
 
     // ================== ELIMINAR ==================
+    // Solo ADMIN puede eliminar comentarios
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
@@ -143,7 +146,8 @@ public class ComentarioProyectoController {
     }
 
     // ================== LISTAR POR PROYECTO ==================
-    @PermitAll
+    // Solo ADMIN puede usar el buscador por proyecto (según tu matriz)
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/proyecto/{idProyecto}")
     public ResponseEntity<?> listarPorProyecto(@PathVariable("idProyecto") int idProyecto) {
         List<ComentarioProyecto> lista = comentarioProyectoService.listarPorProyecto(idProyecto);
@@ -177,13 +181,17 @@ public class ComentarioProyectoController {
     }
 
     // ================== CONTAR POR PROYECTO ==================
-    @PermitAll
+    // Reporte: también solo ADMIN
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/proyecto/{idProyecto}/count")
     public ResponseEntity<?> contarPorProyecto(@PathVariable("idProyecto") int idProyecto) {
         int total = comentarioProyectoService.contarPorProyecto(idProyecto);
         return ResponseEntity.ok("El proyecto con ID " + idProyecto + " tiene " + total + " comentario(s).");
     }
 
+    // ================== REPORTE: CONTAR COMENTARIOS POR PROYECTO ==================
+    // También para ADMIN
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/comentarios/proyectos")
     public ResponseEntity<?> contarComentariosPorProyecto() {
         List<Object[]> lista = comentarioProyectoService.contarComentariosPorProyecto();
