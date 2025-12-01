@@ -9,10 +9,9 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.Serializable;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -21,18 +20,17 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    // milisegundos → 5 horas
+    // 5 horas
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000;
 
     @Value("${jwt.secret}")
     private String secret;
 
-    // Obtener username (subject) del token
+    // ====== helpers de claims ======
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    // Obtener fecha de expiración
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -42,52 +40,52 @@ public class JwtTokenUtil implements Serializable {
         return claimsResolver.apply(claims);
     }
 
-    // Leer todos los claims usando la clave secreta
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
-                .setSigningKey(secret)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    // Verificar si está expirado
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
-    // Generar token
+    // ====== generar token ======
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("nombre", "textilconnect"); // decorativo
-        claims.put("role", userDetails.getAuthorities()
-                .stream()
+
+        // Guardamos authorities en claim "roles" (ej ["ROLE_ADMIN"])
+        claims.put("roles", userDetails.getAuthorities().stream()
                 .map(r -> r.getAuthority())
-                .collect(Collectors.joining()));
+                .collect(Collectors.toList()));
+
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
-    // Construir el token JWT
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject) // username
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
-                .signWith(
-                        new SecretKeySpec(
-                                Base64.getDecoder().decode(secret),
-                                SignatureAlgorithm.HS512.getJcaName()
-                        )
-                )
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    // Validar que el token sea del user y no esté expirado
+    // ====== validar token ======
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    // ====== clave secreta ======
+    private Key getSigningKey() {
+        return new SecretKeySpec(
+                secret.getBytes(StandardCharsets.UTF_8),
+                SignatureAlgorithm.HS512.getJcaName()
+        );
     }
 }

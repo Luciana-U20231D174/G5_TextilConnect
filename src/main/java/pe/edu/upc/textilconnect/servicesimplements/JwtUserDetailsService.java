@@ -12,7 +12,7 @@ import pe.edu.upc.textilconnect.repositories.IUsuarioRepository;
 
 import java.util.Collections;
 
-@Service
+@Service("jwtUserDetailsService")
 public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -20,22 +20,31 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // ⬇️ Usamos tu username para buscar
         Usuario u = usuarioRepository.findOneByUsername(username);
+
         if (u == null) {
             throw new UsernameNotFoundException("Usuario no encontrado: " + username);
         }
 
+        // Nombre del rol en tu BD, ej "ADMIN", "VENDEDOR", "ESTUDIANTE"
+        String baseRol = (u.getRol() != null && u.getRol().getNombreRol() != null)
+                ? u.getRol().getNombreRol()
+                : "ESTUDIANTE";
+
+        // Spring Security trabaja bien con "ROLE_X"
         GrantedAuthority authority =
                 new SimpleGrantedAuthority(u.getRol().getNombreRol());
 
-        // devolvemos el usuario de Spring con el HASH BCRYPT tal cual
+        boolean enabled = (u.getEnabled() == null) ? true : u.getEnabled();
+
         return new org.springframework.security.core.userdetails.User(
-                u.getUsername(),
-                u.getPassword(),                           // hash bcrypt de BD
-                u.getEnabled() == null ? true : u.getEnabled(), // enabled
-                true,
-                true,
-                true,
+                u.getUsername(),        // username que usas para login
+                u.getPassword(),        // hash BCRYPT en BD
+                enabled,
+                true,   // accountNonExpired
+                true,   // credentialsNonExpired
+                true,   // accountNonLocked
                 Collections.singletonList(authority)
         );
     }
