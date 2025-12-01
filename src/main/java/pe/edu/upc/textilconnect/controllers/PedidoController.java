@@ -4,12 +4,13 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import pe.edu.upc.textilconnect.dtos.PedidoDTO;
+import pe.edu.upc.textilconnect.dtos.PagoSimuladoResponseDTO;
 import pe.edu.upc.textilconnect.entities.Pedido;
 import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.entities.MetodoPago;
@@ -29,7 +30,7 @@ public class PedidoController {
     private IPedidoService pS;
 
     // 🔹 INSERTAR
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<Void> insertar(@RequestBody @Valid PedidoDTO dto) {
         Pedido p = new Pedido();
@@ -60,8 +61,8 @@ public class PedidoController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 🔹 LISTAR TODOS (lo que te está dando 500)
-    @PermitAll
+    // 🔹 LISTAR TODOS
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping
     public List<PedidoDTO> listar() {
         return pS.list().stream().map(p -> {
@@ -72,7 +73,6 @@ public class PedidoController {
             dto.setFechaPagoPedido(p.getFechaPagoPedido());
             dto.setTotalPedido(p.getTotalPedido());
 
-            // Vendedor
             if (p.getVendedor() != null) {
                 Usuario v = new Usuario();
                 v.setIdUsuario(p.getVendedor().getIdUsuario());
@@ -80,7 +80,6 @@ public class PedidoController {
                 dto.setVendedor(v);
             }
 
-            // Comprador
             if (p.getComprador() != null) {
                 Usuario c = new Usuario();
                 c.setIdUsuario(p.getComprador().getIdUsuario());
@@ -88,7 +87,6 @@ public class PedidoController {
                 dto.setComprador(c);
             }
 
-            // Método de pago
             if (p.getMetodoPago() != null) {
                 MetodoPago m = new MetodoPago();
                 m.setIdMetodoPago(p.getMetodoPago().getIdMetodoPago());
@@ -100,8 +98,8 @@ public class PedidoController {
         }).collect(Collectors.toList());
     }
 
-    // 🔹 LISTAR POR ID (para el editar en Angular)
-    @PermitAll
+    // 🔹 LISTAR POR ID
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Pedido p = pS.listId(id);
@@ -142,7 +140,7 @@ public class PedidoController {
     }
 
     // 🔹 MODIFICAR
-    @PermitAll
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody @Valid PedidoDTO dto) {
         Pedido existente = pS.listId(dto.getIdPedido());
@@ -179,7 +177,7 @@ public class PedidoController {
     }
 
     // 🔹 ELIMINAR
-    @PermitAll
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         Pedido pedido = pS.listId(id);
@@ -189,21 +187,20 @@ public class PedidoController {
         }
 
         try {
-            pS.delete(id);  // normalmente hace repository.deleteById(id);
+            pS.delete(id);
             return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
         } catch (DataIntegrityViolationException ex) {
-            // Aquí cae cuando hay comprobantes / items / etc. que usan ese pedido
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("No se puede eliminar el pedido porque tiene información relacionada " +
                             "(comprobantes, items u otros registros).");
         }
     }
 
+    // 🔹 REPORTE TOTAL POR FECHA
     @GetMapping("/total")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     public Map<String, Object> sumarPrecioTotalPorFecha(@RequestParam String fecha) {
-
         LocalDate fechaParsed = LocalDate.parse(fecha);
-
         Double total = pS.sumarPrecioTotalPorFecha(fechaParsed);
 
         Map<String, Object> response = new HashMap<>();
@@ -212,5 +209,4 @@ public class PedidoController {
 
         return response;
     }
-
 }

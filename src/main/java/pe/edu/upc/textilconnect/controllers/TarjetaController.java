@@ -27,7 +27,7 @@ public class TarjetaController {
     @Autowired
     private ITarjetaService tarjetaService;
 
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','COMPRADOR')")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR','ESTUDIANTE')")
     @PostMapping
     public void insertar(@RequestBody TarjetaDTO mpgdto) {
         ModelMapper m = new ModelMapper();
@@ -63,7 +63,7 @@ public class TarjetaController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Tarjeta t = tarjetaService.listId(id);
@@ -95,7 +95,7 @@ public class TarjetaController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id)
     {
@@ -108,7 +108,7 @@ public class TarjetaController {
         return ResponseEntity.ok("Registro con ID " +id+ "eliminado correctamente");
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable("id") Integer id, @RequestBody TarjetaDTO dto){
         Tarjeta existente = tarjetaService.listId(id);
@@ -140,7 +140,7 @@ public class TarjetaController {
 
 
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','COMPRADOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<?> listarPorUsuario(@PathVariable("idUsuario") int idUsuario) {
         List<Tarjeta> tarjetas = tarjetaService.listarxusuario(idUsuario);

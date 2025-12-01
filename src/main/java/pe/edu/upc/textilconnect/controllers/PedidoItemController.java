@@ -1,4 +1,3 @@
-// src/main/java/pe/edu/upc/textilconnect/controllers/PedidoItemController.java
 package pe.edu.upc.textilconnect.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,13 @@ public class PedidoItemController {
     private IPedidoItemService pedidoItemService;
 
     // 🔹 INSERTAR
-    @PreAuthorize("hasAuthority('COMPRADOR')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<String> insertar(@RequestBody PedidoItemDTO dto) {
         PedidoItem pi = new PedidoItem();
         pi.setCantidadPedidoItem(dto.getCantidadPedidoItem());
         pi.setPrecioPedidoItem(dto.getPrecioPedidoItem());
-        pi.setImagenUrl(dto.getImagenUrl()); // 👈 NUEVO
+        pi.setImagenUrl(dto.getImagenUrl());
 
         if (dto.getIdPedido() != null) {
             Pedido p = new Pedido();
@@ -48,7 +47,7 @@ public class PedidoItemController {
     }
 
     // 🔹 LISTAR TODOS
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping
     public List<PedidoItemDTO> listar() {
         return pedidoItemService.list().stream().map(pi -> {
@@ -66,14 +65,13 @@ public class PedidoItemController {
                 dto.setNombreProducto(pi.getProducto().getNombreProducto());
             }
 
-            dto.setImagenUrl(pi.getImagenUrl()); // 👈 NUEVO
-
+            dto.setImagenUrl(pi.getImagenUrl());
             return dto;
         }).collect(Collectors.toList());
     }
 
-    // 🔹 LISTAR POR ID (para EDITAR)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    // 🔹 LISTAR POR ID
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         PedidoItem pi = pedidoItemService.listId(id);
@@ -95,13 +93,12 @@ public class PedidoItemController {
             dto.setNombreProducto(pi.getProducto().getNombreProducto());
         }
 
-        dto.setImagenUrl(pi.getImagenUrl()); // 👈 NUEVO
-
+        dto.setImagenUrl(pi.getImagenUrl());
         return ResponseEntity.ok(dto);
     }
 
     // 🔹 MODIFICAR
-    @PreAuthorize("hasAuthority('COMPRADOR')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody PedidoItemDTO dto) {
         PedidoItem existente = pedidoItemService.listId(dto.getIdPedidoItem());
@@ -112,7 +109,7 @@ public class PedidoItemController {
 
         existente.setCantidadPedidoItem(dto.getCantidadPedidoItem());
         existente.setPrecioPedidoItem(dto.getPrecioPedidoItem());
-        existente.setImagenUrl(dto.getImagenUrl()); // 👈 NUEVO
+        existente.setImagenUrl(dto.getImagenUrl());
 
         if (dto.getIdPedido() != null) {
             Pedido p = new Pedido();
@@ -134,7 +131,7 @@ public class PedidoItemController {
         return ResponseEntity.ok("PedidoItem actualizado");
     }
 
-    // 🔹 ELIMINAR (igual que ya lo tienes)
+    // 🔹 ELIMINAR
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {

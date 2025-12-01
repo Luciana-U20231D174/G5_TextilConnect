@@ -1,4 +1,3 @@
-// src/main/java/pe/edu/upc/textilconnect/controllers/PresupuestoMensualController.java
 package pe.edu.upc.textilconnect.controllers;
 
 import jakarta.annotation.security.PermitAll;
@@ -26,7 +25,7 @@ public class PresupuestoMensualController {
     private IPresupuestoMensualService presupuestoMensualService;
 
     // ---------- INSERTAR ----------
-    @PreAuthorize("hasAuthority('COMPRADOR')")
+    @PreAuthorize("hasAuthority('ESTUDIANTE')")
     @PostMapping
     public ResponseEntity<?> insertar(@RequestBody PresupuestoMensualDTO dto) {
         try {
@@ -85,7 +84,7 @@ public class PresupuestoMensualController {
         }).collect(Collectors.toList());
     }
 
-    // ---------- LISTAR POR ID (para editar) ----------
+    // ---------- LISTAR POR ID ----------
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {

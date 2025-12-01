@@ -1,6 +1,5 @@
 package pe.edu.upc.textilconnect.controllers;
 
-import jakarta.annotation.security.PermitAll;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,20 +12,19 @@ import pe.edu.upc.textilconnect.entities.Proyecto;
 import pe.edu.upc.textilconnect.servicesinterfaces.IProyectoService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/proyectos")
 public class ProyectoController {
-
     @Autowired
     private IProyectoService proyectoService;
 
     // INSERTAR
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PostMapping
     public void insertar(@RequestBody ProyectoDTO pdto) {
         ModelMapper m = new ModelMapper();
@@ -34,8 +32,8 @@ public class ProyectoController {
         this.proyectoService.insert(p);
     }
 
-    // LISTAR (para la tabla: usa DTO plano)
-    @PermitAll
+    // LISTAR TODOS
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping
     public List<ProyectoListDTO> listar() {
         return this.proyectoService.list().stream().map(p -> {
@@ -53,13 +51,12 @@ public class ProyectoController {
             if (p.getUsuario() != null) {
                 dto.setUsuario(p.getUsuario().getNombreUsuario());
             }
-
             return dto;
         }).collect(Collectors.toList());
     }
 
-    // ✅ NUEVO: LISTAR POR ID (para EDITAR en Angular)
-    @PreAuthorize("permitAll()")
+    // LISTAR POR ID
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Proyecto p = proyectoService.listId(id);
@@ -68,13 +65,6 @@ public class ProyectoController {
                     .status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: " + id);
         }
-
-        // Devolvemos JSON PLANO, similar a Producto:
-        // {
-        //   idProyecto, tituloProyecto, descripcionProyecto,
-        //   urlProyecto, visibleProyecto, fechaCreacion,
-        //   idTipoProyecto, idUsuario
-        // }
         Map<String, Object> map = new HashMap<>();
         map.put("idProyecto", p.getIdProyecto());
         map.put("tituloProyecto", p.getTituloProyecto());
@@ -86,16 +76,14 @@ public class ProyectoController {
         if (p.getTipoProyecto() != null) {
             map.put("idTipoProyecto", p.getTipoProyecto().getIdTipoProyecto());
         }
-
         if (p.getUsuario() != null) {
             map.put("idUsuario", p.getUsuario().getIdUsuario());
         }
-
         return ResponseEntity.ok(map);
     }
 
     // ELIMINAR
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         Proyecto proyecto = proyectoService.listId(id);
@@ -108,7 +96,7 @@ public class ProyectoController {
     }
 
     // MODIFICAR
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody ProyectoDTO pdto) {
         ModelMapper m = new ModelMapper();
@@ -124,48 +112,42 @@ public class ProyectoController {
     }
 
     // BUSCAR POR TÍTULO
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/btitulo")
     public ResponseEntity<?> buscarTitulo(@RequestParam String titulo) {
         List<Proyecto> proyectos = proyectoService.buscarxTitulo(titulo);
-
         if (proyectos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No se encontraron proyectos con el título: " + titulo);
-        } else {
-            List<ProyectoListDTO> listaDTO = proyectos.stream()
-                    .map(p -> {
-                        ProyectoListDTO dto = new ProyectoListDTO();
-                        dto.setIdProyecto(p.getIdProyecto());
-                        dto.setTituloProyecto(p.getTituloProyecto());
-                        dto.setDescripcionProyecto(p.getDescripcionProyecto());
-                        dto.setUrlProyecto(p.getUrlProyecto());
-                        dto.setVisibleProyecto(p.getVisibleProyecto());
-                        dto.setFechaCreacion(p.getFechaCreacion());
-                        if (p.getTipoProyecto() != null) {
-                            dto.setTipoProyecto(p.getTipoProyecto().getNombreTipoProyecto());
-                        }
-                        if (p.getUsuario() != null) {
-                            dto.setUsuario(p.getUsuario().getNombreUsuario());
-                        }
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(listaDTO);
         }
+        List<ProyectoListDTO> listaDTO = proyectos.stream().map(p -> {
+            ProyectoListDTO dto = new ProyectoListDTO();
+            dto.setIdProyecto(p.getIdProyecto());
+            dto.setTituloProyecto(p.getTituloProyecto());
+            dto.setDescripcionProyecto(p.getDescripcionProyecto());
+            dto.setUrlProyecto(p.getUrlProyecto());
+            dto.setVisibleProyecto(p.getVisibleProyecto());
+            dto.setFechaCreacion(p.getFechaCreacion());
+            if (p.getTipoProyecto() != null) {
+                dto.setTipoProyecto(p.getTipoProyecto().getNombreTipoProyecto());
+            }
+            if (p.getUsuario() != null) {
+                dto.setUsuario(p.getUsuario().getNombreUsuario());
+            }
+            return dto;
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(listaDTO);
     }
 
     // BUSCAR POR USUARIO
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<?> buscarUsuario(@PathVariable("idUsuario") int idUsuario) {
         List<Proyecto> proyectos = proyectoService.buscarxUsuario(idUsuario);
-
         if (proyectos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("El usuario con ID " + idUsuario + " no tiene proyectos guardados.");
         }
-
         List<ProyectoListDTO> listarDto = proyectos.stream().map(p -> {
             ProyectoListDTO dto = new ProyectoListDTO();
             dto.setIdProyecto(p.getIdProyecto());
@@ -182,23 +164,21 @@ public class ProyectoController {
             }
             return dto;
         }).collect(Collectors.toList());
-
         return ResponseEntity.ok(listarDto);
     }
 
+    // RANKING DE USUARIOS
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping("/rankingusuarios")
     public List<Map<String, Object>> listarUsuariosConMasProyectos() {
         List<Object[]> datos = proyectoService.listarUsuariosConMasProyectos();
-
         List<Map<String, Object>> respuesta = new ArrayList<>();
-
         for (Object[] fila : datos) {
             Map<String, Object> item = new HashMap<>();
             item.put("username", fila[0]);
             item.put("cantidadProyectos", fila[1]);
             respuesta.add(item);
         }
-
         return respuesta;
     }
 }

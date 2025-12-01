@@ -28,6 +28,7 @@ public class ComprobanteController {
     private IComprobanteService comprobanteService;
 
     // ---------- INSERTAR ----------
+    // ADMIN y VENDEDOR pueden insertar comprobantes
     @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR')")
     @PostMapping
     public ResponseEntity<String> insertar(@RequestBody ComprobanteDTO dto) {
@@ -54,6 +55,7 @@ public class ComprobanteController {
     }
 
     // ---------- LISTAR TODOS ----------
+    // Solo ADMIN puede listar todos los comprobantes
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public List<ComprobanteDTO> listar() {
@@ -78,6 +80,7 @@ public class ComprobanteController {
     }
 
     // ---------- LISTAR POR ID (para editar) ----------
+    // Solo ADMIN puede ver un comprobante por ID
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
@@ -107,6 +110,7 @@ public class ComprobanteController {
     }
 
     // ---------- UPDATE ----------
+    // Solo ADMIN puede modificar comprobantes
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody ComprobanteDTO dto) {
@@ -142,6 +146,8 @@ public class ComprobanteController {
         return ResponseEntity.ok("Comprobante actualizado");
     }
 
+    // ---------- ELIMINAR ----------
+    // Solo ADMIN puede eliminar comprobantes
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
@@ -155,6 +161,9 @@ public class ComprobanteController {
         return ResponseEntity.ok("Comprobante eliminado");
     }
 
+    // ---------- REPORTE: IGV TOTAL POR FECHA ----------
+    // Reporte → solo ADMIN según tu matriz
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/igvtotal")
     public Map<String, Object> obtenerIgvPorFecha(@RequestParam String fecha) {
 
@@ -169,6 +178,9 @@ public class ComprobanteController {
         return response;
     }
 
+    // ---------- REPORTE: COMPROBANTES POR RANGO DE FECHAS ----------
+    // También solo ADMIN
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/rango-fechas")
     public ResponseEntity<List<Map<String, Object>>> listarPorRangoFecha(
             @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
@@ -190,4 +202,3 @@ public class ComprobanteController {
     }
 
 }
-

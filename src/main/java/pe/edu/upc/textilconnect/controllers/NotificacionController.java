@@ -28,7 +28,7 @@ public class NotificacionController {
     //       LISTAR TODOS
     // ===========================
     @GetMapping
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     public List<NotificacionDTO> listar() {
         return nS.list().stream().map(n -> {
             NotificacionDTO dto = new NotificacionDTO();
@@ -52,14 +52,13 @@ public class NotificacionController {
     //       INSERTAR
     // ===========================
     @PostMapping
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> insertar(@RequestBody NotificacionDTO dto) {
         try {
             Notificacion n = new Notificacion();
             n.setTipoNotificacion(dto.getTipoNotificacion());
             n.setMensajeNotificacion(dto.getMensajeNotificacion());
 
-            // Si no mandas fecha desde el front, ponemos hoy
             LocalDate fecha = dto.getFechaNotificacion() != null
                     ? dto.getFechaNotificacion()
                     : LocalDate.now();
@@ -85,7 +84,7 @@ public class NotificacionController {
     //       LISTAR POR ID
     // ===========================
     @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
         Notificacion n = nS.listId(id);
         if (n == null) {
@@ -113,7 +112,7 @@ public class NotificacionController {
     //          MODIFICAR
     // ===========================
     @PutMapping
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> modificar(@RequestBody NotificacionDTO dto) {
         try {
             Notificacion existente = nS.listId(dto.getIdNotificacion());
@@ -151,7 +150,7 @@ public class NotificacionController {
     //          ELIMINAR
     // ===========================
     @DeleteMapping("/{id}")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
         Notificacion n = nS.listId(id);
         if (n == null) {
