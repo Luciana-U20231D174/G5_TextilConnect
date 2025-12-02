@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin(origins = "[http://localhost:4200](http://localhost:4200)", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class UsuarioController {
     @Autowired
     private IUsuarioService uS;

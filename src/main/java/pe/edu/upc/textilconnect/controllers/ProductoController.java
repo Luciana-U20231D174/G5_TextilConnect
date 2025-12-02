@@ -22,7 +22,7 @@ public class ProductoController {
     private IProductoService productoService;
 
     // 🔹 INSERTAR (solo ADMIN)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR')")
     @PostMapping
     public void insertar(@RequestBody ProductoDTO pdto) {
         ModelMapper m = new ModelMapper();
@@ -76,7 +76,7 @@ public class ProductoController {
     }
 
     // 🔹 MODIFICAR (solo ADMIN)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody ProductoDTO pddto) {
         ModelMapper m = new ModelMapper();

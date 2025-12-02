@@ -16,100 +16,73 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/roles")
-@CrossOrigin(origins = "[http://localhost:4200](http://localhost:4200)")
 public class RolController {
     @Autowired
-    private IRolService rS;
+    private IRolService rolService;
 
-    // LISTAR TODOS (solo ADMIN)
+    // listar → ADMIN, VENDEDOR, ESTUDIANTE
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
     public List<RolDTO> listar() {
-        return rS.list().stream().map(y -> {
+        return rolService.list().stream().map(rol -> {
             ModelMapper m = new ModelMapper();
-            return m.map(y, RolDTO.class);
+            return m.map(rol, RolDTO.class);
         }).collect(Collectors.toList());
     }
 
-    // INSERTAR (solo ADMIN)
-    @PostMapping
+    // insertar → solo ADMIN
     @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping
     public ResponseEntity<String> insertar(@RequestBody RolDTO dto) {
-        try {
-            ModelMapper m = new ModelMapper();
-            Rol r = m.map(dto, Rol.class);
-            r.setIdRol(null);
-            rS.insert(r);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Rol creado correctamente.");
-        } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Ya existe un rol con el nombre: " + dto.getNombreRol());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ocurrió un error al registrar el rol.");
-        }
+        ModelMapper m = new ModelMapper();
+        Rol r = m.map(dto, Rol.class);
+        rolService.insert(r);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Rol registrado correctamente.");
     }
 
-    // BUSCAR POR ID (solo ADMIN)
-    @GetMapping("/{id}")
+    // eliminar → solo ADMIN
     @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
+        Rol rol = rolService.listId(id);
+        if (rol == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No existe un registro con el ID: " + id);
+        }
+        rolService.delete(id);
+        return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
+    }
+
+    // listar por id → ADMIN, VENDEDOR, ESTUDIANTE
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
+    @GetMapping("/{id}")
     public ResponseEntity<?> listarId(@PathVariable("id") Integer id) {
-        Rol r = rS.listId(id);
-        if (r == null) {
+        Rol rol = rolService.listId(id);
+        if (rol == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No existe un registro con el ID: " + id);
         }
         ModelMapper m = new ModelMapper();
-        RolDTO dto = m.map(r, RolDTO.class);
+        RolDTO dto = m.map(rol, RolDTO.class);
         return ResponseEntity.ok(dto);
     }
 
-    // ELIMINAR (solo ADMIN)
-    @DeleteMapping("/{id}")
+    // modificar → solo ADMIN
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> eliminar(@PathVariable("id") Integer id) {
-        try {
-            Rol r = rS.listId(id);
-            if (r == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("No existe un registro con el ID: " + id);
-            }
-            rS.delete(id);
-            return ResponseEntity.ok("Registro con ID " + id + " eliminado correctamente.");
-        } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("No se puede eliminar el rol porque está asociado a otros registros.");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ocurrió un error al eliminar el rol.");
-        }
-    }
-
-    // MODIFICAR (solo ADMIN)
     @PutMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> modificar(@RequestBody RolDTO dto) {
-        try {
-            ModelMapper m = new ModelMapper();
-            Rol r = m.map(dto, Rol.class);
+        ModelMapper m = new ModelMapper();
+        Rol rol = m.map(dto, Rol.class);
 
-            Rol existente = rS.listId(r.getIdRol());
-            if (existente == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("No se puede modificar. No existe un registro con el ID: " + r.getIdRol());
-            }
-
-            rS.update(r);
-            return ResponseEntity.ok("Registro con ID " + r.getIdRol() + " modificado correctamente.");
-        } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Ya existe un rol con el nombre: " + dto.getNombreRol());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ocurrió un error al modificar el rol.");
+        Rol existente = rolService.listId(rol.getIdRol());
+        if (existente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se puede modificar. No existe un registro con el ID: " + rol.getIdRol());
         }
+
+        rolService.update(rol);
+        return ResponseEntity.ok("Rol con ID " + rol.getIdRol() + " modificado correctamente.");
     }
 }
+
