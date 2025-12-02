@@ -25,7 +25,7 @@ public class PresupuestoMensualController {
     private IPresupuestoMensualService presupuestoMensualService;
 
     // ---------- INSERTAR ----------
-    @PreAuthorize("hasAuthority('ESTUDIANTE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ESTUDIANTE')")
     @PostMapping
     public ResponseEntity<?> insertar(@RequestBody PresupuestoMensualDTO dto) {
         try {

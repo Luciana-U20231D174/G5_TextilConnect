@@ -24,7 +24,7 @@ public class CalificacionController {
 
     // ---------- INSERTAR ----------
     // Solo VENDEDOR y COMPRADOR pueden insertar
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','ESTUDIANTE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PostMapping
     public ResponseEntity<CalificacionDTO> insertar(@RequestBody @Valid CalificacionDTO dto) {
         Calificacion c = new Calificacion();
@@ -147,7 +147,7 @@ public class CalificacionController {
 
     // 🔹 MODIFICAR
     // Solo VENDEDOR y COMPRADOR pueden modificar
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','ESTUDIANTE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PutMapping
     public ResponseEntity<String> modificar(@RequestBody CalificacionDTO dto) {
 

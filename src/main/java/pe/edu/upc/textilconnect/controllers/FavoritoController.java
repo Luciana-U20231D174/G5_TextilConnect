@@ -24,7 +24,7 @@ public class FavoritoController {
     private IFavoritoService favoritoService;
 
     // INSERTAR → SOLO ESTUDIANTE
-    @PreAuthorize("hasAuthority('ESTUDIANTE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ESTUDIANTE')")
     @PostMapping
     public void insertar(@RequestBody FavoritoDTO fdto) {
         ModelMapper m = new ModelMapper();

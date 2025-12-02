@@ -23,7 +23,7 @@ public class ProductoFotoController {
     private IProductoFotoService productoFotoService;
 
     // INSERTAR
-    @PreAuthorize("hasAuthority('VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR')")
     @PostMapping
     public ResponseEntity<Void> insertar(@RequestBody ProductoFotoDTO dto) {
         ModelMapper m = new ModelMapper();

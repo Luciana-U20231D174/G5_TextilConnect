@@ -27,7 +27,7 @@ public class TarjetaController {
     @Autowired
     private ITarjetaService tarjetaService;
 
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','ESTUDIANTE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PostMapping
     public void insertar(@RequestBody TarjetaDTO mpgdto) {
         ModelMapper m = new ModelMapper();

@@ -24,7 +24,7 @@ public class ComentarioProyectoController {
 
     // ================== INSERTAR ==================
     // VENDEDOR y COMPRADOR pueden insertar comentarios
-    @PreAuthorize("hasAnyAuthority('VENDEDOR','ESTUDIANTE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','VENDEDOR','ESTUDIANTE')")
     @PostMapping
     public ResponseEntity<ComentarioProyectoDTO> insertar(
             @RequestBody @Valid ComentarioProyectoDTO dto) {

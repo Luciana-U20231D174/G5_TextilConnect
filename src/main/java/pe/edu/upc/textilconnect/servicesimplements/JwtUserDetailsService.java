@@ -11,6 +11,7 @@ import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.repositories.IUsuarioRepository;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service("jwtUserDetailsService")
 public class JwtUserDetailsService implements UserDetailsService {
@@ -20,27 +21,26 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // ⬇️ Usamos tu username para buscar
         Usuario u = usuarioRepository.findOneByUsername(username);
 
         if (u == null) {
             throw new UsernameNotFoundException("Usuario no encontrado: " + username);
         }
 
-        // Nombre del rol en tu BD, ej "ADMIN", "VENDEDOR", "ESTUDIANTE"
-        String baseRol = (u.getRol() != null && u.getRol().getNombreRol() != null)
-                ? u.getRol().getNombreRol()
-                : "ESTUDIANTE";
+        // 🔹 Sacamos el nombre del rol de forma segura
+        String baseRol = Optional.ofNullable(u.getRol())
+                .map(r -> r.getNombreRol())  // "ADMIN", "VENDEDOR", "ESTUDIANTE"
+                .orElse("ESTUDIANTE");       // por defecto, si no tuviera rol
 
-        // Spring Security trabaja bien con "ROLE_X"
-        GrantedAuthority authority =
-                new SimpleGrantedAuthority(u.getRol().getNombreRol());
+        // 🔹 Spring Security trabaja sin "ROLE_" si no lo estás utilizando
+        GrantedAuthority authority = new SimpleGrantedAuthority(baseRol);
 
-        boolean enabled = (u.getEnabled() == null) ? true : u.getEnabled();
+        // 🔹 enabled por defecto true si viene null
+        boolean enabled = (u.getEnabled() == null) || u.getEnabled();
 
         return new org.springframework.security.core.userdetails.User(
-                u.getUsername(),        // username que usas para login
-                u.getPassword(),        // hash BCRYPT en BD
+                u.getUsername(),
+                u.getPassword(),
                 enabled,
                 true,   // accountNonExpired
                 true,   // credentialsNonExpired
