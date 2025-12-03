@@ -12,9 +12,18 @@ public class UsuarioDTOInsert {
     private String direccionUsuario;
     private LocalDate fechaRegistroUsuario;
     private Boolean enabled;
+    private String fotoUrl;
 
     // id del rol elegido en el combo de Angular
     private Integer idRol;
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
+    }
 
     public Integer getIdUsuario() { return idUsuario; }
     public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }

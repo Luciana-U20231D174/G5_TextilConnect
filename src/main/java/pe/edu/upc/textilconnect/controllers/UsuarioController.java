@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin(origins = "[http://localhost:4200](http://localhost:4200)", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class UsuarioController {
     @Autowired
     private IUsuarioService uS;
@@ -38,6 +38,7 @@ public class UsuarioController {
             dto.setNombreRol(u.getRol() != null ? u.getRol().getNombreRol() : null);
             dto.setPromedioCalificacion(u.getPromedioCalificacion());
             dto.setTotalCalificacion(u.getTotalCalificacion());
+            dto.setFotoUrl(u.getFotoUrl());
             return dto;
         }).collect(Collectors.toList());
     }

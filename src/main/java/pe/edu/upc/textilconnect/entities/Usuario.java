@@ -43,6 +43,9 @@ public class Usuario implements Serializable {
     @Column(name = "totalCalificacion", nullable = false)
     private int totalCalificacion = 0;
 
+    @Column(name = "fotoUrl", length = 500, nullable = true)
+    private String fotoUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idRol", nullable = false)
     private Rol rol;
@@ -92,4 +95,12 @@ public class Usuario implements Serializable {
 
     public Rol getRol() { return rol; }
     public void setRol(Rol rol) { this.rol = rol; }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
+    }
 }

@@ -14,6 +14,9 @@ public class UsuarioDTOList {
     private BigDecimal promedioCalificacion;
     private int totalCalificacion;
 
+    // 👇 NUEVO
+    private String fotoUrl;
+
     public Integer getIdUsuario() {
         return idUsuario;
     }
@@ -76,5 +79,13 @@ public class UsuarioDTOList {
 
     public void setTotalCalificacion(int totalCalificacion) {
         this.totalCalificacion = totalCalificacion;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
     }
 }

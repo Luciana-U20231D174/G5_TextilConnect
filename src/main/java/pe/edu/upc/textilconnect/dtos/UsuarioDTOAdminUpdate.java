@@ -16,6 +16,8 @@ public class UsuarioDTOAdminUpdate {
     private BigDecimal promedioCalificacion;
     private int totalCalificacion;
     private Integer idRol; // id del rol seleccionado
+    // 👇 NUEVO
+    private String fotoUrl;
 
     public Integer getIdUsuario() {
         return idUsuario;
@@ -103,5 +105,13 @@ public class UsuarioDTOAdminUpdate {
 
     public void setIdRol(Integer idRol) {
         this.idRol = idRol;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
     }
 }
