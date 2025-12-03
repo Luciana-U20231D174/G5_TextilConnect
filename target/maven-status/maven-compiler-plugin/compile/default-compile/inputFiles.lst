@@ -29,6 +29,7 @@ C:\Users\Asus\IdeaProjects\G5_TextilConnect\src\main\java\pe\edu\upc\textilconne
 C:\Users\Asus\IdeaProjects\G5_TextilConnect\src\main\java\pe\edu\upc\textilconnect\entities\TipoProyecto.java
 C:\Users\Asus\IdeaProjects\G5_TextilConnect\src\main\java\pe\edu\upc\textilconnect\dtos\ProyectoCountDTO.java
 C:\Users\Asus\IdeaProjects\G5_TextilConnect\src\main\java\pe\edu\upc\textilconnect\servicesinterfaces\ITipoProyectoService.java
+C:\Users\Asus\IdeaProjects\G5_TextilConnect\src\main\java\pe\edu\upc\textilconnect\config\StaticResourceConfig.java
 C:\Users\Asus\IdeaProjects\G5_TextilConnect\src\main\java\pe\edu\upc\textilconnect\servicesimplements\PedidoServiceImplement.java
 C:\Users\Asus\IdeaProjects\G5_TextilConnect\src\main\java\pe\edu\upc\textilconnect\controllers\PedidoItemController.java
 C:\Users\Asus\IdeaProjects\G5_TextilConnect\src\main\java\pe\edu\upc\textilconnect\repositories\IEntregaRepository.java

@@ -86,6 +86,8 @@ public class ProductoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No se puede modificar. No existe un registro con el ID: " + producto.getIdProducto());
         }
+        //hace que la entidad sea opcional
+        //if(pddto.getDisponibleProducto() != null) existente.setDisponibleProducto(pddto.getDisponibleProducto());
         productoService.update(producto);
         return ResponseEntity.ok("Registro con ID " + producto.getIdProducto() + " modificado correctamente.");
     }

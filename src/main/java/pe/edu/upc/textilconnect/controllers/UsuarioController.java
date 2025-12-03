@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOInsert;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOList;
 import pe.edu.upc.textilconnect.dtos.UsuarioDTOAdminUpdate;
@@ -14,7 +15,12 @@ import pe.edu.upc.textilconnect.entities.Rol;
 import pe.edu.upc.textilconnect.entities.Usuario;
 import pe.edu.upc.textilconnect.servicesinterfaces.IUsuarioService;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -128,6 +134,55 @@ public class UsuarioController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error interno al modificar: " + e.getMessage());
+        }
+    }
+    // ---------- SUBIR FOTO (upload) ----------
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/foto")
+    public ResponseEntity<?> subirFoto(
+            @PathVariable("id") Integer id,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            Usuario u = uS.listId(id);
+            if (u == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No existe usuario con ID: " + id);
+            }
+
+            if (file.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("El archivo está vacío");
+            }
+
+            // Carpeta donde se guardan las fotos
+            String folder = "uploads/usuarios";
+            Path folderPath = Paths.get(folder).toAbsolutePath();
+            Files.createDirectories(folderPath);
+
+            // Nombre único
+            String extension = Optional.ofNullable(file.getOriginalFilename())
+                    .filter(f -> f.contains("."))
+                    .map(f -> f.substring(f.lastIndexOf(".")))
+                    .orElse(".jpg");
+
+            String fileName = "user_" + id + "_" + System.currentTimeMillis() + extension;
+            Path filePath = folderPath.resolve(fileName);
+
+            // Guardar archivo
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // URL pública (ojo con tu dominio real de Render)
+            String urlPublica = "https://g5-textilconnect.onrender.com/uploads/usuarios/" + fileName;
+
+            // Guardar en fotoUrl
+            u.setFotoUrl(urlPublica);
+            uS.update(u);
+
+            return ResponseEntity.ok(urlPublica);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al subir foto: " + e.getMessage());
         }
     }
 }

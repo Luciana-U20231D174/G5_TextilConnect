@@ -22,6 +22,7 @@ pe\edu\upc\textilconnect\entities\PedidoItem.class
 pe\edu\upc\textilconnect\controllers\TipoProductoController.class
 pe\edu\upc\textilconnect\servicesinterfaces\ITipoDocumentoService.class
 pe\edu\upc\textilconnect\servicesinterfaces\ITipoProyectoService.class
+pe\edu\upc\textilconnect\config\StaticResourceConfig.class
 pe\edu\upc\textilconnect\dtos\PedidoItemDTO.class
 pe\edu\upc\textilconnect\servicesinterfaces\ICalificacionService.class
 pe\edu\upc\textilconnect\dtos\TipoProyectoDTO.class

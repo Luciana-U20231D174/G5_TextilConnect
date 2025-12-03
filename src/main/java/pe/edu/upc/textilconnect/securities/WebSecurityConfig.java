@@ -78,6 +78,9 @@ public class WebSecurityConfig {
                         // login sin token
                         .requestMatchers("/login").permitAll()
 
+                        // Rutas solo ADMIN
+                        //.requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("ADMIN")
+
                         // registro de usuario público (opcional)
                         .requestMatchers(HttpMethod.POST, "/usuario").permitAll()
 
